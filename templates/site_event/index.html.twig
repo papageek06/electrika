@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SiteEvent index{% endblock %}
+
+{% block body %}
+    <h1>SiteEvent index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>PostalCode</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for site_event in site_events %}
+            <tr>
+                <td>{{ site_event.id }}</td>
+                <td>{{ site_event.name }}</td>
+                <td>{{ site_event.address }}</td>
+                <td>{{ site_event.city }}</td>
+                <td>{{ site_event.postalCode }}</td>
+                <td>{{ site_event.description }}</td>
+                <td>
+                    <a href="{{ path('app_site_event_show', {'id': site_event.id}) }}">show</a>
+                    <a href="{{ path('app_site_event_edit', {'id': site_event.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_site_event_new') }}">Create new</a>
+{% endblock %}
