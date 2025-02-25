@@ -18,7 +18,7 @@ class EventDetail
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'eventDetails')]
-    private ?product $product = null;
+    private ?Product $product = null;
 
     #[ORM\ManyToOne(inversedBy: 'eventDetails')]
     private ?Event $event = null;
@@ -49,12 +49,12 @@ class EventDetail
         return $this;
     }
 
-    public function getProduct(): ?product
+    public function getProduct(): ?Product
     {
         return $this->product;
     }
 
-    public function setProduct(?product $product): static
+    public function setProduct(?Product $product): static
     {
         $this->product = $product;
 
