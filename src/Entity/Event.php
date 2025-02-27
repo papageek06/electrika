@@ -40,6 +40,9 @@ class Event
     #[ORM\OneToMany(targetEntity: EventDetail::class, mappedBy: 'event')]
     private Collection $eventDetails;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->eventDetails = new ArrayCollection();
@@ -148,6 +151,18 @@ class Event
                 $eventDetail->setEvent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }

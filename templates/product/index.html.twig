@@ -4,6 +4,12 @@
 
 {% block body %}
     <h1>Product index</h1>
+    <select id="eventSelect">
+        <option>select your event</option>
+        {% for event in events %}
+            <option value="{{ event.id }}">{{ event.name }}</option>
+        {% endfor %}    
+    </select>
 
     <table class="table">
         <thead>
@@ -32,6 +38,16 @@
                     <a href="{{ path('app_product_show', {'id': product.id}) }}">show</a>
                     <a href="{{ path('app_product_edit', {'id': product.id}) }}">edit</a>
                 </td>
+                <td class="col-3">
+                    <form method="post" action="{{ path('app_cart_add') }}">
+                        <label for="quantity">Quantity</label>
+                        <input class="col-2" type="number" name="quantity" value="1">
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <input type="hidden" name="user" value="{{ app.user.id }}">
+                        <input type="hidden" name="event_id" id="eventIdInput">
+                        <button class="bg-success" type="submit">add to cart</button>
+                    </form>
+                </td>
             </tr>
         {% else %}
             <tr>
@@ -42,4 +58,22 @@
     </table>
 
     <a href="{{ path('app_product_new') }}">Create new</a>
+
+    <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let eventSelect = document.getElementById("eventSelect");
+        let eventIdInputList = document.querySelectorAll("input[name='event_id']");
+
+        eventSelect.addEventListener("change", function () {
+            let selectedEventId = eventSelect.value;
+
+            // Mettre à jour tous les inputs cachés des formulaires
+            eventIdInputList.forEach(input => {
+                input.value = selectedEventId;
+            });
+        });
+    });
+</script>
+
 {% endblock %}
