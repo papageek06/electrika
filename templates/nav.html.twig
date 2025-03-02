@@ -1,3 +1,10 @@
+<style>
+a {
+    color: black !important;
+    text-decoration: none; /* Supprime le soulignement si nécessaire */
+}
+</style>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
 	<div class="container-fluid">
 		<a class="navbar-brand" href="{{ path('app_home') }}">Logo</a>
@@ -15,7 +22,7 @@
 
 				{% if app.user %}
 					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_eventdetail_index') }}">bon de prépa </a>
+						<a class="nav-link" href="{{ path('app_event_detail_index') }}">bon de prépa </a>
 					</li>	
 					<li class="nav-item">
 						<a class="nav-link" href="{{ path('app_cart') }}">prépa en cours</a>

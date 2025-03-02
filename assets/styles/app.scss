@@ -17,3 +17,8 @@ body {
 .txt-light {
     color: $txtLight;
 }
+
+a {
+    color: black !important;
+    text-decoration: none; /* Supprime le soulignement si nécessaire */
+}

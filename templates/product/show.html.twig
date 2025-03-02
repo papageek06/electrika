@@ -17,7 +17,7 @@
             </tr>
             <tr>
                 <th>Category</th>
-                <td>{{ product.category }}</td>
+                <td>{{ product.category ? product.category.name : "N/A" }}</td>
             </tr>
             <tr>
                 <th>StockInitial</th>
@@ -38,9 +38,9 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_product_index') }}">back to list</a>
+    <button class="bg-success" ><a href="{{ path('app_product_index') }}">back to list</a>
 
-    <a href="{{ path('app_product_edit', {'id': product.id}) }}">edit</a>
+    
 
-    {{ include('product/_delete_form.html.twig') }}
+    
 {% endblock %}

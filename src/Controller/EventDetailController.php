@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/eventdetail')]
 final class EventDetailController extends AbstractController
 {
-    #[Route(name: 'app_eventdetail_index', methods: ['GET'])]
+    #[Route(name: 'app_event_detail_index', methods: ['GET'])]
     public function index(EventDetailRepository $eventDetailRepository): Response
     {
         return $this->render('event_detail/index.html.twig', [

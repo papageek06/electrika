@@ -55,7 +55,7 @@
                 <td>{{ product.hs }}</td>
                 <td>{{ product.lost }}</td>
                 <td>
-                    <button class="bg-success txt-black" href="{{ path('app_product_show', {'id': product.id}) }}">show</button>
+                    <button class="bg-success txt-black" ><a href="{{ path('app_product_show', {'id': product.id}) }}">show</a></button>
                 </td>
                 <td class="col-3">
                     <form method="post" action="{{ path('app_cart_add') }}">
