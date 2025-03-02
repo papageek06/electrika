@@ -2,10 +2,30 @@
 
 {% block title %}Product index{% endblock %}
 
+
+
 {% block body %}
+
     <h1>Product index</h1>
-    <select id="eventSelect">
+ {# Ici, on affiche un message d'alerte si le panier est vide #}
+<div>
+    {% if cart_session is empty %}
+        <div class="alert alert-warning">Your cart is empty</div>
+        {% elseif cart_session.eventId == NULL %}
+        <div class="alert alert-warning">Select your event</div>
+    {% endif %}
+
+ {% if cart_session["eventId"] is defined and cart_session.eventId is not empty %}
+    <select id="eventSelect" value="{{ cart_session.eventId[0] }}">
+        
+
+    {#si un event id et en panier on l'affiche dans le select #}    
+       
+        <option value="{{ cart_session.eventId[0] }}">{{ cart_session.eventName[0] }}</option>
+        {% else %}
+         <select id="eventSelect" >
         <option>select your event</option>
+        {% endif %}
         {% for event in events %}
             <option value="{{ event.id }}">{{ event.name }}</option>
         {% endfor %}    
@@ -29,14 +49,13 @@
             <tr>
                 <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
-                <td>{{ product.category }}</td>
+                <td>{{ product.category ? product.category.name : "N/A" }}</td>
                 <td>{{ product.stockInitial }}</td>
                 <td>{{ product.stock }}</td>
                 <td>{{ product.hs }}</td>
                 <td>{{ product.lost }}</td>
                 <td>
-                    <a href="{{ path('app_product_show', {'id': product.id}) }}">show</a>
-                    <a href="{{ path('app_product_edit', {'id': product.id}) }}">edit</a>
+                    <button class="bg-success txt-black" href="{{ path('app_product_show', {'id': product.id}) }}">show</button>
                 </td>
                 <td class="col-3">
                     <form method="post" action="{{ path('app_cart_add') }}">
@@ -45,7 +64,7 @@
                         <input type="hidden" name="product_id" value="{{ product.id }}">
                         <input type="hidden" name="user" value="{{ app.user.id }}">
                         <input type="hidden" name="event_id" id="eventIdInput">
-                        <button class="bg-success" type="submit">add to cart</button>
+                        <button class="bg-warning" type="submit">add to cart</button>
                     </form>
                 </td>
             </tr>
@@ -59,21 +78,32 @@
 
     <a href="{{ path('app_product_new') }}">Create new</a>
 
-    <script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    let eventSelect = document.getElementById("eventSelect");
+    let eventIdInputList = document.querySelectorAll("input[name='event_id']");
 
-    document.addEventListener("DOMContentLoaded", function () {
-        let eventSelect = document.getElementById("eventSelect");
-        let eventIdInputList = document.querySelectorAll("input[name='event_id']");
+    // Vérifier si un eventId est déjà en session et le pré-sélectionner
+    let selectedEventId = eventSelect.value;
+    
+    if (selectedEventId) {
+        // Mettre à jour immédiatement tous les champs cachés
+        eventIdInputList.forEach(input => {
+            input.value = selectedEventId;
+        });
+    }
 
-        eventSelect.addEventListener("change", function () {
-            let selectedEventId = eventSelect.value;
+    // Écoute du changement dans le <select>
+    eventSelect.addEventListener("change", function () {
+        let selectedEventId = eventSelect.value;
 
-            // Mettre à jour tous les inputs cachés des formulaires
-            eventIdInputList.forEach(input => {
-                input.value = selectedEventId;
-            });
+        // Mettre à jour tous les inputs cachés des formulaires
+        eventIdInputList.forEach(input => {
+            input.value = selectedEventId;
         });
     });
+});
 </script>
+
 
 {% endblock %}

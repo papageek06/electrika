@@ -1,5 +1,19 @@
 @import "~bootstrap/scss/bootstrap";
 
+$bg-dark: #343a40;
+$txtLight: #f4f4f4;
+
+
 body {
-    background-color: skyblue;
+    background-color: white;
+    transition:  1s ease-in-out !important;
+}
+
+.bg-dark {
+    background-color: $bg-dark;
+    transition: 5s ease-in-out !important;
+}
+
+.txt-light {
+    color: $txtLight;
 }

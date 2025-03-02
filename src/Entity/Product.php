@@ -6,6 +6,7 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Nullable;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -18,8 +19,6 @@ class Product
     #[ORM\Column(length: 150)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 150)]
-    private ?string $category = null;
 
     #[ORM\Column]
     private ?int $stockInitial = null;
@@ -38,6 +37,12 @@ class Product
      */
     #[ORM\OneToMany(targetEntity: EventDetail::class, mappedBy: 'product')]
     private Collection $eventDetails;
+
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    private ?Category $category = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
 
     public function __construct()
     {
@@ -61,17 +66,6 @@ class Product
         return $this;
     }
 
-    public function getCategory(): ?string
-    {
-        return $this->category;
-    }
-
-    public function setCategory(string $category): static
-    {
-        $this->category = $category;
-
-        return $this;
-    }
 
     public function getStockInitial(): ?int
     {
@@ -147,6 +141,30 @@ class Product
                 $eventDetail->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description ): static
+    {
+        $this->description = $description;
 
         return $this;
     }
