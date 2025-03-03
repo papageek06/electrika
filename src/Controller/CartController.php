@@ -42,8 +42,8 @@ final class CartController extends AbstractController
     {
     
         $message ="";
-
-        if($request->request->get('eventId') == null && $request->request->get('event_id') == null ){
+        // dd($request->request->get('event_id'));
+        if($request->request->get('eventId') == null && $request->request->get('event_id') == "select your event" ){
            
             $message = "Please select an event";
             return $this->redirectToRoute('app_product_index');
