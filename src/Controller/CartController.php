@@ -40,36 +40,20 @@ final class CartController extends AbstractController
     #[Route('/cart/add', name: 'app_cart_add' , methods: ['POST'])]
     public function add(Request $request , ProductRepository $productRepository, EventRepository $eventRepository, UserRepository $userRepository): Response
     {
-    
-        $message ="";
-        // dd($request->request->get('event_id'));
-        if($request->request->get('eventId') == null && $request->request->get('event_id') == "select your event" ){
-           
-            $message = "Please select an event";
-            return $this->redirectToRoute('app_product_index');
-        }
+
+        $message="";
         $idEvent= $request->request->get('event_id');
         $quantity = $request->request->get('quantity');
         $idProduct = $request->request->get('product_id'); 
         $idUser = $request->request->get('user');
 
+        if ($idEvent === null || $idEvent === "") {
+            $this->addFlash('warning', 'Please select an event');
+            return $this->redirectToRoute('app_product_index');
+        }
 
         $session = $request->getSession();
-        // if (!$session->get('event')) {
-        //     $session->set('event', [
-        //         $idEvent => [
-        //             'articles' => [
-        //                 $idProduct => [
-        //                     'quantity' => $quantity,
-        //                     'date_sortie' => '2021-10-10',                 
-        //                 ],
-        //             ],
-        //             'user' => [
-        //                 'id' => $idUser,
-        //             ],
-        //         ],
-        //     ]);
-        // }
+
 
 if (!$session->get('cart')) {
             $session->set('cart', [

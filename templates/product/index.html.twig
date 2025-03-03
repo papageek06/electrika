@@ -10,26 +10,24 @@
  {# Ici, on affiche un message d'alerte si le panier est vide #}
 <div>
     {% if cart_session is empty %}
-        <div class="alert alert-warning">Your cart is empty</div>
-        {% elseif cart_session.eventId == NULL %}
-        <div class="alert alert-warning">Select your event</div>
+        <div class="alert alert-warning">Selectionner votre évenment</div>
+        {% else  %}
+        <div class="alert alert-warning"> valider votre preparation avant de changer l'évenment</div>
     {% endif %}
 
- {% if cart_session["eventId"] is defined and cart_session.eventId is not empty %}
-    <select id="eventSelect" value="{{ cart_session.eventId[0] }}">
-        
 
-    {#si un event id et en panier on l'affiche dans le select #}    
-       
-        <option value="{{ cart_session.eventId[0] }}">{{ cart_session.eventName[0] }}</option>
-        {% else %}
-         <select id="eventSelect" >
-        <option>select your event</option>
-        {% endif %}
-        {% for event in events %}
-            <option value="{{ event.id }}">{{ event.name }}</option>
-        {% endfor %}    
-    </select>
+<select id="eventSelect" name="event_id">
+    <option value="">Select your event</option>
+    {% for event in events %}
+        <option value="{{ event.id }}" 
+            {% if cart_session is defined and cart_session["eventId"] is defined and event.id in cart_session["eventId"] %} 
+                selected 
+            {% endif %}>
+            {{ event.name }}
+        </option>
+    {% endfor %}
+</select>
+
 
     <table class="table">
         <thead>
@@ -63,7 +61,7 @@
                         <input class="col-2" type="number" name="quantity" value="1">
                         <input type="hidden" name="product_id" value="{{ product.id }}">
                         <input type="hidden" name="user" value="{{ app.user.id }}">
-                        <input type="hidden" name="event_id" id="eventIdInput">
+                        <input type="hidden" name="event_id" id="eventIdInput" value="{{ cart_session['eventId'][0] ?? '' }}">
                         <button class="bg-warning" type="submit">add to cart</button>
                     </form>
                 </td>
@@ -83,26 +81,20 @@ document.addEventListener("DOMContentLoaded", function () {
     let eventSelect = document.getElementById("eventSelect");
     let eventIdInputList = document.querySelectorAll("input[name='event_id']");
 
-    // Vérifier si un eventId est déjà en session et le pré-sélectionner
-    let selectedEventId = eventSelect.value;
-    
-    if (selectedEventId) {
-        // Mettre à jour immédiatement tous les champs cachés
+    function updateEventIdInputs() {
+        let selectedEventId = eventSelect.value;
         eventIdInputList.forEach(input => {
             input.value = selectedEventId;
         });
     }
 
-    // Écoute du changement dans le <select>
-    eventSelect.addEventListener("change", function () {
-        let selectedEventId = eventSelect.value;
+    // Met à jour tous les inputs cachés au chargement
+    updateEventIdInputs();
 
-        // Mettre à jour tous les inputs cachés des formulaires
-        eventIdInputList.forEach(input => {
-            input.value = selectedEventId;
-        });
-    });
+    // Écoute du changement dans le <select>
+    eventSelect.addEventListener("change", updateEventIdInputs);
 });
+
 </script>
 
 
