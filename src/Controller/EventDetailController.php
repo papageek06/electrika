@@ -82,28 +82,5 @@ final class EventDetailController extends AbstractController
         return $this->redirectToRoute('app_event_detail_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/search/suggestions', name: 'app_search', methods: ['GET'])]
-    public function getSuggestions(Request $request, EventDetailRepository $eventDetail): JsonResponse
-    {
-    
-        $value = $request->query->get('search');
-       
-
-        if(!$value ) {
-            return $this->json([], 200);
-
-        }
-
-        $events = $eventDetail->findByName($value, ); /* query NOT result */
-        dd($events);
-        $suggestions = [];
-        foreach ($events as $event) {
-            $suggestions[] = [
-                'id' => $event->getId()
-            ];
-
-        }
-
-        return $this->json($suggestions);
-    }
+   
 }

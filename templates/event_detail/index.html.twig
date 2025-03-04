@@ -5,14 +5,52 @@
 {% block body %}
     <h1>EventDetail index</h1>
 
+<div>
+<select>
+    <option>select event</option>
+{% for event_detail in event_details %}
+    <option value="{{ event_detail.event.id}}" >{{event_detail.event.name}}</option>
+    {% endfor %}
+</select>
 
+<select>
+    <option>select par status</option>
+    <option value="new" >new</option>
+    <option value="preparer" >preparer</option>
+    <option value="livrer" >livrer</option>
+    <option value="retour" >retour</option>
+</select>
+<select>
+    <option>select par status</option>
+    <option value="new" >new</option>
+    <option value="preparer" >preparer</option>
+    <option value="livrer" >livrer</option>
+    <option value="retour" >retour</option>
+</select>
+<select>
+    <option value="ASC">select par date</option>
+    <option value="ASC" >lus recent</option>
+    <option value="DESC" >ancien</option>
+
+</select>
+<select>
+    <option>select event</option>
+{% for event_detail in event_details %}
+    <option value="{{ event_detail.event.id}}" >{{event_detail.event.name}}</option>
+    {% endfor %}
+</select>
+
+
+
+</div>
 
     <table class="table">
         <thead>
             <tr>
                 <th>evenment</th>
-                <th>Mouve</th>
+                <th>Statut</th>
                 <th>preparateur</th>
+                <th>article</th>
                 <th>Quantity</th>
                 <th>Date</th>
                 <th>actions</th>
@@ -24,6 +62,7 @@
                 <td>{{ event_detail.event ? event_detail.event.name : 'N/A'  }}</td>
                 <td>{{ event_detail.mouve }}</td>
                 <td>{{ event_detail.user ? event_detail.user.firstName : 'N/A' }}</td>
+                <td>{{ event_detail.user ? event_detail.product.name : 'N/A' }}</td>
                 <td>{{ event_detail.quantity }}</td>
                 <td>{{ event_detail.date ? event_detail.date|date('Y-m-d') : '' }}</td>
                 <td>
@@ -41,5 +80,8 @@
 
     <a href="{{ path('app_event_detail_new') }}">Create new</a>
 
-   
+   <script>
+
+
+    </script>
 {% endblock %}

@@ -32,6 +32,8 @@ class EventDetailRepository extends ServiceEntityRepository
            ;
        }
 
+
+
     //    public function findOneBySomeField($value): ?EventDetail
     //    {
     //        return $this->createQueryBuilder('e')
