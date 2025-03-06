@@ -7,20 +7,48 @@ use App\Form\EventDetailType;
 use App\Repository\EventDetailRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/eventdetail')]
+#[Route('eventdetail')]
 final class EventDetailController extends AbstractController
 {
-    #[Route(name: 'app_event_detail_index', methods: ['GET'])]
-    public function index(EventDetailRepository $eventDetailRepository): Response
+    #[Route(name: 'app_event_detail_index', methods: ['GET', 'POST'])]
+    public function index(EventDetailRepository $eventDetailRepository, Request $request): Response
     {
+        $event = $request->request->get('eventSelected');
+        $status = $request->request->get('statusSelected');
+        $order = $request->request->get('orderSelected');
+          
+        $events = [];
+        
+        if (!empty($status) && empty($event)) {  
+            $this->addFlash('success', 'Filtrage status appliqué avec succès !');
+            // dd('que status'); // Vérifie que le if est bien exécuté
+            $events = $eventDetailRepository->findByStatus($status, $order);
+            
+        } else if(!empty($event) && empty($status)) {
+            $this->addFlash('success', 'Filtrage event appliqué avec succès !');
+            // dd('que event'); // Vérifie que le if est bien exécuté
+            $events = $eventDetailRepository->findByEvent($event, $order);
+        }else if (!empty($event) && !empty($status)) {
+            $this->addFlash('success', 'Filtrage event et status appliqué avec succès !');
+            // dd(' status et event'); // Vérifie que le if est bien exécuté
+            $events = $eventDetailRepository->findByEventStatus($event, $status , $order);
+        }
+        else {
+            // dd("JE PASSE DANS LE ELSE"); // Vérifie que le else est bien exécuté
+            $events = $eventDetailRepository->findAll();
+        }
+     
+        // dd($events);
+        
         return $this->render('event_detail/index.html.twig', [
-            'event_details' => $eventDetailRepository->findAll(),
+            'event_details' => $events
         ]);
+        
+
     }
 
     #[Route('/new', name: 'app_event_detail_new', methods: ['GET', 'POST'])]
@@ -71,10 +99,10 @@ final class EventDetailController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_event_detail_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_event_detail_delete', methods: ['POST'])]
     public function delete(Request $request, EventDetail $eventDetail, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$eventDetail->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $eventDetail->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($eventDetail);
             $entityManager->flush();
         }
@@ -82,5 +110,4 @@ final class EventDetailController extends AbstractController
         return $this->redirectToRoute('app_event_detail_index', [], Response::HTTP_SEE_OTHER);
     }
 
-   
 }

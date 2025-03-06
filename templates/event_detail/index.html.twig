@@ -5,42 +5,36 @@
 {% block body %}
     <h1>EventDetail index</h1>
 
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+
 <div>
-<select>
-    <option>select event</option>
-{% for event_detail in event_details %}
-    <option value="{{ event_detail.event.id}}" >{{event_detail.event.name}}</option>
-    {% endfor %}
-</select>
-
-<select>
-    <option>select par status</option>
-    <option value="new" >new</option>
-    <option value="preparer" >preparer</option>
-    <option value="livrer" >livrer</option>
-    <option value="retour" >retour</option>
-</select>
-<select>
-    <option>select par status</option>
-    <option value="new" >new</option>
-    <option value="preparer" >preparer</option>
-    <option value="livrer" >livrer</option>
-    <option value="retour" >retour</option>
-</select>
-<select>
-    <option value="ASC">select par date</option>
-    <option value="ASC" >lus recent</option>
-    <option value="DESC" >ancien</option>
-
-</select>
-<select>
-    <option>select event</option>
-{% for event_detail in event_details %}
-    <option value="{{ event_detail.event.id}}" >{{event_detail.event.name}}</option>
-    {% endfor %}
-</select>
 
 
+<form method="POST" action="{{ path('app_event_detail_index') }}" data-turbo="false">
+    <select name="eventSelected" >
+        {% for event_detail in event_details %}
+            <option value="event_detail.event">{{event_detail.event.name}}</option>
+        {% endfor %}
+    </select>
+
+    <select name="statusSelected">
+        <option value="">Sélectionner un statut</option>
+        <option value="new">New</option>
+        <option value="preparer">Préparer</option>
+        <option value="livrer">Livrer</option>
+        <option value="retour">Retour</option>
+    </select>
+
+    <select name="orderSelected">
+        <option value="ASC">croissant</option>
+        <option value="DESC">decroissant</option>
+    </select>
+
+    <button type="submit">Filtrer</button>
+</form>
 
 </div>
 
@@ -80,8 +74,5 @@
 
     <a href="{{ path('app_event_detail_new') }}">Create new</a>
 
-   <script>
 
-
-    </script>
 {% endblock %}
