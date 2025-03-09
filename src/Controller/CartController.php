@@ -2,14 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\EventDetail;
+use App\Repository\EventDetailRepository;
 use App\Repository\EventRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Validator\Constraints\Length;
 
 final class CartController extends AbstractController
 {
@@ -129,6 +134,45 @@ public function remove(SessionInterface $session, int $index): Response
     }
 
     return $this->redirectToRoute('app_cart');
+}
+
+#[Route('/cart/add/all', name: 'app_cart_add_all')]
+public function addAll(SessionInterface $session ,
+UserRepository $userRepository ,
+ProductRepository $productRepository ,
+EventRepository $eventRepository,
+EventDetailRepository $eventDetailRepository,
+EntityManagerInterface $entityManager
+): Response
+{
+    $cart = $session->get('cart');
+
+    if(isset($cart) && $cart['idProduct']>0 ){
+        
+        $cartCount= count($cart['idProduct']);
+
+        for ( $i= 0 ; $i< $cartCount ; $i++ ){
+            $user=$userRepository->find($cart['userId'][$i]);
+            $product=$productRepository->find($cart['idProduct'][$i]);
+            $event=$eventRepository->find($cart['eventId'][$i]);
+            
+            
+            $EventDetail = new EventDetail;
+            $EventDetail->setUser($user);
+            $EventDetail->setProduct($product);
+            $EventDetail->setEvent($event);
+            $EventDetail->setMouve('New');
+            $EventDetail->setQuantity($cart['quantity'][$i]);
+            $EventDetail->setDate(new \DateTime());
+            $entityManager->persist($EventDetail);
+            
+
+        }
+      
+        $entityManager->flush();
+        
+    }
+    return $this->redirectToRoute('app_event_detail_index');
 }
 
     

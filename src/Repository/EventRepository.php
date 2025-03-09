@@ -16,6 +16,19 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
+    public function findByDistinct(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->select('MIN(e.id) , e.name ') // Prend le plus petit ID par événement
+            ->groupBy('e.name') // Groupe par nom pour éviter les doublons
+            ->orderBy('e.name', 'ASC') // Trie par ordre alphabétique
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+    
+
+
     //    /**
     //     * @return Event[] Returns an array of Event objects
     //     */

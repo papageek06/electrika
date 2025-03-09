@@ -9,14 +9,15 @@
     <div class="alert alert-success">{{ message }}</div>
     {% endfor %}
 
-
+{# {{dump(listEvents)}} #}
 <div>
 
 
 <form method="POST" action="{{ path('app_event_detail_index') }}" data-turbo="false">
     <select name="eventSelected" >
-        {% for event_detail in event_details %}
-            <option value="event_detail.event">{{event_detail.event.name}}</option>
+        <option value="">evenment</option>
+        {% for event in listEvents %}
+            <option value="{{event.1}}">{{event.name}}</option>
         {% endfor %}
     </select>
 

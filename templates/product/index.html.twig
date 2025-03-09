@@ -16,7 +16,7 @@
     {% endif %}
 
 
-<select id="eventSelect" name="event_id">
+<select id="eventSelect" name="event_id" >
     <option value="">Select your event</option>
     {% for event in events %}
         <option value="{{ event.id }}" 
@@ -56,7 +56,7 @@
                     <button class="bg-success txt-black" ><a href="{{ path('app_product_show', {'id': product.id}) }}">show</a></button>
                 </td>
                 <td class="col-3">
-                    <form method="post" action="{{ path('app_cart_add') }}">
+                    <form method="post" action="{{ path('app_cart_add') }}" data-turbo="false">
                         <label for="quantity">Quantity</label>
                         <input class="col-2" type="number" name="quantity" value="1">
                         <input type="hidden" name="product_id" value="{{ product.id }}">

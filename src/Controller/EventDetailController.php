@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\EventDetail;
 use App\Form\EventDetailType;
 use App\Repository\EventDetailRepository;
+use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,12 +16,20 @@ use Symfony\Component\Routing\Attribute\Route;
 final class EventDetailController extends AbstractController
 {
     #[Route(name: 'app_event_detail_index', methods: ['GET', 'POST'])]
-    public function index(EventDetailRepository $eventDetailRepository, Request $request): Response
+    public function index(EventRepository $eventRepository, Request $request , EventDetailRepository $eventDetailRepository): Response
     {
         $event = $request->request->get('eventSelected');
         $status = $request->request->get('statusSelected');
         $order = $request->request->get('orderSelected');
-          
+        $listEvents=$eventRepository->findByDistinct();
+        $listDistinct=[];
+
+        // foreach ($listEvents as $listEvent){
+        //     foreach ( $listEvent as $value){
+        //         if ($value ==  )
+        //     }
+        
+       
         $events = [];
         
         if (!empty($status) && empty($event)) {  
@@ -29,6 +38,7 @@ final class EventDetailController extends AbstractController
             $events = $eventDetailRepository->findByStatus($status, $order);
             
         } else if(!empty($event) && empty($status)) {
+            //  dd($event);
             $this->addFlash('success', 'Filtrage event appliqué avec succès !');
             // dd('que event'); // Vérifie que le if est bien exécuté
             $events = $eventDetailRepository->findByEvent($event, $order);
@@ -45,7 +55,8 @@ final class EventDetailController extends AbstractController
         // dd($events);
         
         return $this->render('event_detail/index.html.twig', [
-            'event_details' => $events
+            'event_details' => $events,
+            'listEvents' => $listEvents
         ]);
         
 

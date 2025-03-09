@@ -31,16 +31,6 @@ class EventDetailRepository extends ServiceEntityRepository
                ->getResult()
            ;
        }
-       public function findByNameDistinct( ): array
-       {
-           return $this->createQueryBuilder('ed')
-               ->distinct('ed.name')
-               ->orderBy('ed.name', 'ASC')
-               ->setMaxResults(10)
-               ->getQuery()
-               ->getResult()
-           ;
-       }
 
 
 
@@ -58,8 +48,8 @@ class EventDetailRepository extends ServiceEntityRepository
        public function findByEvent( $event , $order): array
        {
            return $this->createQueryBuilder('e')
-               ->andWhere('e.mouve = :event')
-               ->setParameter('event',$event)
+               ->andWhere('e.event = :event')
+               ->setParameter('event', $event )
                ->orderBy('e.date' , $order )
                ->getQuery()
                ->getResult()
