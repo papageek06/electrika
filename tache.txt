@@ -1,0 +1,45 @@
+mise a jour des stock 
+
+afficher la liste des article en commande selon event
+
+mise a jour des stock quand pret retour livret 
+
+lister les event lier  dans site 
+
+insert d'image dans article
+
+insert d'image dans site
+
+insert d'image dans event
+
+insert d'image dans user
+
+revoir la visibiliter de la nav selon utilisateur
+
+revoir visuel de:
+ -accueil -> liste des event avenir
+             liste des stock dans le rouge dans le mois avenir
+             liste des prepa a faire selon etat et date  de   sortie ou retour iminant dans la semaine
+             liste des notif ?? a voir selon le temp restant
+
+-stock 
+-bon de prepa
+-prepa en cours
+-evenment
+-site d'event
+-contact
+-profile
+-deconection
+-dashbord
+
+teste de fonctionnement de:
+ -accueil 
+-stock 
+-bon de prepa
+-prepa en cours
+-evenment
+-site d'event
+-contact
+-profile
+-deconection
+-dashbord
