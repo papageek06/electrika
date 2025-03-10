@@ -6,6 +6,7 @@ use App\Entity\EventDetail;
 use App\Form\EventDetailType;
 use App\Repository\EventDetailRepository;
 use App\Repository\EventRepository;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,7 +50,7 @@ final class EventDetailController extends AbstractController
         }
         else {
             // dd("JE PASSE DANS LE ELSE"); // Vérifie que le else est bien exécuté
-            $events = $eventDetailRepository->findAll();
+            $events = [];
         }
      
         // dd($events);
@@ -93,12 +94,30 @@ final class EventDetailController extends AbstractController
 
 
     #[Route('/{id}/edit', name: 'app_event_detail_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EventDetail $eventDetail, EntityManagerInterface $entityManager): Response
-    {
+    public function edit(Request $request, EventDetail $eventDetail, EntityManagerInterface $entityManager, ProductRepository $productRepository): Response
+    { 
+         
         $form = $this->createForm(EventDetailType::class, $eventDetail);
         $form->handleRequest($request);
+      
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            if($form->getData()->getMouve() == 'retour'){
+
+                $product = $productRepository->find($form->getData()->getProduct()->getId());
+                $product->setStock($product->getStock() - $form->getData()->getQuantity());
+                $entityManager->persist($product);
+
+            } else if ($form->getData()->getMouve() == 'livrer') {
+                $product = $productRepository->find($form->getData()->getProduct()->getId());
+                $product->setStock($product->getStock() - $form->getData()->getQuantity());
+                $entityManager->persist($product);
+            }else if ($form->getData()->getMouve() == 'annuler') {
+                $eventDetail->setQuantity(0);
+        
+            }
+            
             $entityManager->flush();
 
             return $this->redirectToRoute('app_event_detail_index', [], Response::HTTP_SEE_OTHER);

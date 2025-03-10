@@ -38,5 +38,11 @@
 
     <a href="{{ path('app_site_event_edit', {'id': site_event.id}) }}">edit</a>
 
+    <div>
+    {% for event in events %}
+        <a href="{{ path('app_event_show', {'id': event.id}) }}">{{ event.name }}</a>
+    {% endfor %}
+    </div>
+
     {{ include('site_event/_delete_form.html.twig') }}
 {% endblock %}

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\SiteEvent;
 use App\Form\SiteEventType;
+use App\Repository\EventRepository;
 use App\Repository\SiteEventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,10 +44,11 @@ final class SiteEventController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_site_event_show', methods: ['GET'])]
-    public function show(SiteEvent $siteEvent): Response
+    public function show(SiteEvent $siteEvent,EventRepository $eventRepository): Response
     {
         return $this->render('site_event/show.html.twig', [
             'site_event' => $siteEvent,
+            'events' => $eventRepository->findBy(['site' => $siteEvent->getId()]),
         ]);
     }
 

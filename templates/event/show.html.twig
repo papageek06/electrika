@@ -5,34 +5,153 @@
 {% block body %}
     <h1>Event</h1>
 
-    <table class="table">
+      <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ event.id }}</td>
+                <th>nom</th>
+                <td>{{ event.name }}</td>
             </tr>
             <tr>
-                <th>DateMontage</th>
+                <th>client</th>
+                <td>{{ event.contact.LastName }} /   Email: {{event.contact.email}}</td>
+            </tr>
+            <tr>
+                <th>Date de Montage</th>
                 <td>{{ event.dateMontage ? event.dateMontage|date('Y-m-d') : '' }}</td>
             </tr>
             <tr>
-                <th>DateStartShow</th>
+                <th>Date d'evenmant du</th>
                 <td>{{ event.dateStartShow ? event.dateStartShow|date('Y-m-d') : '' }}</td>
             </tr>
             <tr>
-                <th>DateEndSHOW</th>
+                <th>au</th>
                 <td>{{ event.dateEndSHOW ? event.dateEndSHOW|date('Y-m-d') : '' }}</td>
             </tr>
             <tr>
-                <th>DateEnd</th>
+                <th>Date de fin de demontage</th>
                 <td>{{ event.dateEnd ? event.dateEnd|date('Y-m-d') : '' }}</td>
             </tr>
         </tbody>
-    </table>
+    </table>  
 
-    <a href="{{ path('app_event_index') }}">back to list</a>
+<div class="row">
+<div class="container col-3">
 
-    <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
+    <h2>new</h2>
+    <table class="table">
+            <tbody>
+                    <tr>
+                        <td>status</td>
+                        <td>produit</td>
+                        <td>quantity</td>
+                        <td>date</td>
+                        
+                    </tr>
+        {% for eventDetail in eventDetails %}
+            {% if eventDetail.mouve == 'New' %}
+        
+    
+                    <tr>
+                        <td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
+                        <td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+                        <td>{{ eventDetail.quantity }}</td>
+                        <td>{{ eventDetail.date|date('d/m/Y') }}</td>
+                    </tr>
+                </tbody>
+
+            {% endif %}
+        {% endfor  %}
+        </table> 
+    </div>
+
+    <div class="container col-3">
+
+    <h2>pret</h2>
+    <table class="table">
+            <tbody>
+                    <tr>
+                        <td>status</td>
+                        <td>produit</td>
+                        <td>quantity</td>
+                        <td>date</td>
+                        
+                    </tr>
+        {% for eventDetail in eventDetails %}
+            {% if eventDetail.mouve == 'pret' and eventDetail.event.id == event.id %}
+        
+    
+                    <tr>
+                        <td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
+                        <td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+                        <td>{{ eventDetail.quantity }}</td>
+                        <td>{{ eventDetail.date|date('d/m/Y') }}</td>
+                    </tr>
+                </tbody>
+
+            {% endif %}
+        {% endfor  %}
+        </table> 
+    </div>
+
+        <div class="container col-3">
+
+    <h2>livret</h2>
+    <table class="table">
+            <tbody>
+                    <tr>
+                        <td>status</td>
+                        <td>produit</td>
+                        <td>quantity</td>
+                        <td>date</td>
+                        
+                    </tr>
+        {% for eventDetail in eventDetails %}
+            {% if eventDetail.mouve == 'livret' %}
+        
+    
+                    <tr>
+                        <td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
+                        <td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+                        <td>{{ eventDetail.quantity }}</td>
+                        <td>{{ eventDetail.date|date('d/m/Y') }}</td>
+                    </tr>
+                </tbody>
+
+            {% endif %}
+        {% endfor  %}
+        </table> 
+    </div>
+    <div class="container col-3">
+
+    <h2>retour</h2>
+    <table class="table">
+            <tbody>
+                    <tr>
+                        <td>status</td>
+                        <td>produit</td>
+                        <td>quantity</td>
+                        <td>date</td>
+                        
+                    </tr>
+        {% for eventDetail in eventDetails %}
+            {% if eventDetail.mouve == 'retour' %}
+        
+    
+                    <tr>
+                        <td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
+                        <td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+                        <td>{{ eventDetail.quantity }}</td>
+                        <td>{{ eventDetail.date|date('d/m/Y') }}</td>
+                    </tr>
+                </tbody>
+
+            {% endif %}
+        {% endfor  %}
+        </table> 
+    </div>
+</div>
+
+
 
     {{ include('event/_delete_form.html.twig') }}
 {% endblock %}

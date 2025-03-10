@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Entity\EventDetail;
+use App\Entity\Product;
 use App\Form\EventType;
+use App\Repository\EventDetailRepository;
 use App\Repository\EventRepository;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,10 +47,12 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
-    public function show(Event $event): Response
+    public function show(Event $event,EventDetailRepository $eventDetailRepository ,Product $product): Response
     {
         return $this->render('event/show.html.twig', [
             'event' => $event,
+            'eventDetails' => $eventDetailRepository->findBy(['event' => $event->getId()]),
+            'products' => $product,
         ]);
     }
 
