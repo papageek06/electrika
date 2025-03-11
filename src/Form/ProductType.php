@@ -6,8 +6,10 @@ use App\Entity\Category;
 use App\Entity\Product;
 use App\Repository\CategoryRepository;
 use Container4ldQ9nV\getCategoryRepositoryService;
+use Faker\Core\File;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -27,6 +29,18 @@ class ProductType extends AbstractType
             ->add('stock')
             ->add('hs')
             ->add('lost')
+            // ->add('picture', FileType::class, [
+            //     'label' => 'Avatar',
+            //     'mapped' => false, // ne lie pas directement le champ à la colonne picture de User
+            //     'required' => false,
+            //     'constraints' => [
+            //         new File([
+            //             'maxSize' => '2M',
+            //             'mimeTypes' => ['image/jpeg', 'image/png'],
+            //             'mimeTypesMessage' => 'Veuillez télécharger une image au format JPEG ou PNG.',
+            //         ])
+            //     ],
+            // ])
         ;
     }
 

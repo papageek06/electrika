@@ -68,5 +68,24 @@ class EventDetailRepository extends ServiceEntityRepository
                ->getResult()
            ;
        }
+       public function countOrdersByStatus(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->select('e.mouve AS status, COUNT(e.id) AS total')
+            ->groupBy('e.mouve')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countstockByProduct(): array
+    {
+        return $this->createQueryBuilder('e')
+        ->select('IDENTITY(e.product) as product_id, SUM(e.quantity) as Tquantity')
+        ->where('e.mouve = :livrer')
+        ->setParameter('livrer', 'livrer') 
+        ->groupBy('e.product')
+        ->getQuery()
+        ->getResult();
+    }
 
 }

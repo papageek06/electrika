@@ -17,31 +17,24 @@ a {
 					<a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="{{ path('app_product_index') }}">Stock</a>
+					
 				</li>
 
 				{% if app.user %}
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_event_detail_index') }}">bon de prépa </a>
-					</li>	
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_cart') }}">prépa en cours</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_event_index') }}">Evenment </a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_site_event_index') }}">Site d'events</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_contact_index') }}">Contact</a>
-					</li>						
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_user_index') }}">Profile</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
-					</li>
+				<select onchange="location = this.value;">
+						<option>Menu</option>
+						<option value="{{ path('app_product_index') }}">Stock</option>					
+						<option value="{{ path('app_event_detail_index') }}">bon de prépa </option>						
+						<option value="{{ path('app_cart') }}">prépa en cours</option>					
+						<option value="{{ path('app_event_index') }}">Evenment </option>					
+						<option value="{{ path('app_site_event_index') }}">Site d'events</option>				
+						<option value="{{ path('app_contact_index') }}">Contact</option>											
+						<option value="{{ path('app_user_index') }}">Profile</option>					
+						<option value="{{ path('app_logout') }}">Se déconnecter</option>
+						{% if is_granted('ROLE_ADMIN') %}					
+								<option value="/admin">dashbord</option>					
+						{% endif %}
+				</select
 				{% else %}
 					<li class="nav-item">
 						<a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
@@ -49,13 +42,10 @@ a {
 					<li class="nav-item">
 						<a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
 					</li>
+					
 				{% endif %}
 
-				{% if is_granted('ROLE_ADMIN') %}
-					<li class="nav-item">
-						<a class="nav-link" href="/admin">dashbord</a>
-					</li>
-				{% endif %}
+
 
 				{# <li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

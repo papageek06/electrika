@@ -15,6 +15,8 @@ class EventType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('name')
+
             ->add('dateMontage', null, [
                 'widget' => 'single_text',
             ])
@@ -29,11 +31,12 @@ class EventType extends AbstractType
             ])
             ->add('site', EntityType::class, [
                 'class' => SiteEvent::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
             ])
             ->add('contact', EntityType::class, [
                 'class' => Contact::class,
-                'choice_label' => 'id',
+                'choice_label' => 'lastName',
+                
             ])
         ;
     }

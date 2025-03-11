@@ -3,8 +3,61 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
+{% if app.user %}
+    <h1 class="text-center ">Bienvenue {{ app.user.firstName }}!</h1>
+{% else %}
+    <h1>Bienvenue!</h1>
+{% endif %}
 
-    <h1>Hello {{ controller_name }}! ✅</h1>
+  <h1>Statistiques des commandes</h1>
+
+<div class="col-4">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>État</th>
+                <th>Nombre de commandes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orderCounts %}
+                <tr>
+                    <td>{{ order.status }}</td>
+                    <td>{{ order.total }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2">Aucune commande trouvée</td>
+                </tr>
+            {% endfor %}
+    </table>
+</div>
+
+
+
+<div class="col-12 row">
+<h2>Events a venir</h2>
+     
+{% for event in events %}
+    {% if event.dateMontage > date('now') %}
+
+    
+        <div class="card col-2 " style="">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{ event.name }}</h5>
+                <p class="card-title">site{{ event.site.name }}</p>
+                <p class="card-address">ville:{{ event.site.city }}</p>
+                <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-primary">Voir</a>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
+</div>
+
+
+
+    
 
  
 {% endblock %}

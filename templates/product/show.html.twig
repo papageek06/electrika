@@ -35,12 +35,13 @@
                 <th>Lost</th>
                 <td>{{ product.lost }}</td>
             </tr>
-        </tbody>
+      </tbody>
     </table>
 
-    <button class="bg-success" ><a href="{{ path('app_product_index') }}">back to list</a>
+    <button class="" ><a href="{{ path('app_product_edit',{'id' : product.id}) }}">edit</a>
+    <button class="" ><a href="{{ path('app_product_index') }}">back to list</a>
 
     
-
+  
     
 {% endblock %}

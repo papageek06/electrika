@@ -37,21 +37,24 @@
                 <th>Category</th>
                 <th>StockInitial</th>
                 <th>Stock</th>
-                <th>Hs</th>
-                <th>Lost</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for product in products %}
+            
             <tr>
                 <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.category ? product.category.name : "N/A" }}</td>
                 <td>{{ product.stockInitial }}</td>
-                <td>{{ product.stock }}</td>
-                <td>{{ product.hs }}</td>
-                <td>{{ product.lost }}</td>
+                <td>
+                    {% for retri in retry %} 
+                        {% if product.id == retri.product_id %}
+                            {{product.stockInitial - retri.Tquantity }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
                 <td>
                     <button class="bg-success txt-black" ><a href="{{ path('app_product_show', {'id': product.id}) }}">show</a></button>
                 </td>
@@ -66,6 +69,7 @@
                     </form>
                 </td>
             </tr>
+           
         {% else %}
             <tr>
                 <td colspan="8">no records found</td>
@@ -73,7 +77,7 @@
         {% endfor %}
         </tbody>
     </table>
-
+ 
     <a href="{{ path('app_product_new') }}">Create new</a>
 
 <script>

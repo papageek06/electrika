@@ -44,6 +44,9 @@ class Product
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(length: 150, nullable: true)]
+    private ?string $picture = null;
+
     public function __construct()
     {
         $this->eventDetails = new ArrayCollection();
@@ -165,6 +168,18 @@ class Product
     public function setDescription(string $description ): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): static
+    {
+        $this->picture = $picture;
 
         return $this;
     }
