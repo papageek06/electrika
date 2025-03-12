@@ -36,9 +36,19 @@ class SiteEvent
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'site')]
     private Collection $events;
 
+    /**
+     * @var Collection<int, PictureLink>
+     */
+    #[ORM\OneToMany(targetEntity: PictureLink::class, mappedBy: 'siteLink')]
+    private Collection $pictureLinks;
+
+   
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
+        $this->pictureLinks = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -135,4 +145,36 @@ class SiteEvent
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, PictureLink>
+     */
+    public function getPictureLinks(): Collection
+    {
+        return $this->pictureLinks;
+    }
+
+    public function addPictureLink(PictureLink $pictureLink): static
+    {
+        if (!$this->pictureLinks->contains($pictureLink)) {
+            $this->pictureLinks->add($pictureLink);
+            $pictureLink->setSiteLink($this);
+        }
+
+        return $this;
+    }
+
+    public function removePictureLink(PictureLink $pictureLink): static
+    {
+        if ($this->pictureLinks->removeElement($pictureLink)) {
+            // set the owning side to null (unless already changed)
+            if ($pictureLink->getSiteLink() === $this) {
+                $pictureLink->setSiteLink(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
 }

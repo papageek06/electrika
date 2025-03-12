@@ -32,7 +32,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>image</th>
                 <th>Name</th>
                 <th>Category</th>
                 <th>StockInitial</th>
@@ -44,7 +44,7 @@
         {% for product in products %}
             
             <tr>
-                <td>{{ product.id }}</td>
+                <td><img width="70px" src="{{ asset('uploads/pictures/' ~ product.picture) }}" alt="photo"></td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.category ? product.category.name : "N/A" }}</td>
                 <td>{{ product.stockInitial }}</td>

@@ -43,9 +43,18 @@ class Event
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
+    /**
+     * @var Collection<int, PictureLink>
+     */
+    #[ORM\OneToMany(targetEntity: PictureLink::class, mappedBy: 'eventsLink')]
+    private Collection $pictureLinks;
+
+
+
     public function __construct()
     {
         $this->eventDetails = new ArrayCollection();
+        $this->pictureLinks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -166,4 +175,36 @@ class Event
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, PictureLink>
+     */
+    public function getPictureLinks(): Collection
+    {
+        return $this->pictureLinks;
+    }
+
+    public function addPictureLink(PictureLink $pictureLink): static
+    {
+        if (!$this->pictureLinks->contains($pictureLink)) {
+            $this->pictureLinks->add($pictureLink);
+            $pictureLink->setEventsLink($this);
+        }
+
+        return $this;
+    }
+
+    public function removePictureLink(PictureLink $pictureLink): static
+    {
+        if ($this->pictureLinks->removeElement($pictureLink)) {
+            // set the owning side to null (unless already changed)
+            if ($pictureLink->getEventsLink() === $this) {
+                $pictureLink->setEventsLink(null);
+            }
+        }
+
+        return $this;
+    }
+
+  
 }

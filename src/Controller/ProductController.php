@@ -84,7 +84,7 @@ final class ProductController extends AbstractController
 
                 try {
                     $photoProduct->move(
-                        $this->getParameter('profile_pictures_directory'),
+                        $this->getParameter('pictures_directory'),
                         $newFilename
                     );
                     $product->setPicture($newFilename); // Mise à jour du champ `picture` dans l'entité

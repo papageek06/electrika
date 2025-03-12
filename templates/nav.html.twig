@@ -29,7 +29,7 @@ a {
 						<option value="{{ path('app_event_index') }}">Evenment </option>					
 						<option value="{{ path('app_site_event_index') }}">Site d'events</option>				
 						<option value="{{ path('app_contact_index') }}">Contact</option>											
-						<option value="{{ path('app_user_index') }}">Profile</option>					
+						<option value="{{ path('app_user_show' , {'id' : app.user.id}) }}">Profile</option>					
 						<option value="{{ path('app_logout') }}">Se déconnecter</option>
 						{% if is_granted('ROLE_ADMIN') %}					
 								<option value="/admin">dashbord</option>					
