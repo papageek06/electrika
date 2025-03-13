@@ -9,29 +9,112 @@
     <h1>Bienvenue!</h1>
 {% endif %}
 
-  <h1>Statistiques des commandes</h1>
+  
+<div class="col-12 row">
 
-<div class="col-4">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>État</th>
-                <th>Nombre de commandes</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for order in orderCounts %}
+    <div class="col-4">
+        <h1>Statistiques des commandes</h1>
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                    <td>{{ order.status }}</td>
-                    <td>{{ order.total }}</td>
+                    <th>État</th>
+                    <th>Nombre de commandes</th>
                 </tr>
-            {% else %}
-                <tr>
-                    <td colspan="2">Aucune commande trouvée</td>
-                </tr>
-            {% endfor %}
-    </table>
+            </thead>
+            <tbody>
+                {% for order in orderCounts %}
+                    <tr>
+                        <td>{{ order.status }}</td>
+                        <td>{{ order.total }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2">Aucune commande trouvée</td>
+                    </tr>
+                {% endfor %}
+        </table>
+    </div>
+
+    <div class="col-7">
+        <style>
+
+            #calendar-holder {
+                background: white;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+        </style>
+
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+        {{dump(data)}}
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+
+        <div class="row">
+            <div id="calendar"></div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: {{ data|raw }},
+            dateClick: function (info) { // Remplir le champ date dans le formulaire
+
+            let dateTime = new Date(info.dateStr); // Convertir en objet Date
+            let formattedDateTime = dateTime.toISOString().slice(0, 16);
+            //
+            // document.querySelector('#appointment_startTime').value = formattedDateTime;
+
+            // Afficher la modal Bootstrap
+            var modalEl = document.getElementById('appointmentModal');
+            var myModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            myModal.show();
+            } // Assurez-vous que 'data' est bien transmis dans la vue
+
+            });
+            calendar.render();
+            });
+        </script>
+
+        <!-- Modal -->
+        <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="appointmentModalLabel">Créer un mission</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div
+                        class="modal-body">
+                        <!-- Le formulaire sera injecté ici -->
+                        <div id="appointmentFormContainer">
+                        
+                            {{ form_start(form) }}
+
+
+                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            {{ form_end(form) }}
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script></script>
+
+    </div>
+
 </div>
+
+
 
 
 

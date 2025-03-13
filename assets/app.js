@@ -1,4 +1,4 @@
-import './bootstrap.js';
+import 'bootstrap';
 /*
  * Welcome to your app's main JavaScript file!
  *
@@ -8,3 +8,6 @@ import './bootstrap.js';
 import './styles/app.scss';
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+
+// import * as bootstrap from 'bootstrap';
+// window.bootstrap = bootstrap;
