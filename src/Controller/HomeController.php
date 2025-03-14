@@ -19,11 +19,11 @@ final class HomeController extends AbstractController
     public function index(EventRepository $eventRepository,EventDetailRepository $eventDetails, ProductRepository $products ): Response
     {
         $orderCounts = $eventDetails->countOrdersByStatus();
+        $eventListDistinc = $eventRepository->findByEventDistinct();
         $eventList = $eventRepository->findAll();
-        $eventDetailsList = $eventDetails->findByEventDistinct();
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
-        dd($eventDetailsList);
+        
         foreach($eventList as $event) {
             $miss[] = [
                 "title" => $event->getName() ,
@@ -33,6 +33,18 @@ final class HomeController extends AbstractController
             ];
            
         }
+        foreach($eventListDistinc as $eventList) {
+            $miss[] = [
+                // dd($eventList),
+                "title" => $eventList['name'], 
+                "start" => $eventList['date']->format("Y-m-d"),
+                "end" => $eventList['date']->add(new DateInterval('P1D'))->format("Y-m-d"),
+                "backgroundColor" => $eventList['mouve'] == 'livrer' ? 'green' : 'red',
+            ];
+           
+        }
+        
+
        
 
         $data = json_encode($miss);

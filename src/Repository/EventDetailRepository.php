@@ -56,17 +56,7 @@ class EventDetailRepository extends ServiceEntityRepository
            ;
        }
 
-       public function findByEventDistinct(): array
-       {
-           return $this->createQueryBuilder('ed')
-            //    ->innerJoin('ed.event', 'e')
-            //    ->addSelect('event','e' )
-            //    ->innerJoin('ev.event', 'e')
-            //    ->groupBy('e.mouve' )
-               ->getQuery()
-               ->getResult()
-           ;
-       }
+
 
 
        public function findByEventStatus( $event , $status , $order): array
