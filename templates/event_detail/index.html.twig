@@ -9,15 +9,12 @@
     <div class="alert alert-success">{{ message }}</div>
     {% endfor %}
 
-{# {{dump(listEvents)}} #}
 <div>
-
-
 <form method="POST" action="{{ path('app_event_detail_index') }}" data-turbo="false">
-    <select name="eventSelected" >
-        <option value="">evenment</option>
+    <select name="eventSelected">
+        <option value="">Événement</option>
         {% for event in listEvents %}
-            <option value="{{event.1}}">{{event.name}}</option>
+            <option value="{{ event.1 }}">{{ event.name }}</option>
         {% endfor %}
     </select>
 
@@ -30,50 +27,76 @@
     </select>
 
     <select name="orderSelected">
-        <option value="ASC">croissant</option>
-        <option value="DESC">decroissant</option>
+        <option value="ASC">Croissant</option>
+        <option value="DESC">Décroissant</option>
     </select>
 
     <button type="submit">Filtrer</button>
 </form>
-
 </div>
 
+<form method="POST" action="{{ path('app_event_detail_update_all') }}" data-turbo="false">
     <table class="table">
         <thead>
-            <tr>
-                <th>evenment</th>
-                <th>Statut</th>
-                <th>preparateur</th>
-                <th>article</th>
-                <th>Quantity</th>
+            <tr class="linearCard">
+                <th>Événement</th>
+                <th>
+                    <select name="statusAll" id="statusAll">
+                        <option value="">Statut global</option>
+                        <option value="new">New</option>
+                        <option value="preparer">Préparer</option>
+                        <option value="livrer">Livrer</option>
+                        <option value="retour">Retour</option>
+                    </select>
+                </th>
+                <th>Préparateur</th>
+                <th>Article</th>
+                <th>Quantité</th>
                 <th>Date</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for event_detail in event_details %}
-            <tr>
-                <td>{{ event_detail.event ? event_detail.event.name : 'N/A'  }}</td>
-                <td>{{ event_detail.mouve }}</td>
-                <td>{{ event_detail.user ? event_detail.user.firstName : 'N/A' }}</td>
-                <td>{{ event_detail.user ? event_detail.product.name : 'N/A' }}</td>
-                <td>{{ event_detail.quantity }}</td>
-                <td>{{ event_detail.date ? event_detail.date|date('Y-m-d') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_event_detail_show', {'id': event_detail.id}) }}">show</a>
-                    <a href="{{ path('app_event_detail_edit', {'id': event_detail.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
+            {% for event_detail in event_details %}
+                <tr>
+                    <td>{{ event_detail.event ? event_detail.event.name : 'N/A' }}</td>
+                    <td>
+                        <select name="statuses[{{ event_detail.id }}]" class="statusSelect">
+                            <option value="new" {% if event_detail.mouve == 'new' %} selected {% endif %}>New</option>
+                            <option value="preparer" {% if event_detail.mouve == 'preparer' %} selected {% endif %}>Préparer</option>
+                            <option value="livrer" {% if event_detail.mouve == 'livrer' %} selected {% endif %}>Livrer</option>
+                            <option value="retour" {% if event_detail.mouve == 'retour' %} selected {% endif %}>Retour</option>
+                        </select>
+                    </td>
+                    <td>{{ event_detail.user ? event_detail.user.firstName : 'N/A' }}</td>
+                    <td>{{ event_detail.product ? event_detail.product.name : 'N/A' }}</td>
+                    <td><input type='number' name="quantities[{{ event_detail.id }}]" value='{{ event_detail.quantity }}'></td>
+                    <td>{{ event_detail.date ? event_detail.date|date('Y-m-d') : '' }}</td>
+                    <td>
+                        <a href="{{ path('app_event_detail_delete', {'id': event_detail.id}) }}">Supprimer</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">Aucun enregistrement trouvé</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
+    
+    <button type="submit" class="btn btn-primary">Valider les modifications</button>
+</form>
 
-    <a href="{{ path('app_event_detail_new') }}">Create new</a>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const statusAllSelect = document.getElementById("statusAll");
+    const statusSelects = document.querySelectorAll(".statusSelect");
 
-
+    statusAllSelect.addEventListener("change", function() {
+        statusSelects.forEach(select => {
+            select.value = this.value;
+        });
+    });
+});
+</script>
 {% endblock %}

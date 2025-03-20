@@ -60,6 +60,8 @@ final class CartController extends AbstractController
         $session = $request->getSession();
 
 
+
+  // Initialiser le panier s'il n'existe pas encore
 if (!$session->get('cart')) {
             $session->set('cart', [
                 "idProduct" => [],
@@ -78,7 +80,16 @@ if (!$session->get('cart')) {
         }
         // je la récupère
         $cartSession = $session->get('cart');
-
+        $found = false;
+        for ($i = 0; $i < count($cartSession["idProduct"]); $i++) {
+            if ($cartSession["idProduct"][$i] == $idProduct) {
+                $cartSession["quantity"][$i] += $quantity; // Ajouter la quantité
+                $found = true;
+                break;
+            }
+        }
+ 
+        if (!$found) {
         // je récupère les infos du produit en bdd que je souhaite ajouter à mon panier
         $product = $productRepository->find($idProduct);
         $event = $eventRepository->find($idEvent);
@@ -96,11 +107,12 @@ if (!$session->get('cart')) {
         $cartSession["eventName"][] = $event->getName();
         $cartSession["userName"][] = $user->getfirstName();
         $cartSession["message"] = $message;
+        }
 
         // mettre à jour la session
         $session->set('cart', $cartSession);
 
-        return $this->redirectToRoute('app_cart');
+        return $this->redirectToRoute('app_product_index');
     }
 
 

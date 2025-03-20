@@ -37,17 +37,20 @@ class SiteEvent
     private Collection $events;
 
     /**
-     * @var Collection<int, PictureLink>
+     * @var Collection<int, GaleryPicture>
      */
-    #[ORM\OneToMany(targetEntity: PictureLink::class, mappedBy: 'siteLink')]
-    private Collection $pictureLinks;
+    #[ORM\ManyToMany(targetEntity: GaleryPicture::class, mappedBy: 'site')]
+    private Collection $galeryPictures;
+
+    
 
    
 
     public function __construct()
     {
         $this->events = new ArrayCollection();
-        $this->pictureLinks = new ArrayCollection();
+        $this->galeryPictures = new ArrayCollection();
+        
 
     }
 
@@ -147,34 +150,33 @@ class SiteEvent
     }
 
     /**
-     * @return Collection<int, PictureLink>
+     * @return Collection<int, GaleryPicture>
      */
-    public function getPictureLinks(): Collection
+    public function getGaleryPictures(): Collection
     {
-        return $this->pictureLinks;
+        return $this->galeryPictures;
     }
 
-    public function addPictureLink(PictureLink $pictureLink): static
+    public function addGaleryPicture(GaleryPicture $galeryPicture): static
     {
-        if (!$this->pictureLinks->contains($pictureLink)) {
-            $this->pictureLinks->add($pictureLink);
-            $pictureLink->setSiteLink($this);
+        if (!$this->galeryPictures->contains($galeryPicture)) {
+            $this->galeryPictures->add($galeryPicture);
+            $galeryPicture->addSite($this);
         }
 
         return $this;
     }
 
-    public function removePictureLink(PictureLink $pictureLink): static
+    public function removeGaleryPicture(GaleryPicture $galeryPicture): static
     {
-        if ($this->pictureLinks->removeElement($pictureLink)) {
-            // set the owning side to null (unless already changed)
-            if ($pictureLink->getSiteLink() === $this) {
-                $pictureLink->setSiteLink(null);
-            }
+        if ($this->galeryPictures->removeElement($galeryPicture)) {
+            $galeryPicture->removeSite($this);
         }
 
         return $this;
     }
+
+   
 
    
 }

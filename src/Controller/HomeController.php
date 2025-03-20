@@ -18,6 +18,7 @@ final class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(EventRepository $eventRepository,EventDetailRepository $eventDetails, ProductRepository $products ): Response
     {
+        $miss = [];
         $orderCounts = $eventDetails->countOrdersByStatus();
         $eventListDistinc = $eventRepository->findByEventDistinct();
         $eventList = $eventRepository->findAll();

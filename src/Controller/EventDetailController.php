@@ -140,4 +140,32 @@ final class EventDetailController extends AbstractController
         return $this->redirectToRoute('app_event_detail_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    #[Route('/event-detail/update-all', name: 'app_event_detail_update_all', methods: ['POST'])]
+    public function updateAll(Request $request, EntityManagerInterface $entityManager, EventDetailRepository $eventDetailRepository): Response
+    {
+        
+        $statuses = $request->get('statuses',[]);
+        $quantities = $request->get('quantities',[]);
+        
+        foreach ($statuses as $id => $status) {
+            $eventDetail = $eventDetailRepository->find($id);
+            if ($eventDetail) {
+                $eventDetail->setMouve($status);
+                $eventDetail->setDate(new \DateTime());
+            }
+        }
+
+        foreach ($quantities as $id => $quantity) {
+            $eventDetail = $eventDetailRepository->find($id);
+            if ($eventDetail) {
+                $eventDetail->setQuantity((int) $quantity);
+            }
+        }
+
+        $entityManager->flush();
+        $this->addFlash('success', 'Mises à jour enregistrées avec succès.');
+
+        return $this->redirectToRoute('app_event_detail_index');
+    }
+
 }

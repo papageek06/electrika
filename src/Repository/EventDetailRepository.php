@@ -91,4 +91,9 @@ class EventDetailRepository extends ServiceEntityRepository
         ->getResult();
     }
 
+
+    
+
+
+
 }

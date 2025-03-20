@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -19,16 +20,18 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 final class ProductController extends AbstractController
 {
     #[Route(name: 'app_product_index', methods: ['GET'])]
-    public function index(ProductRepository $productRepository,EventRepository $eventRepository,EventDetailRepository $eventDetail): Response
+    public function index(ProductRepository $productRepository,EventRepository $eventRepository,EventDetailRepository $eventDetail , EventRepository $event, SessionInterface $session): Response
     {
         $retry = $eventDetail->countstockByProduct();
+
 
        
         return $this->render('product/index.html.twig', [
             'products' => $productRepository->findAll(),
             'events' => $eventRepository->findAll(),
             'eventDetails' => $eventDetail->findAll(),
-            'retry' => $retry
+            'retry' => $retry,
+            'cart_session' => $session->get('cart', [])
         ]);
     }
 

@@ -19,15 +19,27 @@ class GaleryPicture
     private ?string $picture = null;
 
     /**
-     * @var Collection<int, PictureLink>
+     * @var Collection<int, Event>
      */
-    #[ORM\OneToMany(targetEntity: PictureLink::class, mappedBy: 'galeryPicture')]
-    private Collection $pictureLinks;
+    #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'galeryPictures')]
+    private Collection $event;
+
+    /**
+     * @var Collection<int, SiteEvent>
+     */
+    #[ORM\ManyToMany(targetEntity: SiteEvent::class, inversedBy: 'galeryPictures')]
+    private Collection $site;
 
     public function __construct()
     {
-        $this->pictureLinks = new ArrayCollection();
+        $this->event = new ArrayCollection();
+        $this->site = new ArrayCollection();
     }
+
+
+
+   
+    
 
     public function getId(): ?int
     {
@@ -47,32 +59,52 @@ class GaleryPicture
     }
 
     /**
-     * @return Collection<int, PictureLink>
+     * @return Collection<int, Event>
      */
-    public function getPictureLinks(): Collection
+    public function getEvent(): Collection
     {
-        return $this->pictureLinks;
+        return $this->event;
     }
 
-    public function addPictureLink(PictureLink $pictureLink): static
+    public function addEvent(Event $event): static
     {
-        if (!$this->pictureLinks->contains($pictureLink)) {
-            $this->pictureLinks->add($pictureLink);
-            $pictureLink->setGaleryPicture($this);
+        if (!$this->event->contains($event)) {
+            $this->event->add($event);
         }
 
         return $this;
     }
 
-    public function removePictureLink(PictureLink $pictureLink): static
+    public function removeEvent(Event $event): static
     {
-        if ($this->pictureLinks->removeElement($pictureLink)) {
-            // set the owning side to null (unless already changed)
-            if ($pictureLink->getGaleryPicture() === $this) {
-                $pictureLink->setGaleryPicture(null);
-            }
+        $this->event->removeElement($event);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SiteEvent>
+     */
+    public function getSite(): Collection
+    {
+        return $this->site;
+    }
+
+    public function addSite(SiteEvent $site): static
+    {
+        if (!$this->site->contains($site)) {
+            $this->site->add($site);
         }
 
         return $this;
     }
+
+    public function removeSite(SiteEvent $site): static
+    {
+        $this->site->removeElement($site);
+
+        return $this;
+    }
+
+   
 }

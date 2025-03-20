@@ -13,7 +13,7 @@
             </tr>
             <tr>
                 <th>client</th>
-                <td>{{ event.contact.LastName }} /   Email: {{event.contact.email}}</td>
+                <td>{{ event.contact ? event.contact.lastName : 'N/A'}} /   Email: {{event.contact ? event.contact.email : 'N/A'}}</td>
             </tr>
             <tr>
                 <th>Date de Montage</th>
@@ -35,7 +35,7 @@
     </table>  
 
 <div class="row">
-<div class="container col-3">
+<div class="container col-3 card ">
 
     <h2>new</h2>
     <table class="table">
@@ -43,7 +43,7 @@
                     <tr>
                         <td>status</td>
                         <td>produit</td>
-                        <td>quantity</td>
+                        <td>Q</td>
                         <td>date</td>
                         
                     </tr>
@@ -55,7 +55,7 @@
                         <td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
                         <td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
                         <td>{{ eventDetail.quantity }}</td>
-                        <td>{{ eventDetail.date|date('d/m/Y') }}</td>
+                        <td>{{ eventDetail.date|date('d/m') }}</td>
                     </tr>
                 </tbody>
 
@@ -64,7 +64,7 @@
         </table> 
     </div>
 
-    <div class="container col-3">
+    <div class="container col-3 card">
 
     <h2>pret</h2>
     <table class="table">
@@ -72,19 +72,19 @@
                     <tr>
                         <td>status</td>
                         <td>produit</td>
-                        <td>quantity</td>
+                        <td>Q</td>
                         <td>date</td>
                         
                     </tr>
         {% for eventDetail in eventDetails %}
-            {% if eventDetail.mouve == 'pret' and eventDetail.event.id == event.id %}
+            {% if eventDetail.mouve == 'pret'  %}
         
     
                     <tr>
                         <td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
                         <td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
                         <td>{{ eventDetail.quantity }}</td>
-                        <td>{{ eventDetail.date|date('d/m/Y') }}</td>
+                        <td>{{ eventDetail.date|date('d/m') }}</td>
                     </tr>
                 </tbody>
 
@@ -93,7 +93,7 @@
         </table> 
     </div>
 
-        <div class="container col-3">
+        <div class="container col-3 card">
 
     <h2>livret</h2>
     <table class="table">
@@ -101,7 +101,7 @@
                     <tr>
                         <td>status</td>
                         <td>produit</td>
-                        <td>quantity</td>
+                        <td>Q</td>
                         <td>date</td>
                         
                     </tr>
@@ -113,7 +113,7 @@
                         <td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
                         <td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
                         <td>{{ eventDetail.quantity }}</td>
-                        <td>{{ eventDetail.date|date('d/m/Y') }}</td>
+                        <td>{{ eventDetail.date|date('d/m') }}</td>
                     </tr>
                 </tbody>
 
@@ -121,7 +121,7 @@
         {% endfor  %}
         </table> 
     </div>
-    <div class="container col-3">
+    <div class="container col-3 card">
 
     <h2>retour</h2>
     <table class="table">
@@ -129,7 +129,7 @@
                     <tr>
                         <td>status</td>
                         <td>produit</td>
-                        <td>quantity</td>
+                        <td>Q</td>
                         <td>date</td>
                         
                     </tr>
@@ -141,7 +141,7 @@
                         <td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
                         <td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
                         <td>{{ eventDetail.quantity }}</td>
-                        <td>{{ eventDetail.date|date('d/m/Y') }}</td>
+                        <td>{{ eventDetail.date|date('d/m') }}</td>
                     </tr>
                 </tbody>
 
@@ -153,5 +153,5 @@
 
 
 
-    {{ include('event/_delete_form.html.twig') }}
+  
 {% endblock %}

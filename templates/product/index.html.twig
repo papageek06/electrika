@@ -1,84 +1,113 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Product index{% endblock %}
-
-
+{% block title %}Liste des Produits{% endblock %}
 
 {% block body %}
+<div class="container py-4">
+    <h1 class="text-center">Liste des Produits</h1>
+    
+    {# Message d'alerte selon le statut du panier #}
+    <div class="alert alert-warning text-center">
+        {% if cart_session is empty %}
+            Sélectionnez votre événement
+        {% else %}
+            Validez votre préparation avant de changer d'événement
+        {% endif %}
+    </div>
+    
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6">
+            <select id="eventSelect" name="event_id" class="form-select">
+                <option value="">Sélectionnez un événement</option>
+                {% for event in events %}
+                    <option value="{{ event.id }}" 
+                        {% if cart_session is defined and cart_session["eventId"] is defined and event.id in cart_session["eventId"] %} 
+                            selected 
+                        {% endif %}>
+                        {{ event.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
 
-    <h1>Product index</h1>
- {# Ici, on affiche un message d'alerte si le panier est vide #}
-<div>
-    {% if cart_session is empty %}
-        <div class="alert alert-warning">Selectionner votre évenment</div>
-        {% else  %}
-        <div class="alert alert-warning"> valider votre preparation avant de changer l'évenment</div>
-    {% endif %}
-
-
-<select id="eventSelect" name="event_id" >
-    <option value="">Select your event</option>
-    {% for event in events %}
-        <option value="{{ event.id }}" 
-            {% if cart_session is defined and cart_session["eventId"] is defined and event.id in cart_session["eventId"] %} 
-                selected 
-            {% endif %}>
-            {{ event.name }}
-        </option>
-    {% endfor %}
-</select>
-
-
-    <table class="table">
+    <table class="table  table-hover text-center">
         <thead>
             <tr>
-                <th>image</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>StockInitial</th>
-                <th>Stock</th>
-                <th>actions</th>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Catégorie</th>
+                <th>Stock Initial</th>
+                {% for i in 1..6 %}
+                    <th>Semaine +{{ i }}</th>
+                {% endfor %}
+                <th>quantity</th>
+                <th>Actions</th>
+                <th>panier</th>
+
+                
             </tr>
         </thead>
         <tbody>
-        {% for product in products %}
-            
-            <tr>
-                <td><img width="70px" src="{{ asset('uploads/pictures/' ~ product.picture) }}" alt="photo"></td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.category ? product.category.name : "N/A" }}</td>
-                <td>{{ product.stockInitial }}</td>
-                <td>
-                    {% for retri in retry %} 
-                        {% if product.id == retri.product_id %}
-                            {{product.stockInitial - retri.Tquantity }}
-                        {% endif %}
+            {% for productList in products %}
+                <tr>
+                    {% if productList.picture  %}
+                    <td><img width="70px" src="{{ asset('uploads/pictures/' ~ productList.picture) }}" alt="photo"></td>
+                    {% else %}
+                    <td><img width="70px" src="{{ asset('uploads/pictures/default.png') }}" alt="photo"></td>
+                    {% endif %}
+                    <td>{{ productList.name }}</td>
+                    <td>{{ productList.category ? productList.category.name : "N/A" }}</td>
+                    <td>{{ productList.stockInitial }}</td>
+                    
+                    {% for i in 1..6 %}
+                        <td>
+                            {% set stockDisponible = productList.stockInitial %}
+                            {% set currentWeekDate = date()|date_modify('+' ~ (i * 7) ~ ' days') %} {# Ajoute i semaines à aujourd'hui #}
+
+                            {% for eventDetail in eventDetails %}
+                                {# Vérification correcte des dates #}
+                                {% if eventDetail.product.id == productList.id and eventDetail.event.dateMontage < currentWeekDate and eventDetail.event.dateEnd > currentWeekDate %}
+                                    {% set stockDisponible = stockDisponible - eventDetail.quantity %}
+                                {% endif %}
+                            {% endfor %}
+                            {{ stockDisponible }}
+                        </td>
                     {% endfor %}
-                </td>
-                <td>
-                    <button class="bg-success txt-black" ><a href="{{ path('app_product_show', {'id': product.id}) }}">show</a></button>
-                </td>
-                <td class="col-3">
+
                     <form method="post" action="{{ path('app_cart_add') }}" data-turbo="false">
-                        <label for="quantity">Quantity</label>
-                        <input class="col-2" type="number" name="quantity" value="1">
-                        <input type="hidden" name="product_id" value="{{ product.id }}">
-                        <input type="hidden" name="user" value="{{ app.user.id }}">
-                        <input type="hidden" name="event_id" id="eventIdInput" value="{{ cart_session['eventId'][0] ?? '' }}">
-                        <button class="bg-warning" type="submit">add to cart</button>
+                        <td><input class="col-4" type="number" name="quantity" value="1"></td>                   
+                        <td class="col-1 ">
+                            <a href="{{ path('app_product_show', {'id': productList.id}) }}" class="btn btn-primary col-12">Détails</a>       
+                                <input type="hidden" name="product_id" value="{{ productList.id }}">
+                                <input type="hidden" name="user" value="{{ app.user.id }}">
+                                <input type="hidden" name="event_id" id="eventIdInput" value="{{ cart_session['eventId'][0] ?? '' }}">
+                                <button class="btn btn-warning  col-12" type="submit">add</button>
+                        </td>
                     </form>
-                </td>
-            </tr>
-           
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
+                    <td>
+                    {% if cart_session %}
+                        {% for  key, id in cart_session.idProduct %}
+                        
+                            {% if productList.id == cart_session.idProduct[key] %}
+                                {{cart_session.quantity[key]}}    
+                            {% endif %}
+                        {% endfor %}    
+                    {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">Aucun produit trouvé</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
- 
-    <a href="{{ path('app_product_new') }}">Create new</a>
+    
+    <div class="text-center mt-3">
+        <a href="{{ path('app_product_new') }}" class="btn btn-success">Créer un nouveau produit</a>
+    </div>
+</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -92,14 +121,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Met à jour tous les inputs cachés au chargement
     updateEventIdInputs();
-
-    // Écoute du changement dans le <select>
     eventSelect.addEventListener("change", updateEventIdInputs);
 });
-
 </script>
-
-
 {% endblock %}

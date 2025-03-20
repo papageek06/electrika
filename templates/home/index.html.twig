@@ -1,146 +1,76 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Tableau de bord{% endblock %}
+
+{# {% block stylesheets %}
+    <link rel="stylesheet" href="/css/home_calendar_styles.css">
+{% endblock %} #}
 
 {% block body %}
 {% if app.user %}
-    <h1 class="text-center ">Bienvenue {{ app.user.firstName }}!</h1>
+    <h1 class="text-center">Bienvenue {{ app.user.firstName }}!</h1>
 {% else %}
     <h1>Bienvenue!</h1>
 {% endif %}
 
-  
-<div class="col-12 row">
-
-    <div class="col-4">
-        <h1>Statistiques des commandes</h1>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>État</th>
-                    <th>Nombre de commandes</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orderCounts %}
-                    <tr>
-                        <td>{{ order.status }}</td>
-                        <td>{{ order.total }}</td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="2">Aucune commande trouvée</td>
-                    </tr>
-                {% endfor %}
-        </table>
-    </div>
-
-    <div class="col-7">
-        <style>
-
-            #calendar-holder {
-                background: white;
-                padding-top: 1rem;
-                padding-bottom: 1rem;
-            }
-        </style>
-
-        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
-      
-
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-
-        <div class="row">
-            <div id="calendar"></div>
-        </div>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            events: {{ data|raw }},
-            dateClick: function (info) { // Remplir le champ date dans le formulaire
-
-            let dateTime = new Date(info.dateStr); // Convertir en objet Date
-            let formattedDateTime = dateTime.toISOString().slice(0, 16);
-            //
-            // document.querySelector('#appointment_startTime').value = formattedDateTime;
-
-            // Afficher la modal Bootstrap
-            var modalEl = document.getElementById('appointmentModal');
-            var myModal = bootstrap.Modal.getOrCreateInstance(modalEl);
-            myModal.show();
-            } // Assurez-vous que 'data' est bien transmis dans la vue
-
-            });
-            calendar.render();
-            });
-        </script>
-
-        <!-- Modal -->
-        <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="appointmentModalLabel">Créer un mission</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div
-                        class="modal-body">
-                        <!-- Le formulaire sera injecté ici -->
-                        <div id="appointmentFormContainer">
-                        
-                            {{ form_start(form) }}
-
-
-                                <button type="submit" class="btn btn-primary">Enregistrer</button>
-                            {{ form_end(form) }}
-                        
-                        </div>
-                    </div>
+<div class="container-fluid p-3 col-12 "> 
+    <div class="row justify-content-between">
+        <!-- Statistiques des commandes -->
+        <div class="col-md-3 col-3">
+            <div class="card bg-dark text-white">
+                <div class="card-header">Total des commandes</div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        {% for order in orderCounts %}
+                            <li><span class="badge" style="background-color: ;">&nbsp;</span> {{ order.status }} : {{ order.total }}</li>
+                        {% else %}
+                            <li>Aucune commande trouvée</li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
-
-        <script></script>
-
-    </div>
-
-</div>
-
-
-
-
-
-<div class="col-12 row">
-<h2>Events a venir</h2>
-     
-{% for event in events %}
-    {% if event.dateMontage > date('now') %}
-
-    
-        <div class="card col-2 " style="">
-            <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">{{ event.name }}</h5>
-                <p class="card-title">site{{ event.site.name }}</p>
-                <p class="card-address">ville:{{ event.site.city }}</p>
-                <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-primary">Voir</a>
+        
+        <!-- Calendrier -->
+        <div class=" col-8">
+            <div class="card">
+                <div class="card-header bg-dark text-white">Planning des événements</div>
+                <div class="card-body p-2" id="calendar-holder"></div>
             </div>
         </div>
-    {% endif %}
-{% endfor %}
+    </div>
+    
+    <!-- Événements à venir -->
+    <div class="row mt-4">
+        <h2 class="text-white">Événements à venir :</h2>
+        {% for event in events %}
+            {% if event.dateMontage > date('now') %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                    <div class="card event-card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ event.name }}</h5>
+                            <p class="card-text">Montage : {{ event.dateMontage|date('d/m') }}</p>
+                            <p class="card-text">Démontage : {{ event.dateEnd|date('d/m') }}</p>
+                            <p class="card-text">Lieu : {{ event.site.city }}</p>
+                            <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-primary">Détails</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
 </div>
 
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar-holder');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: {{ data|raw }}
+    });
+    calendar.render();
+});
+</script>
 
-
-    
-
- 
 {% endblock %}

@@ -44,17 +44,20 @@ class Event
     private ?string $name = null;
 
     /**
-     * @var Collection<int, PictureLink>
+     * @var Collection<int, GaleryPicture>
      */
-    #[ORM\OneToMany(targetEntity: PictureLink::class, mappedBy: 'eventsLink')]
-    private Collection $pictureLinks;
+    #[ORM\ManyToMany(targetEntity: GaleryPicture::class, mappedBy: 'event')]
+    private Collection $galeryPictures;
+
+
 
 
 
     public function __construct()
     {
         $this->eventDetails = new ArrayCollection();
-        $this->pictureLinks = new ArrayCollection();
+        $this->galeryPictures = new ArrayCollection();
+     
     }
 
     public function getId(): ?int
@@ -177,34 +180,33 @@ class Event
     }
 
     /**
-     * @return Collection<int, PictureLink>
+     * @return Collection<int, GaleryPicture>
      */
-    public function getPictureLinks(): Collection
+    public function getGaleryPictures(): Collection
     {
-        return $this->pictureLinks;
+        return $this->galeryPictures;
     }
 
-    public function addPictureLink(PictureLink $pictureLink): static
+    public function addGaleryPicture(GaleryPicture $galeryPicture): static
     {
-        if (!$this->pictureLinks->contains($pictureLink)) {
-            $this->pictureLinks->add($pictureLink);
-            $pictureLink->setEventsLink($this);
+        if (!$this->galeryPictures->contains($galeryPicture)) {
+            $this->galeryPictures->add($galeryPicture);
+            $galeryPicture->addEvent($this);
         }
 
         return $this;
     }
 
-    public function removePictureLink(PictureLink $pictureLink): static
+    public function removeGaleryPicture(GaleryPicture $galeryPicture): static
     {
-        if ($this->pictureLinks->removeElement($pictureLink)) {
-            // set the owning side to null (unless already changed)
-            if ($pictureLink->getEventsLink() === $this) {
-                $pictureLink->setEventsLink(null);
-            }
+        if ($this->galeryPictures->removeElement($galeryPicture)) {
+            $galeryPicture->removeEvent($this);
         }
 
         return $this;
     }
+
+   
 
   
 }
