@@ -15,22 +15,22 @@ a {
 		</button>
 		<div class="collapse navbar-collapse" id="navbarNav">
 			<ul class="navbar-nav ms-auto">
-				<li class="nav-item">
-					<a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
-				</li>
+
 
 
 				{% if app.user %}
 				
-						
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
+						</li>
 						<li class="nav-item">
 						<a class="nav-link" href="{{ path('app_product_index') }}">Stock</a>
 						</li>					
 						<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_event_detail_index') }}">bon de prépa </a>
+						<a class="nav-link" href="{{ path('app_event_detail_index') }}">Commande</a>
 						</li>						
 						<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_cart') }}">prépa en cours</a>
+						<a class="nav-link" href="{{ path('app_cart') }}">Prépa </a>
 						</li>					
 						<li class="nav-item">
 						<a class="nav-link" href="{{ path('app_event_index') }}">Evenment </a>
@@ -43,23 +43,25 @@ a {
 						</li>											
 						<li class="nav-item">
 						<a class="nav-link" href="{{ path('app_user_show' , {'id' : app.user.id}) }}">Profile</a>
+						</li>
+						<li class="nav-item">
+						<a class="nav-link" href="{{ path('app_galery_picture_index')}}">Picture</a>
 						</li>					
 						<li class="nav-item">
 						<a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
 						</li>
-						<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_galery_picture_index')}}">picture</a>
-						</li>
+						
 						{% if is_granted('ROLE_ADMIN') %}					
 								<li class="nav-item">
 								<a href="/admin">dashbord</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
 								</li>					
 						{% endif %}
 				
 				{% else %}
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
-					</li>
+					
 					<li class="nav-item">
 						<a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
 					</li>

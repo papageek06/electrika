@@ -2,10 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Contact;
 use App\Entity\Event;
+use App\Entity\SiteEvent;
+use App\Form\ContactType;
 use App\Form\EventType;
+use App\Form\SiteEventType;
 use App\Repository\EventDetailRepository;
 use App\Repository\EventRepository;
+use App\Repository\GaleryPictureRepository;
 use App\Repository\ProductRepository;
 use DateInterval;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +20,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class HomeController extends AbstractController
 {
-    #[Route('/', name: 'app_home')]
+    #[Route('/home', name: 'app_home')]
     public function index(EventRepository $eventRepository,EventDetailRepository $eventDetails, ProductRepository $products ): Response
     {
         $miss = [];
@@ -23,24 +28,41 @@ final class HomeController extends AbstractController
         $eventListDistinc = $eventRepository->findByEventDistinct();
         $eventList = $eventRepository->findAll();
         $event = new Event();
-        $form = $this->createForm(EventType::class, $event);
+        $formEvent = $this->createForm(EventType::class, $event);
+        $contact = new Contact();
+        $formContact = $this->createForm(ContactType::class, $contact);
+        $site = new SiteEvent();
+        $formSite = $this->createForm(SiteEventType::class, $site);
+
         
         foreach($eventList as $event) {
             $miss[] = [
                 "title" => $event->getName() ,
                 "start" => $event->getDateMontage()->format("Y-m-d"),
                 "end" => $event->getDateEnd()->add(new DateInterval('P1D'))->format("Y-m-d"),
-                "backgroundColor" => $event->getEventDetails('mouve'),
+                "backgroundColor" => 'grey',
+                
             ];
            
         }
         foreach($eventListDistinc as $eventList) {
+            $backgroundColor = '';
+            if ($eventList['mouve'] == 'livrer') {
+                $backgroundColor = 'green';
+            } else if ($eventList['mouve'] == 'preparer') {
+                $backgroundColor = 'orange';
+            } else if ($eventList['mouve'] == 'new') {
+                $backgroundColor = 'bleu';
+            } else if ($eventList['mouve'] == 'retour') {
+                $backgroundColor = 'red';
+            }
             $miss[] = [
-                // dd($eventList),
+                
                 "title" => $eventList['name'], 
                 "start" => $eventList['date']->format("Y-m-d"),
                 "end" => $eventList['date']->add(new DateInterval('P1D'))->format("Y-m-d"),
-                "backgroundColor" => $eventList['mouve'] == 'livrer' ? 'green' : 'red',
+                "backgroundColor" => $backgroundColor,
+                
             ];
            
         }
@@ -58,7 +80,9 @@ final class HomeController extends AbstractController
             'products' => $products->findAll(),
             'orderCounts' => $orderCounts,
             'data' => $data,
-            'form' => $form
+            'form' => $formEvent,
+            'formContact' => $formContact,
+            'formSite' => $formSite
         ]);
     }
 }

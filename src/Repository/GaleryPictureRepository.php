@@ -19,25 +19,23 @@ class GaleryPictureRepository extends ServiceEntityRepository
     //    /**
     //     * @return GaleryPicture[] Returns an array of GaleryPicture objects
     //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('g')
-    //            ->andWhere('g.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('g.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+       public function findByEvent(): array
+       {
+           return $this->createQueryBuilder('g')
 
-    //    public function findOneBySomeField($value): ?GaleryPicture
-    //    {
-    //        return $this->createQueryBuilder('g')
-    //            ->andWhere('g.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+               ->innerJoin('g.event', 'e')
+               ->getQuery()
+               ->getResult()
+           ;
+       }
+
+       public function findOneBysite($value): ?GaleryPicture
+       {
+           return $this->createQueryBuilder('g')
+               ->andWhere('g.site = :val')
+               ->setParameter('val', $value)
+               ->getQuery()
+               ->getOneOrNullResult()
+           ;
+       }
 }

@@ -7,28 +7,66 @@
 {% endblock %} #}
 
 {% block body %}
+
 {% if app.user %}
     <h1 class="text-center">Bienvenue {{ app.user.firstName }}!</h1>
 {% else %}
     <h1>Bienvenue!</h1>
 {% endif %}
 
-<div class="container-fluid p-3 col-12 "> 
+<div class="container-fluid p-3 col-12  "> 
     <div class="row justify-content-between">
-        <!-- Statistiques des commandes -->
+        <!-- Statistiques des commandes-->
         <div class="col-md-3 col-3">
             <div class="card bg-dark text-white">
                 <div class="card-header">Total des commandes</div>
                 <div class="card-body">
                     <ul class="list-unstyled">
                         {% for order in orderCounts %}
-                            <li><span class="badge" style="background-color: ;">&nbsp;</span> {{ order.status }} : {{ order.total }}</li>
-                        {% else %}
-                            <li>Aucune commande trouvée</li>
+                            {% if order.status == 'new' %}
+                                <li><span class="badge badge-warning">&nbsp;</span> {{ order.status }} : {{ order.total }}
+                                <button class='bg-primary '>color</button></li>
+                            {% elseif order.status == 'preparer' %}
+                                <li><span class="badge badge-info">&nbsp;</span> {{ order.status }} : {{ order.total }}
+                                <button class='bg-warning '>color</button></li>
+                            {% elseif order.status == 'livrer' %}
+                                <li><span class="badge badge-success">&nbsp;</span> {{ order.status }} : {{ order.total }}
+                                <button class='bg-success '>color</button></li>
+                            {% elseif order.status == 'retour' %}
+
+                                <li><span class="badge" style="background-color: ;">&nbsp;</span> {{ order.status }} : {{ order.total }}<button class='bg-danger '>color</button></li>
+                            {% else %} 
+                                <li>Aucune commande trouvée</li>   
+                            {% endif %}
+                            
+                        
+                            
                         {% endfor %}
                     </ul>
                 </div>
             </div>
+            <div>
+                <button class="btn btn-primary m-1 badge" id="btnNewEvent">Ajouter un événement</button>
+                <button class="btn btn-primary m-1 badge" id="btnNewContact">Ajouter un contact</button>
+                <button class="btn btn-primary m-1 badge" id="btnNewSite">Ajouter un Site d'evenement</button>
+            </div>   
+        </div>
+        
+        <div id="form event" style="display: none ; position: fixed; top: 20%; left: 30%; z-index: 1000; background-color: white; padding: 20px; border-radius: 10px;Border: 1px solid black" class="col-3 ">
+        <button id="closeModalBtn" style="float:right;">X</button>
+             {{ form_start(form) }}
+            
+           <p> <p>{{ form_row(form.name) }}</p>
+            <p>{{ form_row(form.dateMontage) }}</p>
+            <p>{{ form_row(form.dateStartShow) }}</p>
+            <p>{{ form_row(form.dateEndSHOW) }}</p>
+            <p>{{ form_row(form.dateEnd) }}</p>
+            <p>{{ form_row(form.site) }}</p>
+            <p>{{ form_row(form.contact) }}</p>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+            
+            {{ form_end(form) }}
+        
         </div>
         
         <!-- Calendrier -->
@@ -39,7 +77,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Événements à venir -->
     <div class="row mt-4">
         <h2 class="text-white">Événements à venir :</h2>
@@ -48,6 +86,16 @@
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
                     <div class="card event-card">
                         <div class="card-body text-center">
+                            <div class="gallery">
+                                {% set firstImage = event.galeryPictures|first %} {# Récupère la première image liée à l'événement #}
+
+                                {% if firstImage %}
+                                    <img src="{{ asset('uploads/pictures/' ~ firstImage.picture) }}" alt="Image de {{ event.name }}" width="200">
+                                {% else %}
+                                    <img src="uploads/pictures/default.png" widht="200"alt="Aucune image disponible"></img>
+                                {% endif %}
+                            </div>
+
                             <h5 class="card-title">{{ event.name }}</h5>
                             <p class="card-text">Montage : {{ event.dateMontage|date('d/m') }}</p>
                             <p class="card-text">Démontage : {{ event.dateEnd|date('d/m') }}</p>
@@ -63,14 +111,25 @@
 
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 <script>
+// --------------------------------------------------- calendar-------------------------- --------------------------------
 document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar-holder');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
+        editable : true ,
         events: {{ data|raw }}
     });
     calendar.render();
 });
+
+// ----------------------------------------------------form event--------------------------------
+document.getElementById('btnNewEvent').addEventListener('click', function() {
+    document.getElementById('form event').style.display = 'block';
+});
+document.getElementById('closeModalBtn').addEventListener('click', function() {
+    document.getElementById('form event').style.display = 'none';
+});
+
 </script>
 
 {% endblock %}

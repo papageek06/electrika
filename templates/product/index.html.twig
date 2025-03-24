@@ -39,7 +39,7 @@
                 <th>Catégorie</th>
                 <th>Stock Initial</th>
                 {% for i in 1..6 %}
-                    <th>Semaine +{{ i }}</th>
+                    <th class="d-sm-none d-lg-table-cell ">Semaine +{{ i }}</th>
                 {% endfor %}
                 <th>quantity</th>
                 <th>Actions</th>
@@ -61,7 +61,7 @@
                     <td>{{ productList.stockInitial }}</td>
                     
                     {% for i in 1..6 %}
-                        <td>
+                        <td class="d-sm-none d-lg-table-cell ">
                             {% set stockDisponible = productList.stockInitial %}
                             {% set currentWeekDate = date()|date_modify('+' ~ (i * 7) ~ ' days') %} {# Ajoute i semaines à aujourd'hui #}
 
