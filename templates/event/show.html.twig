@@ -1,157 +1,219 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event{% endblock %}
+{% block title %}Event
+{% endblock %}
 
 {% block body %}
-    <h1>Event</h1>
-
-      <table class="table">
-        <tbody>
-            <tr>
-                <th>nom</th>
-                <td>{{ event.name }}</td>
-            </tr>
-            <tr>
-                <th>client</th>
-                <td>{{ event.contact ? event.contact.lastName : 'N/A'}} /   Email: {{event.contact ? event.contact.email : 'N/A'}}</td>
-            </tr>
-            <tr>
-                <th>Date de Montage</th>
-                <td>{{ event.dateMontage ? event.dateMontage|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Date d'evenmant du</th>
-                <td>{{ event.dateStartShow ? event.dateStartShow|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>au</th>
-                <td>{{ event.dateEndSHOW ? event.dateEndSHOW|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Date de fin de demontage</th>
-                <td>{{ event.dateEnd ? event.dateEnd|date('Y-m-d') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>  
-
-<div class="row">
-<div class="container col-3 card ">
-
-    <h2>new</h2>
-    <table class="table">
-            <tbody>
-                    <tr>
-                        <td>status</td>
-                        <td>produit</td>
-                        <td>Q</td>
-                        <td>date</td>
-                        
-                    </tr>
-        {% for eventDetail in eventDetails %}
-            {% if eventDetail.mouve == 'New' %}
-        
-    
-                    <tr>
-                        <td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
-                        <td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
-                        <td>{{ eventDetail.quantity }}</td>
-                        <td>{{ eventDetail.date|date('d/m') }}</td>
-                    </tr>
-                </tbody>
-
-            {% endif %}
-        {% endfor  %}
-        </table> 
-    </div>
-
-    <div class="container col-3 card">
-
-    <h2>pret</h2>
-    <table class="table">
-            <tbody>
-                    <tr>
-                        <td>status</td>
-                        <td>produit</td>
-                        <td>Q</td>
-                        <td>date</td>
-                        
-                    </tr>
-        {% for eventDetail in eventDetails %}
-            {% if eventDetail.mouve == 'pret'  %}
-        
-    
-                    <tr>
-                        <td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
-                        <td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
-                        <td>{{ eventDetail.quantity }}</td>
-                        <td>{{ eventDetail.date|date('d/m') }}</td>
-                    </tr>
-                </tbody>
-
-            {% endif %}
-        {% endfor  %}
-        </table> 
-    </div>
-
-        <div class="container col-3 card">
-
-    <h2>livret</h2>
-    <table class="table">
-            <tbody>
-                    <tr>
-                        <td>status</td>
-                        <td>produit</td>
-                        <td>Q</td>
-                        <td>date</td>
-                        
-                    </tr>
-        {% for eventDetail in eventDetails %}
-            {% if eventDetail.mouve == 'livret' %}
-        
-    
-                    <tr>
-                        <td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
-                        <td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
-                        <td>{{ eventDetail.quantity }}</td>
-                        <td>{{ eventDetail.date|date('d/m') }}</td>
-                    </tr>
-                </tbody>
-
-            {% endif %}
-        {% endfor  %}
-        </table> 
-    </div>
-    <div class="container col-3 card">
-
-    <h2>retour</h2>
-    <table class="table">
-            <tbody>
-                    <tr>
-                        <td>status</td>
-                        <td>produit</td>
-                        <td>Q</td>
-                        <td>date</td>
-                        
-                    </tr>
-        {% for eventDetail in eventDetails %}
-            {% if eventDetail.mouve == 'retour' %}
-        
-    
-                    <tr>
-                        <td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
-                        <td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
-                        <td>{{ eventDetail.quantity }}</td>
-                        <td>{{ eventDetail.date|date('d/m') }}</td>
-                    </tr>
-                </tbody>
-
-            {% endif %}
-        {% endfor  %}
-        </table> 
-    </div>
-</div>
+	<style>
+		.myCard {
+			background-color: rgb(129, 129, 130) !important;
+			border-radius: 10px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			transition: transform 0.2s;
+			padding: 1rem !important;
+		}
+	</style>
 
 
+	<h2 class="text-center m-2">Event</h2>
+	<div class=" MyDiv ">
 
-  
+
+		<div class="row col-12 align-items-end justify-content-between"  > 
+			<h3 class="text-center">{{ event.name }}</h3>
+			<div class="container col-3 card MyDiv">
+				<h4 class="text-center">CONTACT</h4>
+				<p>
+					{{ event.contact ? event.contact.lastName : 'N/A'}}-{{ event.contact ? event.contact.firstName : 'N/A'}}
+				</p>
+				<p>
+					Email :
+					{{event.contact ? event.contact.email : 'N/A'}}</p>
+				<p>
+					Tel :
+					{{event.contact ? event.contact.phoneNumber : 'N/A'}}</p>
+				<button class="btn btn-primary m-2" style="">
+					<a href="{{ path('app_event_edit', {'id': event.id}) }}">Edit</a>
+				</button>
+			</div>
+			<div class="container col-3 card MyDiv ">
+				<h4 class="text-center">SITE</h4>
+
+				<p>
+					{{site.name ? site.name : 'N/A'}}</p>
+				<p>
+					Adresse :
+					{{site.address ? site.address : 'N/A'}}</p>
+				<p>
+					Ville :
+					{{site.city ? site.city : 'N/A'}}</p>
+				<button class="btn btn-primary m-2 " style="justify-content: end;">
+					<a href="{{ path('app_event_edit', {'id': event.id}) }}">Edit</a>
+				</button>
+
+			</div>
+			<div class="container col-3 card MyDiv  ">
+				<h4 class="text-center">DATE</h4>
+				<p>Montage :
+					{{ event.dateMontage ? event.dateMontage|date('Y-m-d') : '' }}</p>
+
+				<p>Show du   :
+					{{ event.dateStartShow ? event.dateStartShow|date('Y-m-d') : '' }}
+					au
+					{{ event.dateEndSHOW ? event.dateEndSHOW|date('Y-m-d') : '' }}</p>
+
+				<p>fin de demontage :
+					{{ event.dateEnd ? event.dateEnd|date('Y-m-d') : '' }}</p>
+				<button class="btn btn-primary m-2">
+					<a href="{{ path('app_event_edit', {'id': event.id}) }}">Edit</a>
+				</button>
+			</div>
+
+
+		</div>
+	</div>
+
+	<div
+		class="row">
+
+		{# ---------------------------------------cad new -------------------------------- #}
+		<div class="container col-3 card MyDiv ">
+
+			<h3>new</h3>
+			<table class="">
+				<thead>
+					<tr>
+						<th class="CellStart">status</th>
+						<th class="MyCell">produit</th>
+						<th class="MyCell">--Q--</th>
+						<th class="cellEnd">date</th>
+					</tr>
+				</thead>
+				<tbody>
+
+					{% for eventDetail in eventDetails %}
+
+						{% if eventDetail.mouve == 'new' %}
+
+
+							<tr>
+								<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
+								<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+								<td>{{ eventDetail.quantity }}</td>
+								<td>{{ eventDetail.date|date('d/m') }}</td>
+							</tr>
+						{% endif %}
+					{% endfor  %}
+				</tbody>
+
+
+			</table>
+			{% if status == 0 %}
+				<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bp' }) }}">BP -></a>
+			{% endif %}
+		</div>
+
+		{# ------------------------------------------card pret-----------------------------------  #}
+
+		<div class="container col-3 card MyDiv">
+			<h3>BP</h3>
+			<table class="">
+				<thead>
+					<tr>
+						<th class="CellStart">status</th>
+						<th class="MyCell">produit</th>
+						<th class="MyCell">--Q--</th>
+						<th class="cellEnd">date</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for eventDetail in eventDetails %}
+						{% if eventDetail.mouve == 'bp'  %}
+
+							<tr>
+								<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
+								<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+								<td>{{ eventDetail.quantity }}</td>
+								<td>{{ eventDetail.date|date('d/m') }}</td>
+							</tr>
+						{% endif %}
+					{% endfor  %}
+				</tbody>
+
+			</table>
+			{% if status  == 1 %}
+				<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bl' }) }}">BL -></a>
+
+			{% endif %}
+		</div>
+
+
+		{# -------------------------------------card livret----------------------------------- #}
+
+		<div class="container col-3 card MyDiv">
+			<h3>BL</h3>
+			<table class="">
+				<thead>
+					<tr>
+						<th class="CellStart">status</th>
+						<th class="MyCell">produit</th>
+						<th class="MyCell">--Q--</th>
+						<th class="cellEnd">date</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for eventDetail in eventDetails %}
+						{% if eventDetail.mouve == 'bl' %}
+
+							<tr>
+								<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
+								<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+								<td>{{ eventDetail.quantity }}</td>
+								<td>{{ eventDetail.date|date('d/m') }}</td>
+							</tr>
+						{% endif %}
+					{% endfor  %}
+				</tbody>
+			</table>
+			{% if status == 2 %}
+				<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'br' }) }}">BR -></a>
+				<a class="btn btn-warning m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bf' }) }}">BF -></a>
+			{% endif %}
+		</div>
+
+
+		{# ----------------------------------card retour ----------------------------------- #}
+
+		<div class="container col-3 card MyDiv">
+
+			<h3>BR</h3>
+			<table class="">
+
+				<thead>
+					<tr>
+						<th class="CellStart">status</th>
+						<th class="MyCell">produit</th>
+						<th class="MyCell">--Q--</th>
+						<th class="cellEnd">date</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for eventDetail in eventDetails %}
+						{% if eventDetail.mouve == 'br' %}
+
+							<tr>
+								<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
+								<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+								<td>{{ eventDetail.quantity }}</td>
+								<td>{{ eventDetail.date|date('d/m') }}</td>
+							</tr>
+						{% endif %}
+					{% endfor  %}
+				</tbody>
+
+			</table>
+		</div>
+
+	</div>
+
 {% endblock %}

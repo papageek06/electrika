@@ -36,9 +36,16 @@ class Contact
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'contact')]
     private Collection $events;
 
+    /**
+     * @var Collection<int, SiteEvent>
+     */
+    #[ORM\ManyToMany(targetEntity: SiteEvent::class, mappedBy: 'contact')]
+    private Collection $siteEvents;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
+        $this->siteEvents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -131,6 +138,33 @@ class Contact
             if ($event->getContact() === $this) {
                 $event->setContact(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SiteEvent>
+     */
+    public function getSiteEvents(): Collection
+    {
+        return $this->siteEvents;
+    }
+
+    public function addSiteEvent(SiteEvent $siteEvent): static
+    {
+        if (!$this->siteEvents->contains($siteEvent)) {
+            $this->siteEvents->add($siteEvent);
+            $siteEvent->addContact($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSiteEvent(SiteEvent $siteEvent): static
+    {
+        if ($this->siteEvents->removeElement($siteEvent)) {
+            $siteEvent->removeContact($this);
         }
 
         return $this;

@@ -3,43 +3,41 @@
 {% block title %}Event index{% endblock %}
 
 {% block body %}
-    <h1>Event index</h1>
+<style>
+</style>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>name</th>
-                <th>Montage</th>
-                <th>Start Event</th>
-                <th>End SHOW</th>
-                <th>Fin de Démontage</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <h1 class="text-center m-2  ">Event index</h1>
+
+<a class="btn bg-success m-3" href="{{ path('app_event_new') }}">Create new</a>
+<div class="row col-12 justify-content-around ">
         {% for event in events %}
-            <tr>
-                <td>{{ event.name }}</td>
-                <td>{{ event.dateMontage ? event.dateMontage|date('Y-m-d') : '' }}</td>
-                <td>{{ event.dateStartShow ? event.dateStartShow|date('Y-m-d') : '' }}</td>
-                <td>{{ event.dateEndSHOW ? event.dateEndSHOW|date('Y-m-d') : '' }}</td>
-                <td>{{ event.dateEnd ? event.dateEnd|date('Y-m-d') : '' }}</td>
-                <td>
-                    <button class="bg-success"><a href="{{ path('app_event_show', {'id': event.id}) }}">show</a></button>
-                    <button class="bg-warning"><a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a></button>
+        
+        {% set firstPicture = event.galeryPictures|first %}
+        
+            <div class="card m-4 p-0 myCard" style="width: 18rem;">
+
+                {% if firstPicture %}
+                    <img class="card-img-top" src="{{ asset('uploads/pictures/' ~ firstPicture.picture) }}" alt="Image de l'event">
+                {% else %}
+                    <img class="card-img-top" src="{{ asset('uploads/pictures/default.png') }}" alt="Default image">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ event.name }}</h5>
+                    <p class="card-text">Montage : {{ event.dateMontage ? event.dateMontage|date('d/m/Y') : '' }}</p>
+                    <p class="card-text">event :{{ event.dateStartShow ? event.dateStartShow|date('d/m/Y') : '' }} au {{ event.dateEndSHOW ? event.dateEndSHOW|date('d/m/Y') : '' }}</p>
+                    <p class="card-text">fin :{{ event.dateEnd ? event.dateEnd|date('d/m/Y') : '' }} </p>
+                    <button class="btn bg-success"><a href="{{ path('app_event_show', {'id': event.id}) }}">show</a></button>
+                    <button class="btn bg-warning"><a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a></button>
                     {% if is_granted('ROLE_ADMIN') %}
                     <button class="bg-danger"><a href="{{ path('app_event_delete', {'id': event.id}) }}" onclick="return confirm('Are you sure?')">delete</a></button>
                     {% endif %}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
+                </div>
+            </div>   
+          
         {% endfor %}
-        </tbody>
-    </table>
 
-    <a href="{{ path('app_event_new') }}">Create new</a>
+</div>
+
+    
 
 {% endblock %}

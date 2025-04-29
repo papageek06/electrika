@@ -18,18 +18,8 @@ $btnDark : #5023f5;
 $txtLight : #ecf0f1;
 
 body {
-    background-color: white !important;
-    transition: 0.5s;
-    visibility: hidden;
-
-    p {
-        color: $textColor;
-
-        span {
-            color: $textSpan;
-        }
-
-    }
+    background-color: rgb(84,92,108,100) !important;
+    color: white !important;
 }
 
 body.loaded {
@@ -46,9 +36,14 @@ body.dark-mode {
 }
 
 
-.navbar, h1, h2, h3, h4, h5, h6, .card, .btn, .table, .modal-content {
-    transition: 0.5s;
-}
+
+
+// .navbar,h1, h2, h3, h4, h5, h6, .card, .btn, .table, .modal-content {
+//     background-color: $navDark !important;
+//     color: $txtLight;
+//     transition: 0.5s;
+    
+// }
 
 /* Navbar en mode sombre */
 .dark-mode .navbar {
@@ -124,8 +119,19 @@ body.dark-mode {
     transition: 0.5s;
 }
 
-.dark-mode input {
+.dark-mode input   {
     background-color: $inputDark;
+    color: $txtLight;
+    transition: 0.5s;
+}
+.dark-mode select   {
+    background-color: $inputDark !important;
+    color: $txtLight;
+    transition: 0.5s;
+}
+
+.dark-mode option   {
+    background-color: $inputDark !important;
     color: $txtLight;
     transition: 0.5s;
 }
@@ -138,4 +144,59 @@ body.dark-mode {
 
 }
 
+// --------------------------- style table ---------------------------
 
+.MyDiv {
+    background-color: rgb(132,145,172,100) !important;
+    padding: 20px;
+    border-radius: 1rem;
+    margin:2rem;
+    display: flex;
+    justify-items: center ;
+    flex-direction: column;
+}
+.MyTable {
+    background-color: rgb(132,145,172,100) !important;
+    padding: 20px;
+    border-radius: 1rem;
+    margin:2rem;
+    display: contents;
+   
+
+}
+.CellStart {
+    background-color: rgb(84,92,108,100) !important;
+    color: white !important;
+    border-top: 1rem solid rgb(132,145,172,100) !important;
+    border-bottom: 1rem solid rgb(132,145,172,100) !important;
+    padding: 0px 0px 0px 2rem !important;
+    border-radius: 2rem 0px 0px 2rem; 
+}
+.cellEnd {
+    background-color: rgb(84,92,108,100) !important;
+    color: white !important;
+    border-radius: 0px 2rem 2rem 0px; 
+    border-top: 1rem solid rgb(132,145,172,100) !important;
+    border-bottom: 1rem solid rgb(132,145,172,100) !important;
+    
+   
+}
+.MyCell {
+    background-color: rgb(84,92,108,100)!important;
+    color: white !important;
+    border-top: 1rem solid rgb(132,145,172,100) !important;
+    border-bottom: 1rem solid rgb(132,145,172,100) !important;
+    text-align: center;
+}
+
+select , option , input[type="number"] {
+    background-color: rgb(132,145,172,100)!important;
+    color: white !important;
+    border: 1px black solid;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.myCard{
+    background-color: rgb(132,145,172,100)!important;
+}

@@ -47,12 +47,38 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
-    public function show(Event $event,EventDetailRepository $eventDetailRepository ,Product $product): Response
+    public function show(Event $event, EventDetailRepository $eventDetailRepository, Product $product): Response
     {
+        $eventDetails = $eventDetailRepository->findBy(['event' => $event->getId()]);
+        $status = 0;
+        $mouvePriority = [
+            'new' => 0,
+            'bp' => 1,
+            'bl' => 2,
+            'br' => 3,
+  
+        ];
+        
+        foreach ($eventDetails as $eventDetail) {
+            $mouve = $eventDetail->getMouve();
+        
+            if (isset($mouvePriority[$mouve])) {
+                $currentPriority = $mouvePriority[$mouve];
+        
+                
+                if ($currentPriority > $status) {
+                    $status = $currentPriority;
+                }
+            }
+        }
+
+
         return $this->render('event/show.html.twig', [
             'event' => $event,
-            'eventDetails' => $eventDetailRepository->findBy(['event' => $event->getId()]),
+            'eventDetails' => $eventDetails,
             'products' => $product,
+            'site' => $event->getSite(),
+            'status' => $status,
         ]);
     }
 
@@ -77,7 +103,7 @@ final class EventController extends AbstractController
     #[Route('/{id}', name: 'app_event_delete', methods: ['POST'])]
     public function delete(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$event->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $event->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($event);
             $entityManager->flush();
         }

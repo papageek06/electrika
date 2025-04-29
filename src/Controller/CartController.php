@@ -173,7 +173,7 @@ EntityManagerInterface $entityManager
             $EventDetail->setUser($user);
             $EventDetail->setProduct($product);
             $EventDetail->setEvent($event);
-            $EventDetail->setMouve('New');
+            $EventDetail->setMouve('new');
             $EventDetail->setQuantity($cart['quantity'][$i]);
             $EventDetail->setDate(new \DateTime());
             $entityManager->persist($EventDetail);

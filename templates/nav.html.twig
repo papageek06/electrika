@@ -3,18 +3,22 @@ a {
     color: black !important;
     text-decoration: none; /* Supprime le soulignement si nécessaire */
 }
-
+nav {
+	/* background-color:rgb(53, 53, 61); */
+	color: white !important;
+	 }
 
 </style>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	<div class="container-fluid">
-		<a class="navbar-brand" href="{{ path('app_home') }}">Logo</a>
+		
+<div class=" bg-secondary p-0  ">
+<nav class="navbar navbar-expand-lg   ">
+	<div class="container-fluid  ">
+		
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-		<div class="collapse navbar-collapse" id="navbarNav">
-			<ul class="navbar-nav ms-auto">
+		<div class="collapse navbar-collapse  " id="navbarNav">
+			<ul class="navbar-nav w-100 d-flex justify-content-between navbar-spaced ">
 
 
 
@@ -77,12 +81,12 @@ a {
 
 
 
-			</>
+			</ul>
 
 		</div>
 	</div>
 </nav>
-
+</div>
 <script>
 	// au chargement de la page, j'enlève la transition à mes éléments html pour ne pas avoir de transition
 		// a chaque chargement de page et avoir un effet pénible qui passe du light mode au darkmode

@@ -42,6 +42,12 @@ class SiteEvent
     #[ORM\ManyToMany(targetEntity: GaleryPicture::class, mappedBy: 'site')]
     private Collection $galeryPictures;
 
+    /**
+     * @var Collection<int, Contact>
+     */
+    #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'siteEvents')]
+    private Collection $contact;
+
     
 
    
@@ -50,6 +56,7 @@ class SiteEvent
     {
         $this->events = new ArrayCollection();
         $this->galeryPictures = new ArrayCollection();
+        $this->contact = new ArrayCollection();
         
 
     }
@@ -172,6 +179,30 @@ class SiteEvent
         if ($this->galeryPictures->removeElement($galeryPicture)) {
             $galeryPicture->removeSite($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Contact>
+     */
+    public function getContact(): Collection
+    {
+        return $this->contact;
+    }
+
+    public function addContact(Contact $contact): static
+    {
+        if (!$this->contact->contains($contact)) {
+            $this->contact->add($contact);
+        }
+
+        return $this;
+    }
+
+    public function removeContact(Contact $contact): static
+    {
+        $this->contact->removeElement($contact);
 
         return $this;
     }

@@ -19,41 +19,32 @@ final class EventDetailController extends AbstractController
     #[Route(name: 'app_event_detail_index', methods: ['GET', 'POST'])]
     public function index(EventRepository $eventRepository, Request $request , EventDetailRepository $eventDetailRepository): Response
     {
+        // -----------------------------------------filtrage sous condition------------------------------------------
         $event = $request->request->get('eventSelected');
         $status = $request->request->get('statusSelected');
         $order = $request->request->get('orderSelected');
         $listEvents=$eventRepository->findByDistinct();
-        $listDistinct=[];
 
-        // foreach ($listEvents as $listEvent){
-        //     foreach ( $listEvent as $value){
-        //         if ($value ==  )
-        //     }
         
        
         $events = [];
         
         if (!empty($status) && empty($event)) {  
             $this->addFlash('success', 'Filtrage status appliqué avec succès !');
-            // dd('que status'); // Vérifie que le if est bien exécuté
             $events = $eventDetailRepository->findByStatus($status, $order);
             
         } else if(!empty($event) && empty($status)) {
-            //  dd($event);
             $this->addFlash('success', 'Filtrage event appliqué avec succès !');
-            // dd('que event'); // Vérifie que le if est bien exécuté
             $events = $eventDetailRepository->findByEvent($event, $order);
         }else if (!empty($event) && !empty($status)) {
             $this->addFlash('success', 'Filtrage event et status appliqué avec succès !');
-            // dd(' status et event'); // Vérifie que le if est bien exécuté
             $events = $eventDetailRepository->findByEventStatus($event, $status , $order);
         }
         else {
-            // dd("JE PASSE DANS LE ELSE"); // Vérifie que le else est bien exécuté
-            $events = [];
+
+            $events = $eventDetailRepository->findAll();
         }
-     
-        // dd($events);
+
         
         return $this->render('event_detail/index.html.twig', [
             'event_details' => $events,
@@ -129,13 +120,15 @@ final class EventDetailController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_event_detail_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_event_detail_delete', methods: ['GET', 'POST'])]
     public function delete(Request $request, EventDetail $eventDetail, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $eventDetail->getId(), $request->getPayload()->getString('_token'))) {
+        
+            
             $entityManager->remove($eventDetail);
             $entityManager->flush();
-        }
+        
+        $this->addFlash('success', 'Suppression effectuée avec succès !');
 
         return $this->redirectToRoute('app_event_detail_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -144,9 +137,11 @@ final class EventDetailController extends AbstractController
     public function updateAll(Request $request, EntityManagerInterface $entityManager, EventDetailRepository $eventDetailRepository): Response
     {
         
+        
         $statuses = $request->get('statuses',[]);
         $quantities = $request->get('quantities',[]);
         
+        dd($statuses);
         foreach ($statuses as $id => $status) {
             $eventDetail = $eventDetailRepository->find($id);
             if ($eventDetail) {
@@ -167,5 +162,76 @@ final class EventDetailController extends AbstractController
 
         return $this->redirectToRoute('app_event_detail_index');
     }
+    #[Route('/app_event_upgrade/{id}', name: 'app_event_upgrade')]
+    public function upgrade(Request $request ,EventDetailRepository $eventDetailRepository , int $id ,EventRepository $eventRepository , EntityManagerInterface $entityManager ): Response
+    {
+        $event = $eventRepository->find($id);
+        $status = $request->query->get('status');
+        
+
+        if (!$event) {
+            throw $this->createNotFoundException('Event not found.');
+        }
+        $eventDetails = $eventDetailRepository->findBy(['event' => $event]);
+      
+        dump($status);
+        
+        foreach ($eventDetails as $eventDetail) {
+
+            //  dd($eventDetail->getMouve());
+            if ($status == 'bp' && $eventDetail->getMouve() === 'new') {
+                $newDetail = new EventDetail();
+                $newDetail->setUser($eventDetail->getUser());
+                $newDetail->setProduct($eventDetail->getProduct());
+                $newDetail->setEvent($event); 
+                $newDetail->setQuantity($eventDetail->getQuantity());
+                $newDetail->setDate(new \DateTime());
+                $newDetail->setMouve('bp'); 
+                $entityManager->persist($newDetail);
+                $entityManager->flush();
+            } else if ($status == 'bl' && $eventDetail->getMouve() === 'bp') {
+                $newDetail = new EventDetail();
+                $newDetail->setUser($eventDetail->getUser());
+                $newDetail->setProduct($eventDetail->getProduct());
+                $newDetail->setEvent($event); 
+                $newDetail->setQuantity($eventDetail->getQuantity());
+                $newDetail->setDate(new \DateTime());              
+                $newDetail->setMouve('bl'); 
+                $entityManager->persist($newDetail);
+                $entityManager->flush();
+            } else if ($status == 'br' && $eventDetail->getMouve() === 'bl') {
+                $newDetail = new EventDetail();
+                $newDetail->setUser($eventDetail->getUser());
+                $newDetail->setProduct($eventDetail->getProduct());
+                $newDetail->setEvent($event); 
+                $newDetail->setQuantity($eventDetail->getQuantity());
+                $newDetail->setDate(new \DateTime());
+                $newDetail->setMouve('br');
+                $entityManager->persist($newDetail);
+                $entityManager->flush();
+            }
+            else if ($status == 'bf' && $eventDetail->getMouve() === 'bl') {
+                $newDetail = new EventDetail();
+                $newDetail->setUser($eventDetail->getUser());
+                $newDetail->setProduct($eventDetail->getProduct());
+                $newDetail->setEvent($event); 
+                $newDetail->setQuantity($eventDetail->getQuantity());
+                $newDetail->setDate(new \DateTime());
+                $newDetail->setMouve('bf');
+                $entityManager->persist($newDetail);
+                $entityManager->flush();
+             }
+
+            
+
+        }
+    
+        
+        return $this->redirectToRoute('app_event_show', ['id' => $id]);
+
+    }
+
+
+
 
 }

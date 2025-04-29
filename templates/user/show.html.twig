@@ -17,11 +17,11 @@
             </tr>
             <tr>
                 <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                <td>{{ user.roles == "ROLE_ADMIN" ? 'Administateur' : 'User' }}</td>
             </tr>
             <tr>
                 <th>Password</th>
-                <td>{{ user.password }}</td>
+                <td>*****</td>
             </tr>
             <tr>
                 <th>FirstName</th>

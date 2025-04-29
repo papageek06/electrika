@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Contact;
 use App\Entity\Event;
+use App\Entity\GaleryPicture;
 use App\Entity\SiteEvent;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -38,6 +39,17 @@ class EventType extends AbstractType
                 'choice_label' => 'lastName',
                 
             ])
+
+            ->add('galeryPictures', EntityType::class, [
+                'class' => GaleryPicture::class,
+                'multiple' => true,
+                'expanded' => true, // true = checkboxes ; false = select multiple
+                'choice_label' => function(GaleryPicture $picture) {
+                    return $picture->getPicture(); 
+                },
+                'required' => false,
+                'by_reference' => false, // indispensable pour ManyToMany
+            ]);
         ;
     }
 

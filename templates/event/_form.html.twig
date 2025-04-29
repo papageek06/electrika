@@ -1,4 +1,91 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+ <style>
+ body {
+        background-color:rgb(224, 227, 228)!important;
+        font-family: Arial, sans-serif;
+        
+    }
+input , select , option {
+   background-color:rgb(224, 227, 228)!important;
+}
+
+    
+  .formEvent {
+        display: flex;
+        margin: 5rem;
+        justify-content: space-between;
+        
+        
+    }
+    .formInfo {
+      background-color:rgb(181, 183, 185);
+      border-radius: 10px;
+      border: 1px black solid ;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+  .gallery-checkbox {
+        display: inline-block;
+        margin: 10px;
+        text-align: center;
+    }
+
+  .gallery-checkbox img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 2px solid transparent;
+      transition: 0.3s;
+  }
+
+  .gallery-checkbox input[type="checkbox"]:checked + img {
+      border-color: #007bff;
+      box-shadow: 0 0 10px rgba(0,123,255,0.5);
+  }
+
+ </style>
+
+ {{ form_start(form) }}              
+           
+            <div class="formEvent ">
+                
+                
+             
+
+              
+                <div class="col-3 formInfo">
+
+                                <p>{{ form_label(form.name) }}</p>
+                                <p>{{ form_widget(form.name) }}</p>
+                                <p>{{ form_label(form.dateMontage) }}</p>
+                                <p>{{ form_widget(form.dateMontage) }}</p>
+                                <p>{{ form_label(form.dateStartShow) }}</p>
+                                <p>{{ form_widget(form.dateStartShow) }}</p>
+                                <p>{{ form_label(form.dateEndSHOW) }}</p>
+                                <p>{{ form_widget(form.dateEndSHOW) }}</p>
+                                <p>{{ form_label(form.dateEnd) }}</p>
+                                <p>{{ form_widget(form.dateEnd) }}</p>
+                                <p>{{ form_label(form.site) }}</p>
+                                <p>{{ form_widget(form.site) }}</p>
+                                <p>{{ form_label(form.contact) }}</p>
+                                <p>{{ form_widget(form.contact) }}</p>
+                </div>
+                
+                <div class="col-8 formInfo">
+                  <label><strong>Choisissez les images</strong></label>
+                  <div>
+                    {% for child in form.galeryPictures %}
+                      <label class="gallery-checkbox">
+                        {{ form_widget(child, { 'attr': {'style': 'display: none;'} }) }}
+                        <img src="{{ asset('uploads/pictures/' ~ child.vars.label) }}" alt="image">
+                      </label>
+                    {% endfor %}
+                  </div>
+                </div>
+                
+                        
+            </div>
+<button type="submit" class="btn btn-primary">Ajouter</button>    
+
+  {{ form_end(form) }}

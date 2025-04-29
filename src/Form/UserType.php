@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,6 +18,9 @@ class UserType extends AbstractType
             ->add('email')
             ->add('firstName')
             ->add('lastName')
+            ->add('dateEntry', DateType::class, [
+                'widget' => 'single_text',
+            ])
             ->add('picture', FileType::class, [
                 'label' => 'Avatar',
                 'mapped' => false, // ne lie pas directement le champ à la colonne picture de User

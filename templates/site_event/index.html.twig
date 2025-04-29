@@ -3,14 +3,33 @@
 {% block title %}SiteEvent index{% endblock %}
 
 {% block body %}
-    <h1>SiteEvent index</h1>
+
+
+    <style>
+        .card-img-top {
+            width: 50%;
+            height: 50%;
+            object-fit: cover;
+        }
+        .myRow {
+            background-color: rgb(132,145,172,100) !important;
+            color: white !important;
+            border-top: 3rem solid rgb(132,145,172,100) !important;  
+        }
+    </style>
+
+    <h2 class="m-4 text-center">SiteEvent index</h2>
+
+    <button class="btn btn-primary m-2">
+        <a href="{{ path('app_site_event_new') }}">Create new</a>
+    </button>
 
 
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>photo</th>
                 <th>Name</th>
                 <th>Address</th>
                 <th>City</th>
@@ -21,8 +40,14 @@
         </thead>
         <tbody>
         {% for site_event in site_events %}
-            <tr>
-                <td>{{ site_event.id }}</td>
+        {% set firstPicture = site_event.galeryPictures|first %}
+            <tr class="myRow">
+            >
+            {% if firstPicture %}
+                <td><img class="card-img-top"  src="{{ asset('uploads/pictures/' ~ firstPicture.picture) }}" alt="image"></td>
+            {% else %}
+                <td><img class="card-img-top" src="{{asset('uploads/pictures/default.png')}}" alt="Default image"></td>
+            {% endif %}
                 <td>{{ site_event.name }}</td>
                 <td>{{ site_event.address }}</td>
                 <td>{{ site_event.city }}</td>
@@ -41,7 +66,10 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_site_event_new') }}">Create new</a>
+    
+
+    <div><img class="card-img-top" scr="public/uploads/pictures/20kw-67d13e34bf911.jpg" alt="Default image"></div>
+        
 
 
 

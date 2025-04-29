@@ -1,4 +1,31 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+   
+    
+					<div class="mb-3">
+						{{ form_label(form.email) }}
+						{{ form_widget(form.email) }}
+						<div class="text-danger"> {{ form_errors(form.email) }}</div>
+					</div>
+                    <div class="mb-3">
+						{{ form_label(form.lastName) }}
+						{{ form_widget(form.lastName) }}
+						<div class="text-danger"> {{ form_errors(form.lastName) }}</div>
+					</div>
+                    <div class="mb-3">
+						{{ form_label(form.firstName) }}
+						{{ form_widget(form.firstName) }}
+						<div class="text-danger"> {{ form_errors(form.firstName) }}</div>
+					</div>
+                    <div class="mb-3">
+						{{ form_label(form.dateEntry) }}
+						{{ form_widget(form.dateEntry) }}
+						<div class="text-danger"> {{ form_errors(form.dateEntry) }}</div>
+					</div>
+                    <div class="mb-3">
+						{{ form_label(form.picture) }}
+						{{ form_widget(form.picture) }}
+						<div class="text-danger"> {{ form_errors(form.picture) }}</div>
+					</div>
+
     <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
