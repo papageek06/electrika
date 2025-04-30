@@ -17,15 +17,19 @@
 
 	<h2 class="text-center m-2">Event</h2>
 	<div class=" MyDiv ">
+		{% for message in app.flashes('success') %}
+		<div class="alert alert-success">{{ message }}</div>
+	{% endfor %}
 
 
-		<div class="row col-12 align-items-end justify-content-between"  > 
+		<div class="row col-12 align-items-end justify-content-between">
 			<h3 class="text-center">{{ event.name }}</h3>
 			<div class="container col-3 card MyDiv">
 				<h4 class="text-center">CONTACT</h4>
 				<p>
 					{{ event.contact ? event.contact.lastName : 'N/A'}}-{{ event.contact ? event.contact.firstName : 'N/A'}}
 				</p>
+
 				<p>
 					Email :
 					{{event.contact ? event.contact.email : 'N/A'}}</p>
@@ -33,7 +37,7 @@
 					Tel :
 					{{event.contact ? event.contact.phoneNumber : 'N/A'}}</p>
 				<button class="btn btn-primary m-2" style="">
-					<a href="{{ path('app_event_edit', {'id': event.id}) }}">Edit</a>
+					<a href="{{ path('app_contact_edit', {'id': event.contact.id}) }}">Edit</a>
 				</button>
 			</div>
 			<div class="container col-3 card MyDiv ">
@@ -48,7 +52,7 @@
 					Ville :
 					{{site.city ? site.city : 'N/A'}}</p>
 				<button class="btn btn-primary m-2 " style="justify-content: end;">
-					<a href="{{ path('app_event_edit', {'id': event.id}) }}">Edit</a>
+					<a href="{{ path('app_site_event_edit', {'id': event.site.id}) }}">Edit</a>
 				</button>
 
 			</div>
@@ -64,6 +68,17 @@
 
 				<p>fin de demontage :
 					{{ event.dateEnd ? event.dateEnd|date('Y-m-d') : '' }}</p>
+				<h5>Fichiers PDF BL</h5>
+				<ul>
+					{% for file in pdfFiles %}
+						<li>
+							<a href="{{ asset(file) }}" target="_blank">{{ file|split('/')|last }}</a>
+						</li>
+					{% else %}
+						<li>Aucun fichier PDF trouvé.</li>
+					{% endfor %}
+				</ul>
+
 				<button class="btn btn-primary m-2">
 					<a href="{{ path('app_event_edit', {'id': event.id}) }}">Edit</a>
 				</button>

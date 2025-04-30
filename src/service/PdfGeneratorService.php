@@ -36,7 +36,7 @@ class PdfGeneratorService {
         $domPdf->render();
         $invoicePDF = $domPdf->output();
 
-        $uploadDirectory = $this->kernel->getProjectDir() . "/public/pdf" . $destinationPath;
+        $uploadDirectory = $this->kernel->getProjectDir() . "/public/" . $destinationPath;
         if (!file_exists($uploadDirectory)) {
             mkdir($uploadDirectory, 0777, true);
         }

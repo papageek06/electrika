@@ -39,22 +39,22 @@
 		</div>
 	</div>
 	<div>
-<button type="submit" class="btn btn-primary ">Valider les modifications</button>
-		<div class="MyDiv" >
-			<form method="POST" action="{{ path('app_event_detail_update_all') }}" data-turbo="false"  >
-            
+
+		<div class="MyDiv">
+			<form method="POST" action="{{ path('app_event_detail_update_all') }}" data-turbo="false">
+				<button type="submit" class="btn btn-primary ">Valider les modifications</button>
 				<table class="table  table-hover table-sm">
-					
-					<thead >
+
+					<thead>
 						<tr>
 							<th class="CellStart">Événement</th>
 							<th class="MyCell">
 								<select name="statusAll" id="statusAll">
 									<option value="">Statut global</option>
 									<option value="new">New</option>
-									<option value="preparer">Préparer</option>
-									<option value="livrer">Livrer</option>
-									<option value="retour">Retour</option>
+									<option value="bp">Préparer</option>
+									<option value="bl">Livrer</option>
+									<option value="br">Retour</option>
 								</select>
 							</th>
 							<th class="MyCell">Préparateur</th>
@@ -71,9 +71,9 @@
 								<td class="MyCell">
 									<select name="statuses[{{ event_detail.id }}]" class="statusSelect">
 										<option value="new" {% if event_detail.mouve == 'new' %} selected {% endif %}>New</option>
-										<option value="preparer" {% if event_detail.mouve == 'preparer' %} selected {% endif %}>Préparer</option>
-										<option value="livrer" {% if event_detail.mouve == 'livrer' %} selected {% endif %}>Livrer</option>
-										<option value="retour" {% if event_detail.mouve == 'retour' %} selected {% endif %}>Retour</option>
+										<option value="preparer" {% if event_detail.mouve == 'bp' %} selected {% endif %}>Préparer</option>
+										<option value="livrer" {% if event_detail.mouve == 'bl' %} selected {% endif %}>Livrer</option>
+										<option value="retour" {% if event_detail.mouve == 'br' %} selected {% endif %}>Retour</option>
 									</select>
 								</td>
 								<td class="MyCell">{{ event_detail.user ? event_detail.user.firstName : 'N/A' }}</td>

@@ -60,18 +60,18 @@
 <body>
     <div class="invoice-container">
         <div class="header">
-            <h1>Facture</h1>
+            <h1>{{ event_details|first.mouve }}</h1>
             <p>Date : {{ date|date('d/m/Y') }}</p>
         </div>
 
         <div class="company-info">
-            <p><strong>Vendeur :</strong> Nom de l'entreprise</p>
+            <p><strong>Entreprise :</strong> Electrika Antibes</p>
             <p>Email : contact@votreentreprise.com</p>
             <p>Adresse : 123 Rue Exemple, 75001 Paris, France</p>
         </div>
 
         <div class="client-info">
-            <p><strong>Client :</strong> {{ user.email }}</p>
+            <p><strong>Fait par :</strong> {{ user.email }}</p>
             <p>ID Client : {{ user.id }}</p>
         </div>
 
@@ -80,28 +80,21 @@
                 <tr>
                     <th>Article</th>
                     <th>Quantité</th>
-                    <th>Prix Unitaire</th>
-                    <th>Sous-total</th>
                 </tr>
             </thead>
             <tbody>
-                {% for item in order_details %}
+                {% for item in event_details %}
                     <tr>
-                        <td>{{ item.article.title }}</td>
+                        <td>{{ item.event.name }}</td>
                         <td>{{ item.quantity }}</td>
-                        <td>{{ item.article.price|number_format(2, ',', ' ') }} €</td>
-                        <td>{{ (item.quantity * item.article.price)|number_format(2, ',', ' ') }} €</td>
                     </tr>
                 {% endfor %}
-                <tr>
-                    <td colspan="3" class="total">Total :</td>
-                    <td class="total">{{ total_amount|number_format(2, ',', ' ') }} €</td>
-                </tr>
+
             </tbody>
         </table>
 
         <div class="footer">
-            <p>Merci pour votre achat !</p>
+            <p>Merci de reverifier vos prepa et livraison  !</p>
             <p>Entreprise XYZ - SIRET : 123456789 - contact@votreentreprise.com</p>
         </div>
     </div>

@@ -1,9 +1,7 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
+# config/services.yaml
 
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.admin_email: 'marc.longmar@gmail.com'
     app.mailAddress: '%env(MAIL_ADDRESS)%'
     pictures_directory: '%kernel.project_dir%/public/uploads/pictures'
 
@@ -12,13 +10,8 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-    App\Twig\SessionExtension:
-        arguments:
-            $requestStack: '@request_stack'
-        tags: [ 'twig.extension' ]
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
+    # Charge tous les services automatiquement
     App\:
         resource: '../src/'
         exclude:
@@ -26,5 +19,13 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    # Configuration spécifique pour EmailService (doit être APRÈS App\:)
+    App\Service\EmailService:
+        arguments:
+            $adminEmail: '%app.admin_email%'
+
+    # Configuration spécifique pour ton extension Twig
+    App\Twig\SessionExtension:
+        arguments:
+            $requestStack: '@request_stack'
+        tags: [ 'twig.extension' ]
