@@ -4,22 +4,13 @@
 {% endblock %}
 
 {% block body %}
-	<style>
-		.myCard {
-			background-color: rgb(129, 129, 130) !important;
-			border-radius: 10px;
-			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-			transition: transform 0.2s;
-			padding: 1rem !important;
-		}
-	</style>
 
 
 	<h2 class="text-center m-2">Event</h2>
 	<div class=" MyDiv ">
 		{% for message in app.flashes('success') %}
-		<div class="alert alert-success">{{ message }}</div>
-	{% endfor %}
+			<div class="alert alert-success">{{ message }}</div>
+		{% endfor %}
 
 
 		<div class="row col-12 align-items-end justify-content-between">

@@ -19,10 +19,11 @@
 			{% endif %}
 		</div>
 
-		<div class="row justify-content-center mb-4">
+		<div class="row justify-content-center mb-4 ">
 			<div
-				class="col-md-6">
+				class="col-md-6 col-lg-4 ">
 				{# --------------------------select event-------------------------------------------- #}
+
 				<select id="eventSelect" name="event_id" class="form-select">
 					<option value="">Sélectionnez un événement</option>
 					{% for event in events %}
@@ -31,14 +32,16 @@
 						</option>
 					{% endfor %}
 				</select>
+
 				{# --------------------------select category-------------------------------------------- #}
-				{# <select id="categorySelect" name="category" class="form-select">
-				                <option value="">search by category</option>
-				                {% for category in categorys %}
-				                    <option value="{{ category }}" 
-				                        > {{ category }}</option>           
-				                {% endfor %}
-				            </select> #}
+
+				<select id="categorySelect" name="category" class="form-select">
+					<option value="">search by category</option>
+					{% for category in categorys %}
+						<option value="{{ category.id }}">
+							{{ category.name }}</option>
+					{% endfor %}
+				</select>
 			</div>
 		</div>
 
@@ -46,76 +49,91 @@
 			<a href="{{ path('app_product_new') }}" class="btn btn-success">Créer un nouveau produit</a>
 		</div>
 		{# ----------------------------------------------tableau product------------------------------------------- #}
-		<divImage</th <div class="MyDiv"> <table class=" "> <thead> <tr> <th class="CellStart">>
-			<th class="MyCell">Nom</th>
-			<th class="MyCell">Catégorie</th>
-			<th class="MyCell">Stock Initial</th>
-			{% for i in 1..6 %}
-				<th class="MyCell d-sm-none d-lg-table-cell ">Week +{{ i }}</th>
-			{% endfor %}
-			<th class="MyCell">quantity</th>
-			<th class="MyCell">Actions</th>
-			<th class="cellEnd">panier</th>
 
-
-		</tr>
-	</thead>
-	<tbody>
-		{% for productList in products %}
-			<tr class="">
-				{% if productList.picture  %}
-					<td class="CellStart"><img width="70px" src="{{ asset('uploads/pictures/' ~ productList.picture) }}" alt="photo"></td>
-				{% else %}
-					<td class="CellStart"><img width="70px" src="{{ asset('uploads/pictures/default.png') }}" alt="photo"></td>
-				{% endif %}
-				<td class="MyCell">{{ productList.name }}</td>
-				<td class="MyCell">{{ productList.category ? productList.category.name : "N/A" }}</td>
-				<td class="MyCell">{{ productList.stockInitial }}</td>
-
-				{% for i in 1..6 %}
-					<td class="MyCell d-sm-none d-lg-table-cell ">
-						{% set stockDisponible = productList.stockInitial %}
-						{% set currentWeekDate = date()|date_modify('+' ~ (i * 7) ~ ' days') %}
-						{# Ajoute i semaines à aujourd'hui #}
-
-						{% for eventDetail in eventDetails %}
-							{# Vérification correcte des dates #}
-							{% if eventDetail.product.id == productList.id and eventDetail.event.dateMontage < currentWeekDate and eventDetail.event.dateEnd > currentWeekDate %}
-								{% set stockDisponible = stockDisponible - eventDetail.quantity %}
-							{% endif %}
+		<div class="MyDiv m-0 m-sm-2">
+			<table class=" ">
+				<thead>
+					<tr>
+						<th class="CellStart d-none d-md-table-cell">></th>
+						<th class="MyCell">Nom</th>
+						<th class="MyCell d-none d-md-table-cell">Catégorie</th>
+						<th class="MyCell">Stock Initial</th>
+						{% for i in 1..6 %}
+							<th class="MyCell d-none d-lg-table-cell ">Week +{{ i }}</th>
 						{% endfor %}
-						{{ stockDisponible }}
-					</td>
-				{% endfor %}
+						<th class="MyCell">quantity</th>
+						<th class="MyCell">Actions</th>
+						<th class="cellEnd">panier</th>
+						<th style="display:none;">category id</th>
 
-				<form method="post" action="{{ path('app_cart_add') }}" data-turbo="false">
-					<td class="MyCell"><input class="col-4" type="number" name="quantity" value="1"></td>
-					<td class="MyCell col-1 ">
-						<a href="{{ path('app_product_show', {'id': productList.id}) }}" class="btn btn-primary col-9 m-1">Détails</a>
-						<input type="hidden" name="product_id" value="{{ productList.id }}">
-						<input type="hidden" name="user" value="{{ app.user.id }}">
-						<input type="hidden" name="event_id" id="eventIdInput" value="{{ cart_session['eventId'][0] ?? '' }}">
-						<button class="btn btn-warning mt-1  col-9 m-1" type="submit">add</button>
-					</td>
-				</form>
-				<td class="cellEnd">
-					{% if cart_session %}
-						{% for  key, id in cart_session.idProduct %}
 
-							{% if productList.id == cart_session.idProduct[key] %}
-								{{cart_session.quantity[key]}}
+					</tr>
+				</thead>
+				<tbody>
+					{% for productList in products %}
+						<tr class="">
+							{% if productList.picture %}
+								<td class="CellStart d-none d-md-table-cell">
+									<img width="70px" src="{{ asset('uploads/pictures/' ~ productList.picture) }}" alt="{{ productList.name }}">
+								</td>
+							{% else %}
+
+								<td class="CellStart d-none d-md-table-cell"><img width="70px" src="{{ asset('uploads/pictures/default.png') }}" alt="photo"></td>
 							{% endif %}
-						{% endfor %}
-					{% endif %}
-				</td>
-			</tr>
-		{% else %}
-			<tr>
-				<td colspan="8">Aucun produit trouvé</td>
-			</tr>
-		{% endfor %}
-	</tbody>
-</table></div></div><script>// ----------JavaScript to handle the event selection and update the hidden input field----------
+							<td class="MyCell ">{{ productList.name }}</td>
+							<td class="MyCell d-none d-md-table-cell">{{ productList.category ? productList.category.name : "N/A" }}</td>
+							<td class="MyCell">{{ productList.stockInitial }}</td>
+
+							{% for i in 1..6 %}
+								<td class="MyCell d-none d-md-table-cell">
+									{% set stockDisponible = productList.stockInitial %}
+									{% set currentWeekDate = date()|date_modify('+' ~ (i * 7) ~ ' days') %}
+									{# Ajoute i semaines à aujourd'hui #}
+
+									{% for eventDetail in eventDetails %}
+										{# Vérification correcte des dates #}
+										{% if eventDetail.product.id == productList.id and eventDetail.event.dateMontage < currentWeekDate and eventDetail.event.dateEnd > currentWeekDate %}
+											{% set stockDisponible = stockDisponible - eventDetail.quantity %}
+										{% endif %}
+									{% endfor %}
+									{{ stockDisponible }}
+								</td>
+							{% endfor %}
+							<td class="category-{{ productList.category.id }}" style="display:none;"></td>
+
+
+							<form method="post" action="{{ path('app_cart_add') }}" data-turbo="false">
+								<td class="MyCell"><input class="col-4" type="number" name="quantity" value="1"></td>
+								<td class="MyCell col-1 ">
+									<a href="{{ path('app_product_show', {'id': productList.id}) }}" class="btn btn-primary col-9 m-1">Détails</a>
+									<input type="hidden" name="product_id" value="{{ productList.id }}">
+									<input type="hidden" name="user" value="{{ app.user.id }}">
+									<input type="hidden" name="event_id" id="eventIdInput" value="{{ cart_session['eventId'][0] ?? '' }}">
+									<button class="btn btn-warning mt-1  col-9 m-1" type="submit">add</button>
+								</td>
+							</form>
+							<td class="cellEnd">
+								{% if cart_session %}
+									{% for  key, id in cart_session.idProduct %}
+
+										{% if productList.id == cart_session.idProduct[key] %}
+											{{cart_session.quantity[key]}}
+										{% endif %}
+									{% endfor %}
+								{% endif %}
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="8">Aucun produit trouvé</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script>
+		// ----------JavaScript to handle the event selection and update the hidden input field----------
 document.addEventListener("DOMContentLoaded", function () {
 let eventSelect = document.getElementById("eventSelect");
 let eventIdInputList = document.querySelectorAll("input[name='event_id']");
@@ -129,4 +147,28 @@ input.value = selectedEventId;
 
 updateEventIdInputs();
 eventSelect.addEventListener("change", updateEventIdInputs);
-});</script>{% endblock %}
+});
+
+// ----------JavaScript to handle the category selection and filter the products ----------
+
+document.addEventListener("DOMContentLoaded", function () {
+let categorySelect = document.getElementById("categorySelect");
+let productRows = document.querySelectorAll("tbody tr");
+
+function filterProducts() {
+let selectedCategoryId = categorySelect.value;
+productRows.forEach(row => {
+let categoryCell = row.querySelector("td.category-" + selectedCategoryId);
+if (selectedCategoryId === "" || categoryCell) {
+row.style.display = "";
+} else {
+row.style.display = "none";
+}
+});
+}
+
+categorySelect.addEventListener("change", filterProducts);
+filterProducts();
+});
+	</script>
+{% endblock %}

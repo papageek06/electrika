@@ -1,54 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block title %}User
+{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
+	<h1>User</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>photo</th>
-                <td><img width="100px" src="/uploads/pictures/{{ user.picture }}"></td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ user.roles == "ROLE_ADMIN" ? 'Administateur' : 'User' }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>*****</td>
-            </tr>
-            <tr>
-                <th>FirstName</th>
-                <td>{{ user.firstName }}</td>
-            </tr>
-            <tr>
-                <th>LastName</th>
-                <td>{{ user.lastName }}</td>
-            </tr>
-            <tr>
-                <th>DateEntry</th>
-                <td>{{ user.dateEntry ? user.dateEntry|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ user.status }}</td>
-            </tr>
-            <tr>
-                <th>IsVerified</th>
-                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
+	<div class="card m-4 p-0 MyDiv " style="width: 25rem;">
+		<div class="card-header">
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
+			{% if user.picture %}
+				<img class="card-img-top " src="{{ asset('uploads/pictures/' ~ user.picture) }}" alt="Image de l'event">
+			{% else %}
+				<img class="card-img-top" src="{{ asset('uploads/pictures/default.png') }}" alt="Default image">
+			{% endif %}
+		</div>
+		<div class="card-body">
+			<h5 class="card-title">Profile</h5>
+			<p class="card-text">Id :{{ user.id }}</p>
+			<p class="card-text">Nom :{{ user.firstName }}</p>
+			<p class="card-text">Prenom :{{user.lastName}}</p>
+			<p class="card-text">Password :*****
+				<a class="btn bg-warning" href="" onclick="return confirm('Are you sure?')">changer</a>
+			</p>
+			<p class="card-text">{{ user.dateEntry ? user.dateEntry|date('d/m/Y') : '' }}</p>
+			<p class="card-text">statut :{{ user.status == "ROLE_ADMIN" ? 'Administateur' : 'Tech' }}</p>
+			<p>Email verifier :{{ user.isVerified ? 'Yes' : 'No' }}</p>
+			<button class="btn bg-success">
+				<a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+			</button>
+			{% if is_granted('ROLE_ADMIN') %}
+				<a class="btn bg-danger" onclick="return confirm('Are you sure?')">{{ include('user/_delete_form.html.twig') }}</a>
+			{% endif %}
+		</div>
+	</div>
 
-    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
 
-    {{ include('user/_delete_form.html.twig') }}
+	<a class="btn bg-secondary" href="{{ path('app_user_index') }}">back to list</a>
+
+
 {% endblock %}

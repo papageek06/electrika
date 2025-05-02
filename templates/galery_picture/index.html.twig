@@ -1,35 +1,54 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}GaleryPicture index{% endblock %}
+{% block title %}GaleryPicture index
+{% endblock %}
 
 {% block body %}
-    <h1>GaleryPicture index</h1>
-{{dump(galery_pictures)}}
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Picture</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for galery_picture in galery_pictures %}
-            <tr>
-                <td>{{ galery_picture.id }}</td>
-                <td><img width="70px" src="{{ asset('uploads/pictures/' ~ galery_picture.picture) }}" alt="photo"></td>
-                <td>
-                    <a href="{{ path('app_galery_picture_show', {'id': galery_picture.id}) }}">show</a>
-                    <a href="{{ path('app_galery_picture_edit', {'id': galery_picture.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<h1>GaleryPicture index</h1>
+	<table class="table">
+		<thead>
+			<tr>
+				<th class="MyCell">Id</th>
+				<th class="MyCell">Picture</th>
+				<th class="MyCell">Events</th>
+				<th class="MyCell">Site</th>
+				<th class="MyCell">actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for galery_picture in galery_pictures %}
+				<tr>
+					<td class="MyCell">{{ galery_picture.id }}</td>
+					<td class="MyCell"><img width="70px" src="{{ asset('uploads/pictures/' ~ galery_picture.picture) }}" alt="photo"></td>
+					<td class="MyCell">
+						{% if galery_picture.event %}
+							{% for event in galery_picture %},{{ event.name}}<br>
+							{% endfor %}
+						</td>
+					{% else %}
+						<p>no event</p>
+					{% endif %}
+					<td class="MyCell">
+						{% if galery_picture.site %}
+							{% for site in galery_picture.site %}
+								{{ site.name }}<br>
+							{% endfor %}
+						{% else %}
+							<p>no site</p>
+						{% endif %}
+					</td>
+					<td class="MyCell">
+						<a href="{{ path('app_galery_picture_show', {'id': galery_picture.id}) }}">show</a>
+						<a href="{{ path('app_galery_picture_edit', {'id': galery_picture.id}) }}">edit</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="3">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 
-    <a href="{{ path('app_galery_picture_new') }}">Create new</a>
+	<a href="{{ path('app_galery_picture_new') }}">Create new</a>
 {% endblock %}

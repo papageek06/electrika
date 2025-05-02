@@ -1,43 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event index{% endblock %}
+{% block title %}Event index
+{% endblock %}
 
 {% block body %}
-<style>
-</style>
+	<style></style>
 
-    <h1 class="text-center m-2  ">Event index</h1>
+	<h1 class="text-center m-2  ">Event index</h1>
 
-<a class="btn bg-success m-3" href="{{ path('app_event_new') }}">Create new</a>
-<div class="row col-12 justify-content-around ">
-        {% for event in events %}
-        
-        {% set firstPicture = event.galeryPictures|first %}
-        
-            <div class="card m-4 p-0 myCard" style="width: 18rem;">
+	<a class="btn bg-success m-3" href="{{ path('app_event_new') }}">Create new</a>
+	<div class="row col-12 justify-content-around ">
+		{% for event in events %}
 
-                {% if firstPicture %}
-                    <img class="card-img-top" src="{{ asset('uploads/pictures/' ~ firstPicture.picture) }}" alt="Image de l'event">
-                {% else %}
-                    <img class="card-img-top" src="{{ asset('uploads/pictures/default.png') }}" alt="Default image">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ event.name }}</h5>
-                    <p class="card-text">Montage : {{ event.dateMontage ? event.dateMontage|date('d/m/Y') : '' }}</p>
-                    <p class="card-text">event :{{ event.dateStartShow ? event.dateStartShow|date('d/m/Y') : '' }} au {{ event.dateEndSHOW ? event.dateEndSHOW|date('d/m/Y') : '' }}</p>
-                    <p class="card-text">fin :{{ event.dateEnd ? event.dateEnd|date('d/m/Y') : '' }} </p>
-                    <button class="btn bg-success"><a href="{{ path('app_event_show', {'id': event.id}) }}">show</a></button>
-                    <button class="btn bg-warning"><a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a></button>
-                    {% if is_granted('ROLE_ADMIN') %}
-                    <button class="bg-danger"><a href="{{ path('app_event_delete', {'id': event.id}) }}" onclick="return confirm('Are you sure?')">delete</a></button>
-                    {% endif %}
-                </div>
-            </div>   
-          
-        {% endfor %}
+            
+			{% set firstPicture = event.galeryPictures|first %}
+         
+			<div class="card m-4 p-0 MyDiv d-block" style="width: 18rem;">
+             
+				{% if firstPicture %}
+					<img class="card-img-top" src="{{ asset('uploads/pictures/' ~ firstPicture.picture) }}" alt="Image de l'event">
+				{% else %}
+					<img class="card-img-top" src="{{ asset('uploads/pictures/default.png') }}" alt="Default image">
+				{% endif %}
+				<div class="card-body">
+					<h5 class="card-title">{{ event.name }}</h5>
+					<p class="card-text">Montage :
+						{{ event.dateMontage ? event.dateMontage|date('d/m/Y') : '' }}</p>
+					<p class="card-text">event :{{ event.dateStartShow ? event.dateStartShow|date('d/m/Y') : '' }}
+						au
+						{{ event.dateEndSHOW ? event.dateEndSHOW|date('d/m/Y') : '' }}</p>
+					<p class="card-text">fin :{{ event.dateEnd ? event.dateEnd|date('d/m/Y') : '' }}
+					</p>
+					<button class="btn bg-success">
+						<a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
+					</button>
+					<button class="btn bg-warning">
+						<a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
+					</button>
+					{% if is_granted('ROLE_ADMIN') %}
+						<button class="bg-danger">
+							<a href="{{ path('app_event_delete', {'id': event.id}) }}" onclick="return confirm('Are you sure?')">delete</a>
+						</button>
+					{% endif %}
+				</div>
+			</div>
 
-</div>
+		{% endfor %}
 
-    
+	</div>
+
 
 {% endblock %}

@@ -6,7 +6,7 @@
 
 {% block body %}
 	<h2 class="text-center mb-5">SITE EN CONSTRUCTION !!</h2>
-	<div class="container col-4 card myCard p-4 ">
+	<div class="container col-4 card MyDiv p-4 justify-content-center">
 		<form method="post">
 			{% if error %}
 				<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>

@@ -8,27 +8,27 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>FirstName</th>
-                <th>LastName</th>
-                <th>PhoneNumber</th>
-                <th>Email</th>
-                <th>Status</th>
-                <th>actions</th>
+                <th class="MyCell">Id</th>
+                <th class="MyCell">FirstName</th>
+                <th class="MyCell">LastName</th>
+                <th class="MyCell">PhoneNumber</th>
+                <th class="MyCell">Email</th>
+                <th class="MyCell">Status</th>
+                <th class="MyCell">action</th>
             </tr>
         </thead>
         <tbody>
         {% for contact in contacts %}
             <tr>
-                <td>{{ contact.id }}</td>
-                <td>{{ contact.firstName }}</td>
-                <td>{{ contact.lastName }}</td>
-                <td>{{ contact.phoneNumber }}</td>
-                <td>{{ contact.email }}</td>
-                <td>{{ contact.status }}</td>
-                <td>
-                    <a href="{{ path('app_contact_show', {'id': contact.id}) }}">show</a>
-                    <a href="{{ path('app_contact_edit', {'id': contact.id}) }}">edit</a>
+                <td class="MyCell">{{ contact.id }}</td>
+                <td class="MyCell">{{ contact.firstName }}</td>
+                <td class="MyCell">{{ contact.lastName }}</td>
+                <td class="MyCell">{{ contact.phoneNumber }}</td>
+                <td class="MyCell">{{ contact.email }}</td>
+                <td class="MyCell">{{ contact.status }}</td>
+                <td class="MyCell">
+                    <a class="btn bg-success w-100" href="{{ path('app_contact_show', {'id': contact.id}) }}">show</a><br>
+                    <a class="btn bg-warning w-100" href="{{ path('app_contact_edit', {'id': contact.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}

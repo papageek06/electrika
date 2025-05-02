@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tableau de bord{% endblock %}
+{% block title %}Tableau de bord
+{% endblock %}
 
 {# {% block stylesheets %}
     <link rel="stylesheet" href="/css/home_calendar_styles.css">
@@ -9,201 +10,198 @@
 {% block body %}
 
 
-{% if app.user %}
-    <h1 class="text-center mt-2">Bienvenue {{ app.user.firstName }}!</h1>
-{% else %}
-    <h2>Bienvenue!</h2>
-{% endif %}
-<div class=" col-12 row justify-content-between">
-    {# -----------------------------------------------detail commande-------------------------------- #}
-    <div class="card bg-dark text-white col-2 m-5 "  style="width: 18rem;height: 18rem;">
-        <div class="card-body ">
-            <h5 class="card-title  ">Total des commandes</h5>
-            {% for order in orderCounts %}
-                                    {% if order.status == 'new' %}
-                                        <li><button class='bg-primary col-6 ' >{{ order.status }} : {{ order.total }}</button></li>
-                                        
-                                    {% elseif order.status == 'preparer' %}
-                                        <li><button class='bg-warning col-6'>{{ order.status }} : {{ order.total }}</button> </li>
-                                        
-                                    {% elseif order.status == 'livrer' %}
-                                        <li><button class='bg-success col-6'>{{ order.status }} : {{ order.total }}</button> </li>
-                                        
-                                    {% elseif order.status == 'retour' %}
+	{% if app.user %}
+		<h1 class="text-center mt-2">Bienvenue
+			{{ app.user.firstName }}!</h1>
+	{% else %}
+		<h2>Bienvenue!</h2>
+	{% endif %}
+	<div
+		class=" col-12 row justify-content-between">
+		{# -----------------------------------------------detail commande-------------------------------- #}
+		<div class="card bg-dark text-white col-2 m-5 " style="width: 18rem;height: 18rem;">
+			<div class="card-body ">
+				<h5 class="card-title  ">Total des commandes</h5>
+				{% for order in orderCounts %}
+					{% if order.status == 'new' %}
+						<li>
+							<button class='bg-primary col-6 '>{{ order.status }}
+								:
+								{{ order.total }}</button>
+						</li>
 
-                                        <li> <button class='bg-danger col-6'>{{ order.status }} : {{ order.total }}</button></li>
-                                    {% else %} 
-                                        <li>Aucune commande trouvée</li>   
-                                    {% endif %}
-                                    
-                                
-                                    
-                                {% endfor %}
-            <button class="btn btn-primary m-1 badge col-5 mt-5 "  id="btnNewEvent">+ événement</button><br>
-            <button class="btn btn-primary m-1 badge col-5"  id="btnNewSite">+ Site </button><br>
-            <button class="btn btn-primary m-1 badge col-5"  id="btnNewContact">+ Contact </button>
-        </div>
-    </div>
+					{% elseif order.status == 'preparer' %}
+						<li>
+							<button class='bg-warning col-6'>{{ order.status }}
+								:
+								{{ order.total }}</button>
+						</li>
+
+					{% elseif order.status == 'livrer' %}
+						<li>
+							<button class='bg-success col-6'>{{ order.status }}
+								:
+								{{ order.total }}</button>
+						</li>
+
+					{% elseif order.status == 'retour' %}
+
+						<li>
+							<button class='bg-danger col-6'>{{ order.status }}
+								:
+								{{ order.total }}</button>
+						</li>
+					{% else %}
+						<li>Aucune commande trouvée</li>
+					{% endif %}
 
 
-        
+				{% endfor %}
+				<button class="btn btn-primary m-1 badge col-5 mt-5 " id="btnNewEvent">+ événement</button><br>
+				<button class="btn btn-primary m-1 badge col-5" id="btnNewSite">+ Site
+				</button><br>
+				<button class="btn btn-primary m-1 badge col-5" id="btnNewContact">+ Contact
+				</button>
+			</div>
+		</div>
 
-        
-        {# ------------------------------------ Calendrier ------------------------------------ #}
-    <div class=" col-7 m-5">
-                <div class="card">
-                    <div class="card-header bg-dark text-white">Planning des événements</div>
-                    <div class="card-body p-2" id="calendar-holder"></div>
-                </div>
-            </div>
-    </div>
+
+		{# ------------------------------------ Calendrier ------------------------------------ #}
+		<div class=" col-11 col-lg-7 m-5 d-none d-sm-block">
+			<div class="card">
+				<div class="card-header bg-dark text-white">Planning des événements</div>
+				<div class="card-body p-2" id="calendar-holder"></div>
+			</div>
+		</div>
+	</div>
 </div>
-    {# -------------------------------------- Événements à venir -------------------------------------- #}
-    <div class="row m-5 ">
-        <h2 class="text-white">Événements à venir :</h2>
-        {% for event in events %}
-            {% if event.dateMontage > date('now') %}
-                {# <div class="card col-lg-3 col-md-4 col-sm-6 mb-3"> #}
-                    <div class="card event-card col-3 m-2">
-                        <div class="card-body text-center">
-                            <div class="gallery">
-                                {% set firstImage = event.galeryPictures|first %} {# Récupère la première image liée à l'événement #}
+{# -------------------------------------- Événements à venir -------------------------------------- #}
+<div class="row m-5 justify-content-center justify-content-lg-around">
+	<h2 class="text-white">Événements à venir :</h2>
+	{% for event in events %}
+		{% if event.dateEnd > date('now') %}
+			{# <div class="card col-lg-3 col-md-4 col-sm-6 mb-3"> #}
+			<div class="card event-card col-12 col-lg-3 m-2 MyDiv">
+				<div class="card-body text-center  ">
+					<div class="gallery ">
+						{% set firstImage = event.galeryPictures|first %}
+						{# Récupère la première image liée à l'événement #}
 
-                                {% if firstImage %}
-                                    <img src="{{ asset('uploads/pictures/' ~ firstImage.picture) }}" alt="Image de {{ event.name }}" width="200">
-                                {% else %}
-                                    <img src="uploads/pictures/default.png" widht="200"alt="Aucune image disponible"></img>
-                                {% endif %}
-                            </div>
+						{% if firstImage %}
+							<img class="w-100" src="{{ asset('uploads/pictures/' ~ firstImage.picture) }}" alt="Image de {{ event.name }}" >
+						{% else %}
+							<img class="w-100" src="uploads/pictures/default.png"  alt="Aucune image disponible"></img>
+					{% endif %}
+				</div>
 
-                            <h5 class="card-title">{{ event.name }}</h5>
-                            <p class="card-text">Montage : {{ event.dateMontage|date('d/m') }}</p>
-                            <p class="card-text">Démontage : {{ event.dateEnd|date('d/m') }}</p>
-                            <p class="card-text">Lieu : {{ event.site.city }}</p>
-                            <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-primary">Détails</a>
-                        </div>
-                    </div>
-                {# </div> #}
-            {% endif %}
-        {% endfor %}
-    </div>
+				<h5 class="card-title">{{ event.name }}</h5>
+				<p class="card-text">Montage :
+					{{ event.dateMontage|date('d/m') }}</p>
+				<p class="card-text">Démontage :
+					{{ event.dateEnd|date('d/m') }}</p>
+				<p class="card-text">Lieu :
+					{{ event.site.city }}</p>
+				<a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-primary">Détails</a>
+			</div>
+		</div>
+		{# </div> #}
+	{% endif %}
+{% endfor %}</div>{# ----------------------------------------------formulaire evenement---------------------------------------------- #}<div id="form event" style="display: none ; position: fixed; top:0%; left: 10%; z-index: 1000; background-color: rgb(83, 142, 231); padding: 20px; border-radius: 10px;Border: 1px solid black" class="col-8 col-lg-4 ">
+<button id="closeModalBtn" style="float:right;">X</button>
+{{ form_start(form) }}
 
-{# ----------------------------------------------formulaire evenement---------------------------------------------- #}
-<div id="form event" style="display: none ; position: fixed; top: 0%; left: 30%; z-index: 1000; background-color: rgb(83, 142, 231); padding: 20px; border-radius: 10px;Border: 1px solid black" class="col-3 ">
-        <button id="closeModalBtn" style="float:right;">X</button>
-             {{ form_start(form) }}
-            
-            <p>{{ form_label(form.name) }}</p>
-            <p>{{ form_widget(form.name) }}</p>
-            <p>{{ form_label(form.dateMontage) }}</p>
-            <p>{{ form_widget(form.dateMontage) }}</p>
-            <p>{{ form_label(form.dateStartShow) }}</p>
-            <p>{{ form_widget(form.dateStartShow) }}</p>
-            <p>{{ form_label(form.dateEndSHOW) }}</p>
-            <p>{{ form_widget(form.dateEndSHOW) }}</p>
-            <p>{{ form_label(form.dateEnd) }}</p>
-            <p>{{ form_widget(form.dateEnd) }}</p>
-            <p>{{ form_label(form.site) }}</p>
-            <p>{{ form_widget(form.site) }}</p>
-            <p>{{ form_label(form.contact) }}</p>
-            <p>{{ form_widget(form.contact) }}</p>
-            <button type="submit" class="btn btn-primary">Ajouter</button>
-            
-            {{ form_end(form) }}
-        
-</div>
-{# ----------------------------------------------formulaire Site---------------------------------------------- #}
-<div id="form site" style="display: none ; position: fixed; top: 0%; left: 30%; z-index: 1000; background-color:rgb(83, 142, 231); padding: 20px; border-radius: 10px;Border: 1px solid black " class="col-3 ">
-        <button id="closeModalBtnSite" style="float:right;">X</button>
-             {{ form_start(formSite) }}
-            <p>{{ form_label(formSite.name) }}</p>
-            <p>{{ form_widget(formSite.name) }}</p>
-            <p>{{ form_label(formSite.address) }}</p>
-            <p>{{ form_widget(formSite.address) }}</p>
-            <p>{{ form_label(formSite.city) }}</p>
-            <p>{{ form_widget(formSite.city) }}</p>
-            <p>{{ form_label(formSite.postalCode) }}</p>
-            <p>{{ form_widget(formSite.postalCode) }}</p>
-            <p>{{ form_label(formSite.description) }}</p>
-            <p>{{ form_widget(formSite.description) }}</p>
-            <button type="submit" class="btn btn-success">Ajouter</button>
-            
-            {{ form_end(form) }}
-        
-</div>
-{# ----------------------------------------------formulaire Contact---------------------------------------------- #}
-<div id="form contact" style="display: none ; position: fixed; top: 0%; left: 30%; z-index: 1000; background-color: rgb(83, 142, 231); padding: 20px; border-radius: 10px;Border: 1px solid black" class="col-3 ">
-        <button id="closeModalBtnContact" style="float:right;">X</button>
-             {{ form_start(formContact) }}
-            
-            <p>{{ form_label(formContact.firstName) }}</p>
-            <p>{{ form_widget(formContact.firstName) }}</p>
-            <p>{{ form_label(formContact.lastName) }}</p>
-            <p>{{ form_widget(formContact.lastName) }}</p>
-            <p>{{ form_label(formContact.phoneNumber) }}</p>
-            <p>{{ form_widget(formContact.phoneNumber) }}</p>
-            <p>{{ form_label(formContact.email) }}</p>
-            <p>{{ form_widget(formContact.email) }}</p>
-            <p>{{ form_label(formContact.status) }}</p>
-            <p>{{ form_widget(formContact.status) }}</p>
-            <button type="submit" class="btn btn-primary">Ajouter</button>
-            
-            {{ form_end(form) }}
-        
-</div>
+<p>{{ form_label(form.name) }}</p>
+<p>{{ form_widget(form.name) }}</p>
+<p>{{ form_label(form.dateMontage) }}</p>
+<p>{{ form_widget(form.dateMontage) }}</p>
+<p>{{ form_label(form.dateStartShow) }}</p>
+<p>{{ form_widget(form.dateStartShow) }}</p>
+<p>{{ form_label(form.dateEndSHOW) }}</p>
+<p>{{ form_widget(form.dateEndSHOW) }}</p>
+<p>{{ form_label(form.dateEnd) }}</p>
+<p>{{ form_widget(form.dateEnd) }}</p>
+<p>{{ form_label(form.site) }}</p>
+<p>{{ form_widget(form.site) }}</p>
+<p>{{ form_label(form.contact) }}</p>
+<p>{{ form_widget(form.contact) }}</p>
+<button type="submit" class="btn btn-primary">Ajouter</button>
 
- {# ---------------------------------lien calendar-------------------------------- #}
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
-<script src='fullcalendar/core/locales-all.global.js'></script>
+{{ form_end(form) }}</div>{# ----------------------------------------------formulaire Site---------------------------------------------- #}<div id="form site" style="display: none ; position: fixed; top:0%; left: 10%; z-index: 1000; background-color: rgb(83, 142, 231); padding: 20px; border-radius: 10px;Border: 1px solid black" class="col-8 col-lg-4 ">
+<button id="closeModalBtnSite" style="float:right;">X</button>
+{{ form_start(formSite) }}
+<p>{{ form_label(formSite.name) }}</p>
+<p>{{ form_widget(formSite.name) }}</p>
+<p>{{ form_label(formSite.address) }}</p>
+<p>{{ form_widget(formSite.address) }}</p>
+<p>{{ form_label(formSite.city) }}</p>
+<p>{{ form_widget(formSite.city) }}</p>
+<p>{{ form_label(formSite.postalCode) }}</p>
+<p>{{ form_widget(formSite.postalCode) }}</p>
+<p>{{ form_label(formSite.description) }}</p>
+<p>{{ form_widget(formSite.description) }}</p>
+<button type="submit" class="btn btn-success">Ajouter</button>
 
-<script>
+{{ form_end(form) }}</div>{# ----------------------------------------------formulaire Contact---------------------------------------------- #}<div id="form contact" style="display: none ; position: fixed; top:0%; left: 10%; z-index: 1000; background-color: rgb(83, 142, 231); padding: 20px; border-radius: 10px;Border: 1px solid black" class="col-8 col-lg-4 ">
+<button id="closeModalBtnContact" style="float:right;">X</button>
+{{ form_start(formContact) }}
+
+<p>{{ form_label(formContact.firstName) }}</p>
+<p>{{ form_widget(formContact.firstName) }}</p>
+<p>{{ form_label(formContact.lastName) }}</p>
+<p>{{ form_widget(formContact.lastName) }}</p>
+<p>{{ form_label(formContact.phoneNumber) }}</p>
+<p>{{ form_widget(formContact.phoneNumber) }}</p>
+<p>{{ form_label(formContact.email) }}</p>
+<p>{{ form_widget(formContact.email) }}</p>
+<p>{{ form_label(formContact.status) }}</p>
+<p>{{ form_widget(formContact.status) }}</p>
+<button type="submit" class="btn btn-primary">Ajouter</button>
+
+{{ form_end(form) }}</div>{# ---------------------------------lien calendar-------------------------------- #}<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script><script src='fullcalendar/core/locales-all.global.js'></script><script>
 
 // --------------------------------------------------- calendar-------------------------- --------------------------------
 document.addEventListener('DOMContentLoaded', function () {
-    var calendarEl = document.getElementById('calendar-holder');
-    var calendar = new FullCalendar.Calendar(calendarEl, {        
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-        },
-        aspectRatio: 2,
-        editable : true ,
-        events: {{ data|raw }}
-    });
-    
-    calendar.setOption('locale', 'fr');
-    calendar.setOption('aspectRatio', 2.3);
-    calendar.render();
-    calendar.on('eventClick', function(info) {
-        var event = info.event;
-        var eventId = event.id; // Récupérer l'ID de l'événement
-        window.location.href = '/event/' + eventId; // Rediriger vers la page de détails de l'événement
-    });
+var calendarEl = document.getElementById('calendar-holder');
+var calendar = new FullCalendar.Calendar(calendarEl, {
+initialView: 'dayGridMonth',
+headerToolbar: {
+left: 'prev,next today',
+center: 'title',
+right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+},
+aspectRatio: 2,
+editable: true,
+events: {{ data|raw }}
+});
+
+calendar.setOption('locale', 'fr');
+calendar.setOption('aspectRatio', 2.3);
+calendar.render();
+calendar.on('eventClick', function (info) {
+var event = info.event;
+var eventId = event.id; // Récupérer l'ID de l'événement
+window.location.href = '/event/' + eventId; // Rediriger vers la page de détails de l'événement
+});
 });
 
 // ----------------------------------------------------form event--------------------------------
-document.getElementById('btnNewEvent').addEventListener('click', function() {
-    document.getElementById('form event').style.display = 'block';
+document.getElementById('btnNewEvent').addEventListener('click', function () {
+document.getElementById('form event').style.display = 'block';
 });
-document.getElementById('closeModalBtn').addEventListener('click', function() {
-    document.getElementById('form event').style.display = 'none';
+document.getElementById('closeModalBtn').addEventListener('click', function () {
+document.getElementById('form event').style.display = 'none';
 });
 // ----------------------------------------------------form Site--------------------------------
-document.getElementById('btnNewSite').addEventListener('click', function() {
-    document.getElementById('form site').style.display = 'block';
+document.getElementById('btnNewSite').addEventListener('click', function () {
+document.getElementById('form site').style.display = 'block';
 });
-document.getElementById('closeModalBtnSite').addEventListener('click', function() {
-    document.getElementById('form site').style.display = 'none';
+document.getElementById('closeModalBtnSite').addEventListener('click', function () {
+document.getElementById('form site').style.display = 'none';
 });
 // ----------------------------------------------------form Contact--------------------------------
-document.getElementById('btnNewContact').addEventListener('click', function() {
-    document.getElementById('form contact').style.display = 'block';
+document.getElementById('btnNewContact').addEventListener('click', function () {
+document.getElementById('form contact').style.display = 'block';
 });
-document.getElementById('closeModalBtnContact').addEventListener('click', function() {
-    document.getElementById('form contact').style.display = 'none';
-});
-</script>
-
-{% endblock %}
+document.getElementById('closeModalBtnContact').addEventListener('click', function () {
+document.getElementById('form contact').style.display = 'none';
+});</script>{% endblock %}

@@ -29,13 +29,13 @@
     <table class="table">
         <thead>
             <tr>
-                <th>photo</th>
-                <th>Name</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>PostalCode</th>
-                <th>Description</th>
-                <th>actions</th>
+                <th class="MyCell">photo</th>
+                <th class="MyCell">Name</th>
+                <th class="MyCell">Address</th>
+                <th class="MyCell">City</th>
+                <th class="MyCell">PostalCode</th>
+                <th class="MyCell">Description</th>
+                <th class="MyCell">actions</th>
             </tr>
         </thead>
         <tbody>
@@ -44,23 +44,23 @@
             <tr class="myRow">
             >
             {% if firstPicture %}
-                <td><img class="card-img-top"  src="{{ asset('uploads/pictures/' ~ firstPicture.picture) }}" alt="image"></td>
+                <td class="MyCell"><img class="card-img-top"  src="{{ asset('uploads/pictures/' ~ firstPicture.picture) }}" alt="image"></td>
             {% else %}
-                <td><img class="card-img-top" src="{{asset('uploads/pictures/default.png')}}" alt="Default image"></td>
+                <td class="MyCell"><img class="card-img-top" src="{{asset('uploads/pictures/default.png')}}" alt="Default image"></td>
             {% endif %}
-                <td>{{ site_event.name }}</td>
-                <td>{{ site_event.address }}</td>
-                <td>{{ site_event.city }}</td>
-                <td>{{ site_event.postalCode }}</td>
-                <td>{{ site_event.description }}</td>
-                <td>
-                    <a href="{{ path('app_site_event_show', {'id': site_event.id}) }}">show</a>
-                    <a href="{{ path('app_site_event_edit', {'id': site_event.id}) }}">edit</a>
+                <td class="MyCell">{{ site_event.name }}</td>
+                <td class="MyCell">{{ site_event.address }}</td>
+                <td class="MyCell">{{ site_event.city }}</td>
+                <td class="MyCell">{{ site_event.postalCode }}</td>
+                <td class="MyCell">{{ site_event.description }}</td>
+                <td class="MyCell">
+                    <a class="btn bg-success w-100" href="{{ path('app_site_event_show', {'id': site_event.id}) }}">show</a><br>
+                    <a class="btn bg-warning w-100" href="{{ path('app_site_event_edit', {'id': site_event.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td class="MyCell" colspan="7">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -68,7 +68,7 @@
 
     
 
-    <div><img class="card-img-top" scr="public/uploads/pictures/20kw-67d13e34bf911.jpg" alt="Default image"></div>
+  
         
 
 

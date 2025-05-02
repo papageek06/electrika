@@ -6,6 +6,7 @@ use App\Entity\Event;
 use App\Entity\EventDetail;
 use App\Entity\Product;
 use App\Form\EventType;
+use App\Repository\CategoryRepository;
 use App\Repository\EventDetailRepository;
 use App\Repository\EventRepository;
 use App\Repository\ProductRepository;
@@ -52,7 +53,7 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
-    public function show(Event $event, EventDetailRepository $eventDetailRepository, Product $product): Response
+    public function show(Event $event, EventDetailRepository $eventDetailRepository): Response
     {
         $eventDetails = $eventDetailRepository->findBy(['event' => $event->getId()]);
         $status = 0;
@@ -92,7 +93,6 @@ foreach ($finder as $file) {
         return $this->render('event/show.html.twig', [
             'event' => $event,
             'eventDetails' => $eventDetails,
-            'products' => $product,
             'site' => $event->getSite(),
             'status' => $status,
             'pdfFiles' => $pdfFiles,
@@ -130,7 +130,7 @@ foreach ($finder as $file) {
 
 
     #[Route('/app_event_upgrade/{id}', name: 'app_event_upgrade')]
-    public function upgrade(Request $request, EventDetailRepository $eventDetailRepository, int $id, EventRepository $eventRepository, EntityManagerInterface $entityManager, PdfGeneratorService $pdfGeneratorService, MailerInterface $mailer, EmailService $emailService): Response
+    public function upgrade(Request $request, EventDetailRepository $eventDetailRepository, int $id, EventRepository $eventRepository, EntityManagerInterface $entityManager, PdfGeneratorService $pdfGeneratorService, EmailService $emailService): Response
     {
         $event = $eventRepository->find($id);
         $status = $request->query->get('status');

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Repository\CategoryRepository;
 use App\Repository\EventDetailRepository;
 use App\Repository\EventRepository;
 use App\Repository\ProductRepository;
@@ -20,7 +21,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 final class ProductController extends AbstractController
 {
     #[Route(name: 'app_product_index', methods: ['GET'])]
-    public function index(ProductRepository $productRepository,EventRepository $eventRepository,EventDetailRepository $eventDetail , EventRepository $event, SessionInterface $session): Response
+    public function index(ProductRepository $productRepository,EventRepository $eventRepository,EventDetailRepository $eventDetail , EventRepository $event, SessionInterface $session, CategoryRepository $category): Response
     {
         $retry = $eventDetail->countstockByProduct();
 
@@ -31,7 +32,8 @@ final class ProductController extends AbstractController
             'events' => $eventRepository->findAll(),
             'eventDetails' => $eventDetail->findAll(),
             'retry' => $retry,
-            'cart_session' => $session->get('cart', [])
+            'cart_session' => $session->get('cart', []),
+            'categorys' => $category->findAll()
         ]);
     }
 

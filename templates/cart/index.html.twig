@@ -3,33 +3,33 @@
 {% block title %} Mon Panier {% endblock %}
 
 {% block body %}
-<div class="container mt-5">
+<div class="MyDiv m-0 m-md-4 p-1 p-md-4 mt-2">
     <h2 class="text-center mb-4">Résumé de votre sélection</h2>
 
     {% if cart_session["idProduct"] is defined and cart_session.idProduct is not empty %}
-        <table class="table table-striped table-bordered text-center">
-            <thead class="table-dark">
+        <table class="">
+            <thead class="">
                 <tr>
-                    <th>Produit</th>
-                    <th>Description</th>
-                    <th>Stock</th>
-                    <th>Quantité</th>
-                    <th>Événement</th>
-                    <th>preparateur</th>
-                    <th>Action</th>
+                    <th class="MyCell">Produit</th>
+                    <th class="MyCell d-none d-md-table-cell">Description</th>
+                    <th class="MyCell ">Stock</th>
+                    <th class="MyCell ">Quantité</th>
+                    <th class="MyCell ">Événement</th>
+                    <th class="MyCell d-none d-md-table-cell">preparateur</th>
+                    <th class="MyCell">X</th>
                 </tr>
             </thead>
             <tbody>
                 {% for key, id in cart_session.idProduct %}
                     <tr>
-                        <td>{{ cart_session.nameProduct[key] }}</td>
-                        <td>{{ cart_session.descriptionProduct[key] }}</td>
-                        <td>{{ cart_session.stockProduct[key] }}</td>
-                        <td>{{ cart_session.quantity[key] }}</td>
-                        <td>{{ cart_session.eventName[key] }}</td>
-                        <td>{{ cart_session.userName[key] }}</td>
-                        <td>
-                            <a href="{{ path('app_cart_remove', {'index': key}) }}" class="btn btn-danger">Supprimer</a>
+                        <td class="MyCell">{{ cart_session.nameProduct[key] }}</td>
+                        <td class="MyCell d-none d-md-table-cell">{{ cart_session.descriptionProduct[key] }}</td>
+                        <td class="MyCell">{{ cart_session.stockProduct[key] }}</td>
+                        <td class="MyCell">{{ cart_session.quantity[key] }}</td>
+                        <td class="MyCell">{{ cart_session.eventName[key] }}</td>
+                        <td class="MyCell d-none d-md-table-cell">{{ cart_session.userName[key] }}</td>
+                        <td class="MyCell">
+                            <a href="{{ path('app_cart_remove', {'index': key}) }}" class="btn btn-danger">X</a>
                         </td>
                     </tr>
                 {% endfor %}

@@ -40,28 +40,29 @@
 	</div>
 	<div>
 
-		<div class="MyDiv">
-			<form method="POST" action="{{ path('app_event_detail_update_all') }}" data-turbo="false">
-				<button type="submit" class="btn btn-primary ">Valider les modifications</button>
-				<table class="table  table-hover table-sm">
+		<div class="MyDiv  m-md-4 p-md-4 m-0 p-0">
+			<table class="table  ">
+				<form method="POST" action="{{ path('app_event_detail_update_all') }}" data-turbo="false">
+					<button type="submit" class="btn btn-primary ">Valider les modifications</button>
+
 
 					<thead>
 						<tr>
-							<th class="CellStart">Événement</th>
+							<th class="CellStart">EVENT</th>
 							<th class="MyCell">
 								<select name="statusAll" id="statusAll">
-									<option value="">Statut global</option>
+									<option value="">Statut</option>
 									<option value="new">New</option>
-									<option value="bp">Préparer</option>
+									<option value="bp ">Pret</option>
 									<option value="bl">Livrer</option>
 									<option value="br">Retour</option>
 								</select>
 							</th>
-							<th class="MyCell">Préparateur</th>
+							<th class="MyCell d-none d-md-table-cell ">Préparateur</th>
 							<th class="MyCell">Article</th>
-							<th class="MyCell">Quantité</th>
-							<th class="MyCell">Date</th>
-							<th class="cellEnd">Actions</th>
+							<th class="MyCell">Q</th>
+							<th class="MyCell d-none d-md-table-cell">Date</th>
+							<th class="cellEnd">x</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -76,12 +77,14 @@
 										<option value="retour" {% if event_detail.mouve == 'br' %} selected {% endif %}>Retour</option>
 									</select>
 								</td>
-								<td class="MyCell">{{ event_detail.user ? event_detail.user.firstName : 'N/A' }}</td>
+								<td class="MyCell d-none d-md-table-cell">{{ event_detail.user ? event_detail.user.firstName : 'N/A' }}</td>
 								<td class="MyCell">{{ event_detail.product ? event_detail.product.name : 'N/A' }}</td>
-								<td class="MyCell"><input type='number' name="quantities[{{ event_detail.id }}]" value='{{ event_detail.quantity }}'></td>
-								<td class="MyCell">{{ event_detail.date ? event_detail.date|date('Y-m-d') : '' }}</td>
-								<td class="cellEnd">
-									<a class="btn bg-danger" href="{{ path('app_event_detail_delete', {'id': event_detail.id}) }}">Supprimer</a>
+								<td class="MyCell" style="width: ;">
+									<input type="number" name="quantities[{{ event_detail.id }}]" value="{{ event_detail.quantity }}" style="width: 10px; padding: 0; font-size: 0.8rem;">
+								</td>
+								<td class="MyCell d-none d-md-table-cell">{{ event_detail.date ? event_detail.date|date('Y-m-d') : '' }}</td>
+								<td class="cellEnd ">
+									<a class="btn bg-danger " href="{{ path('app_event_detail_delete', {'id': event_detail.id}) }}">x</a>
 								</td>
 							</tr>
 						{% else %}
@@ -90,10 +93,10 @@
 							</tr>
 						{% endfor %}
 					</tbody>
-				</table>
+				</form>
+			</table>
 
 
-			</form>
 		</div>
 
 	</div>
