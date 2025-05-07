@@ -4,6 +4,12 @@
 {% endblock %}
 
 {% block body %}
+	<style>
+		.card-correction {
+			height: 310px;
+			justify-content: space-between;
+		}
+	</style>
 
 
 	<h2 class="text-center m-2">Event</h2>
@@ -13,9 +19,9 @@
 		{% endfor %}
 
 
-		<div class="row col-12 align-items-end justify-content-between">
+		<div class="row col-12 align-items-end justify-content-between ">
 			<h3 class="text-center">{{ event.name }}</h3>
-			<div class="container col-3 card MyDiv">
+			<div class="container col-3 card MyDiv card-correction ">
 				<h4 class="text-center">CONTACT</h4>
 				<p>
 					{{ event.contact ? event.contact.lastName : 'N/A'}}-{{ event.contact ? event.contact.firstName : 'N/A'}}
@@ -31,7 +37,7 @@
 					<a href="{{ path('app_contact_edit', {'id': event.contact.id}) }}">Edit</a>
 				</button>
 			</div>
-			<div class="container col-3 card MyDiv ">
+			<div class="container col-3 card MyDiv card-correction">
 				<h4 class="text-center">SITE</h4>
 
 				<p>
@@ -47,7 +53,7 @@
 				</button>
 
 			</div>
-			<div class="container col-3 card MyDiv  ">
+			<div class="container col-3 card MyDiv card-correction ">
 				<h4 class="text-center">DATE</h4>
 				<p>Montage :
 					{{ event.dateMontage ? event.dateMontage|date('Y-m-d') : '' }}</p>
@@ -59,17 +65,16 @@
 
 				<p>fin de demontage :
 					{{ event.dateEnd ? event.dateEnd|date('Y-m-d') : '' }}</p>
-				<h5>Fichiers PDF BL</h5>
-				<ul>
-					{% for file in pdfFiles %}
-						<li>
-							<a href="{{ asset(file) }}" target="_blank">{{ file|split('/')|last }}</a>
-						</li>
-					{% else %}
-						<li>Aucun fichier PDF trouvé.</li>
-					{% endfor %}
-				</ul>
+				<h5>Fichiers PDF </h5>
+				<select name="file" id="fileSelect" class="form-select">
+					<option value="">Sélectionnez un fichier PDF</option>
 
+					{% for file in pdfFiles %}
+						<option value="{{ asset(file) }}">{{ file|split('/')|last }}</option>
+					{% else %}
+						<option disabled>Aucun fichier PDF trouvé.</option>
+					{% endfor %}
+				</select>
 				<button class="btn btn-primary m-2">
 					<a href="{{ path('app_event_edit', {'id': event.id}) }}">Edit</a>
 				</button>
@@ -221,5 +226,15 @@
 		</div>
 
 	</div>
+
+{# --------------------------- gestion du selecteur de fichier --------------------------- #}
+	<script>
+		document.getElementById('fileSelect').addEventListener('change', function () {
+const selectedUrl = this.value;
+if (selectedUrl) {
+window.open(selectedUrl, '_blank');
+}
+});
+	</script>
 
 {% endblock %}

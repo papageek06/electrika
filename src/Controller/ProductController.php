@@ -57,14 +57,61 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
-    public function show(Product $product): Response
-    {
        
-        return $this->render('product/show.html.twig', [
-            'product' => $product,
-        ]);
-    }
+        #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
+        public function show(Product $product, EventDetailRepository $eventDetailRepository): Response
+        {
+            
+            $eventDetails = $eventDetailRepository->findByProduct($product->getId());
+            $calendarEvents = [];
+            $productId = $product->getId();
+            $stockInitial = $product->getStockInitial();
+            
+            $eventQuantities = []; // [eventId => total quantity]
+            
+            foreach ($eventDetails as $detail) {
+                // On ne garde que les lignes du bon produit + mouvement = 'new'
+                if (
+                    $detail->getProduct()->getId() === $productId &&
+                    $detail->getMouve() === 'new'
+                ) {
+                    $eventId = $detail->getEvent()->getId();
+                    if (!isset($eventQuantities[$eventId])) {
+                        $eventQuantities[$eventId] = [
+                            'event' => $detail->getEvent(),
+                            'total' => 0
+                        ];
+                    }
+            
+                    $eventQuantities[$eventId]['total'] += $detail->getQuantity();
+                }
+            }
+            
+            // Formatage pour FullCalendar
+            foreach ($eventQuantities as $eventData) {
+                $event = $eventData['event'];
+                $quantity = $eventData['total'];
+            
+                $start = $event->getDateMontage();
+                $end = (clone $event->getDateEnd())->modify('+1 day');
+            
+                $calendarEvents[] = [
+                    'title' => $event->getName() . " - $quantity / $stockInitial",
+                    'start' => $start->format('Y-m-d'),
+                    'end'   => $end->format('Y-m-d'),
+                    'color' => $quantity > $stockInitial ? '#dc3545' : '#28a745'
+                ];
+            }
+            
+            return $this->render('product/show.html.twig', [
+                'product' => $product,
+                'calendarEvents' => $calendarEvents,
+    
+            ]);
+    
+        }
+
+    
 
     #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Product $product, EntityManagerInterface $entityManager,SluggerInterface $slugger): Response

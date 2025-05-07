@@ -47,9 +47,23 @@ class Product
     #[ORM\Column(length: 150, nullable: true)]
     private ?string $picture = null;
 
+    /**
+     * @var Collection<int, SpareParts>
+     */
+    #[ORM\ManyToMany(targetEntity: SpareParts::class, mappedBy: 'product')]
+    private Collection $spareParts;
+
+    /**
+     * @var Collection<int, Connector>
+     */
+    #[ORM\ManyToMany(targetEntity: Connector::class, mappedBy: 'product')]
+    private Collection $connectors;
+
     public function __construct()
     {
         $this->eventDetails = new ArrayCollection();
+        $this->spareParts = new ArrayCollection();
+        $this->connectors = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -180,6 +194,60 @@ class Product
     public function setPicture(?string $picture): static
     {
         $this->picture = $picture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SpareParts>
+     */
+    public function getSpareParts(): Collection
+    {
+        return $this->spareParts;
+    }
+
+    public function addSparePart(SpareParts $sparePart): static
+    {
+        if (!$this->spareParts->contains($sparePart)) {
+            $this->spareParts->add($sparePart);
+            $sparePart->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSparePart(SpareParts $sparePart): static
+    {
+        if ($this->spareParts->removeElement($sparePart)) {
+            $sparePart->removeProduct($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Connector>
+     */
+    public function getConnectors(): Collection
+    {
+        return $this->connectors;
+    }
+
+    public function addConnector(Connector $connector): static
+    {
+        if (!$this->connectors->contains($connector)) {
+            $this->connectors->add($connector);
+            $connector->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConnector(Connector $connector): static
+    {
+        if ($this->connectors->removeElement($connector)) {
+            $connector->removeProduct($this);
+        }
 
         return $this;
     }

@@ -22,12 +22,16 @@
 					<td class="MyCell"><img width="70px" src="{{ asset('uploads/pictures/' ~ galery_picture.picture) }}" alt="photo"></td>
 					<td class="MyCell">
 						{% if galery_picture.event %}
-							{% for event in galery_picture %},{{ event.name}}<br>
+
+
+							{% for event in galery_picture.event %}
+								{{ event.name}}<br>
 							{% endfor %}
-						</td>
-					{% else %}
-						<p>no event</p>
-					{% endif %}
+
+						{% else %}
+							<p>no event</p>
+						{% endif %}
+					</td>
 					<td class="MyCell">
 						{% if galery_picture.site %}
 							{% for site in galery_picture.site %}
@@ -38,7 +42,7 @@
 						{% endif %}
 					</td>
 					<td class="MyCell">
-						<a href="{{ path('app_galery_picture_show', {'id': galery_picture.id}) }}">show</a>
+						<a href="{{ path('app_galery_picture_show', {'id': galery_picture.id}) }}">show</a><br>
 						<a href="{{ path('app_galery_picture_edit', {'id': galery_picture.id}) }}">edit</a>
 					</td>
 				</tr>

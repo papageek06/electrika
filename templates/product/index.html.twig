@@ -19,12 +19,12 @@
 			{% endif %}
 		</div>
 
-		<div class="row justify-content-center mb-4 ">
-			<div
-				class="col-md-6 col-lg-4 ">
-				{# --------------------------select event-------------------------------------------- #}
 
-				<select id="eventSelect" name="event_id" class="form-select">
+		<div class="container mb-4">
+			<div
+				class="d-flex flex-wrap gap-2 justify-content-center align-items-center">
+				<!-- Select Event -->
+				<select id="eventSelect" name="event_id" class="form-select" style="max-width: 250px;">
 					<option value="">Sélectionnez un événement</option>
 					{% for event in events %}
 						<option value="{{ event.id }}" {% if cart_session is defined and cart_session["eventId"] is defined and event.id in cart_session["eventId"] %} selected {% endif %}>
@@ -33,15 +33,16 @@
 					{% endfor %}
 				</select>
 
-				{# --------------------------select category-------------------------------------------- #}
-
-				<select id="categorySelect" name="category" class="form-select">
-					<option value="">search by category</option>
+				<!-- Select Category -->
+				<select id="categorySelect" name="category" class="form-select" style="max-width: 250px;">
+					<option value="">Search by category</option>
 					{% for category in categorys %}
-						<option value="{{ category.id }}">
-							{{ category.name }}</option>
+						<option value="{{ category.id }}">{{ category.name }}</option>
 					{% endfor %}
 				</select>
+
+				<!-- Input Search -->
+				<input type="text" id="searchInput" class="form-control" placeholder="Recherche de produit..." style="max-width: 250px;">
 			</div>
 		</div>
 
@@ -71,7 +72,7 @@
 				</thead>
 				<tbody>
 					{% for productList in products %}
-						<tr class="">
+						<tr class="product-item" data-category="{{ productList.category.id }}" data-name="{{ productList.name|lower }}">
 							{% if productList.picture %}
 								<td class="CellStart d-none d-md-table-cell">
 									<img width="70px" src="{{ asset('uploads/pictures/' ~ productList.picture) }}" alt="{{ productList.name }}">
@@ -80,25 +81,28 @@
 
 								<td class="CellStart d-none d-md-table-cell"><img width="70px" src="{{ asset('uploads/pictures/default.png') }}" alt="photo"></td>
 							{% endif %}
-							<td class="MyCell ">{{ productList.name }}</td>
+							<td class="MyCell" id="{{ productList.name }}">{{ productList.name }}</td>
 							<td class="MyCell d-none d-md-table-cell">{{ productList.category ? productList.category.name : "N/A" }}</td>
 							<td class="MyCell">{{ productList.stockInitial }}</td>
 
 							{% for i in 1..6 %}
-								<td class="MyCell d-none d-md-table-cell">
-									{% set stockDisponible = productList.stockInitial %}
-									{% set currentWeekDate = date()|date_modify('+' ~ (i * 7) ~ ' days') %}
-									{# Ajoute i semaines à aujourd'hui #}
+								{# Calcule la date pour la semaine i #}
+								{% set stockDisponible = productList.stockInitial %}
+								{% set currentWeekDate = date()|date_modify('+' ~ (i * 7) ~ ' days') %}
 
-									{% for eventDetail in eventDetails %}
-										{# Vérification correcte des dates #}
-										{% if eventDetail.product.id == productList.id and eventDetail.event.dateMontage < currentWeekDate and eventDetail.event.dateEnd > currentWeekDate %}
-											{% set stockDisponible = stockDisponible - eventDetail.quantity %}
-										{% endif %}
-									{% endfor %}
+								{# Calcule le stock disponible en parcourant les événements #}
+								{% for eventDetail in eventDetails %}
+									{% if eventDetail.product.id == productList.id and eventDetail.event.dateMontage < currentWeekDate and eventDetail.event.dateEnd > currentWeekDate %}
+										{% set stockDisponible = stockDisponible - eventDetail.quantity %}
+									{% endif %}
+								{% endfor %}
+
+								{# Affiche la cellule avec fond rouge si stockDisponible < 0 #}
+								<td class="MyCell d-none d-md-table-cell {{  stockDisponible|number_format < 0 ?  'bg-danger text-white' : '' }}">
 									{{ stockDisponible }}
 								</td>
 							{% endfor %}
+
 							<td class="category-{{ productList.category.id }}" style="display:none;"></td>
 
 
@@ -169,6 +173,40 @@ row.style.display = "none";
 
 categorySelect.addEventListener("change", filterProducts);
 filterProducts();
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+const searchInput = document.getElementById('searchInput');
+const categorySelect = document.getElementById('categorySelect');
+const productRows = document.querySelectorAll('.product-item');
+const eventSelect = document.getElementById('eventSelect');
+
+function filterProducts() {
+const searchTerm = searchInput.value.toLowerCase();
+const selectedCategory = categorySelect.value;
+
+productRows.forEach(function (row) {
+const name = row.dataset.name; // data-name
+const categoryId = row.dataset.category; // data-category
+
+const matchesSearch = name.includes(searchTerm);
+const matchesCategory = ! selectedCategory || categoryId === selectedCategory;
+
+row.style.display = matchesSearch && matchesCategory ? '' : 'none';
+});
+}
+
+// Lancer le filtre à chaque modification
+searchInput.addEventListener('input', filterProducts);
+categorySelect.addEventListener('change', filterProducts);
+
+// Mettre à jour le champ caché event_id dans les formulaires
+eventSelect.addEventListener('change', function () {
+const selectedEventId = this.value;
+document.querySelectorAll('input#selectedEventInput').forEach(input => {
+input.value = selectedEventId;
+});
+});
 });
 	</script>
 {% endblock %}

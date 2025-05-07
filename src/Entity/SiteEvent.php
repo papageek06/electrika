@@ -48,6 +48,12 @@ class SiteEvent
     #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'siteEvents')]
     private Collection $contact;
 
+    /**
+     * @var Collection<int, Connector>
+     */
+    #[ORM\ManyToMany(targetEntity: Connector::class, mappedBy: 'site')]
+    private Collection $connectors;
+
     
 
    
@@ -57,6 +63,7 @@ class SiteEvent
         $this->events = new ArrayCollection();
         $this->galeryPictures = new ArrayCollection();
         $this->contact = new ArrayCollection();
+        $this->connectors = new ArrayCollection();
         
 
     }
@@ -203,6 +210,33 @@ class SiteEvent
     public function removeContact(Contact $contact): static
     {
         $this->contact->removeElement($contact);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Connector>
+     */
+    public function getConnectors(): Collection
+    {
+        return $this->connectors;
+    }
+
+    public function addConnector(Connector $connector): static
+    {
+        if (!$this->connectors->contains($connector)) {
+            $this->connectors->add($connector);
+            $connector->addSite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConnector(Connector $connector): static
+    {
+        if ($this->connectors->removeElement($connector)) {
+            $connector->removeSite($this);
+        }
 
         return $this;
     }

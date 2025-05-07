@@ -1,4 +1,51 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+{% block content %}
+	<h1 class="text-center">Modifier les liens de l'image
+	</h1>
+
+	{{ form_start(form, { attr: { enctype: 'multipart/form-data' } }) }}
+
+	<div class="row justify-content-around mb-3 col-12">
+		<div class="mb-3 col-12 col-md-5">
+			{{ form_label(form.picture) }}
+			{{ form_widget(form.picture, { attr: { accept: 'image/*', onchange: 'previewImage(this)' } }) }}
+			{{ form_errors(form.picture) }}
+		</div>
+
+		<div class="mb-3 col-12 col-md-5">
+			<img id="imagePreview" src="#" alt="Aperçu" style="max-width: 300px; display: none;"/>
+		</div>
+	</div>
+
+	<div class="row justify-content-around">
+		<div class="mb-3 col-12 col-md-5">
+			{{ form_label(form.event) }}
+			{{ form_widget(form.event) }}
+		</div>
+
+		<div class="mb-3 col-12 col-md-5">
+			{{ form_label(form.site) }}
+			{{ form_widget(form.site) }}
+		</div>
+	</div>
+
+	{{ form_widget(form.submit) }}
+
+	{{ form_end(form) }}
+	<a class"btn bg-danger" href="{{ path('app_galery_picture_index') }}">back to list</a>
+
+	<script>
+		function previewImage(input) {
+const preview = document.getElementById('imagePreview');
+const file = input.files[0];
+if (file) {
+const reader = new FileReader();
+reader.onload = function (e) {
+preview.src = e.target.result;
+preview.style.display = 'block';
+};
+reader.readAsDataURL(file);
+}
+}
+	</script>
+
+{% endblock %}

@@ -2,7 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Category;
 use App\Entity\Event;
+use App\Entity\EventDetail;
+use App\Entity\GaleryPicture;
 use App\Entity\Product;
 use App\Entity\SiteEvent;
 use App\Entity\User;
@@ -54,6 +57,10 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('product', 'fas fa-list', Product::class);
         yield MenuItem::linkToCrud('Event', 'fas fa-list', Event::class);
         yield MenuItem::linkToCrud('User', 'fas fa-list', User::class);
+        yield MenuItem::linkToCrud('category', 'fas fa-list', Category::class);
+        yield MenuItem::linkToCrud('event_detail', 'fas fa-list', EventDetail::class);
+        yield MenuItem::linkToCrud('galery-picture', 'fas fa-list', GaleryPicture::class);
+        
         
 
     }

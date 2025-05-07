@@ -21,7 +21,7 @@ class GaleryPictureType extends AbstractType
             ->add('picture', FileType::class, [
                 'label' => 'picture',
                 'mapped' => false, // ne lie pas directement le champ à la colonne picture de User
-                'required' => true
+                'required' => false,
 
                 ])
             ->add('event', EntityType::class, [
@@ -30,8 +30,9 @@ class GaleryPictureType extends AbstractType
                 'placeholder' => 'Sélectionner un événement',
                 'required' => false, // Laisser facultatif si nécessaire
                 'multiple' => true, // Un seul événement par image
-                'expanded' => false , // Sélection sous forme de liste déroulante
-                'by_reference' => false // Nécessaire pour les relations ManyToMany
+                'expanded' => true , // Sélection sous forme de liste déroulante
+                'by_reference' => true, // Nécessaire pour les relations ManyToMany
+                'attr' => ['style' => 'display: flex; flex-direction: column; gap: 5px;']
             ])
             ->add('site', EntityType::class, [
                 'class' => SiteEvent::class,
@@ -39,8 +40,9 @@ class GaleryPictureType extends AbstractType
                 'placeholder' => 'Sélectionner un site',
                 'required' => false,
                 'multiple' => true,
-                'expanded' => false,
-                'by_reference' => false // Nécessaire pour ManyToMany
+                'expanded' => true,
+                'by_reference' => true, // Nécessaire pour ManyToMany
+                'attr' => ['style' => 'display: flex; flex-direction: column; gap: 5px;']
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer',

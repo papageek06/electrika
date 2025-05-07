@@ -1,4 +1,23 @@
+
+<div class="MyCard justifi-items-center text-center" style=" " >
+<h2 class"">Edit Product</h2>
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+
+<h3>{{ form_label(form.name) }}</h3>
+<p>{{ form_widget(form.name) }}</p>
+<p>{{ form_label(form.stockInitial) }}</p>
+<p>{{ form_widget(form.stockInitial) }}</p>
+<p>{{ form_label(form.stock) }}</p>
+<p>{{ form_widget(form.stock) }}</p>
+<p>{{ form_label(form.hs) }}</p>
+<p>{{ form_widget(form.hs) }}</p>
+<p>{{ form_label(form.lost) }}</p>
+<p>{{ form_widget(form.lost) }}</p>
+<p>{{ form_label(form.category) }}</p>
+<p>{{ form_widget(form.category) }}</p>
+<p>{{ form_label(form.picture) }}</p>
+<p>{{ form_widget(form.picture) }}</p>
+<button type="submit" class="btn btn-primary">Ajouter</button>
+
+{{ form_end(form) }}</div>
+</div>
