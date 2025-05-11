@@ -2,37 +2,35 @@
 
 namespace App\Form;
 
-use App\Entity\Connector;
-use App\Entity\SiteEvent;
+use App\Entity\product;
+use App\Entity\SpareParts;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SiteEventType extends AbstractType
+class SparePartsForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name')
-            ->add('address')
-            ->add('city')
-            ->add('postalCode')
+            ->add('reference')
             ->add('description')
-            ->add('connectors', EntityType::class, [
-                'class' => Connector::class,
-                'choice_label' => 'type', // ou autre selon ce que tu veux afficher
+            ->add('quantity')
+            ->add('picture')
+            ->add('product', EntityType::class, [
+                'class' => product::class,
+                'choice_label' => 'id',
                 'multiple' => true,
-                'expanded' => false,
-                'by_reference' => false,
-                'label' => 'Connecteurs associés'
-            ]);
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => SiteEvent::class,
+            'data_class' => SpareParts::class,
         ]);
     }
 }

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connector index{% endblock %}
+
+{% block body %}
+    <h1>Connector index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Type</th>
+                <th>Power</th>
+                <th>In_out</th>
+                <th>Phase_type</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for connector in connectors %}
+            <tr>
+                <td>{{ connector.id }}</td>
+                <td>{{ connector.type.label() }}</td>
+                <td>{{ connector.power.label() }}</td>
+                <td>{{ connector.inOut.label() }}</td>
+                <td>{{ connector.phaseType.label() }}</td>
+                <td>
+                    <a href="{{ path('app_connector_show', {'id': connector.id}) }}">show</a>
+                    <a href="{{ path('app_connector_edit', {'id': connector.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_connector_new') }}">Create new</a>
+{% endblock %}

@@ -1,102 +1,118 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Facture</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            margin: 20px;
-            color: #333;
-        }
-        .invoice-container {
-            width: 100%;
-            max-width: 800px;
-            margin: auto;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-            color: #007BFF;
-        }
-        .company-info, .client-info {
-            margin-bottom: 20px;
-        }
-        .company-info p, .client-info p {
-            margin: 5px 0;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .total {
-            font-weight: bold;
-            text-align: right;
-        }
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-        }
-    </style>
-</head>
-<body>
-    <div class="invoice-container">
-        <div class="header">
-            <h1>{{ event_details|first.mouve }}</h1>
-            <p>Date : {{ date|date('d/m/Y') }}</p>
-        </div>
+	<head>
+		<meta charset="UTF-8">
+		<title>Facture</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				font-size: 14px;
+				margin: 20px;
+				color: #333;
+			}
+			.invoice-container {
+				width: 100%;
+				max-width: 800px;
+				margin: auto;
+			}
+			.header {
+				text-align: center;
+				margin-bottom: 20px;
+			}
+			.header h1 {
+				margin: 0;
+				font-size: 24px;
+				color: #007BFF;
+			}
+			.company-info,
+			.client-info {
+				margin-bottom: 20px;
+			}
+			.company-info p,
+			.client-info p {
+				margin: 5px 0;
+			}
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				margin-top: 20px;
+			}
+			table,
+			th,
+			td {
+				border: 1px solid #ddd;
+			}
+			th,
+			td {
+				padding: 8px;
+				text-align: left;
+			}
+			th {
+				background-color: #f2f2f2;
+			}
+			.total {
+				font-weight: bold;
+				text-align: right;
+			}
+			.footer {
+				margin-top: 20px;
+				text-align: center;
+				font-size: 12px;
+				color: #666;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="invoice-container">
+			<div class="header">
+				{% if event_details is not empty %}
+					<h1>{{ event_details|first.mouve }}</h1>
+				{% else %}
+					<h1>Aucun détail disponible</h1>
+				{% endif %}
 
-        <div class="company-info">
-            <p><strong>Entreprise :</strong> Electrika Antibes</p>
-            <p>Email : contact@votreentreprise.com</p>
-            <p>Adresse : 123 Rue Exemple, 75001 Paris, France</p>
-        </div>
+				<p>Date :
+					{{ date|date('d/m/Y') }}</p>
+			</div>
 
-        <div class="client-info">
-            <p><strong>Fait par :</strong> {{ user.email }}</p>
-            <p>ID Client : {{ user.id }}</p>
-        </div>
+			<div class="company-info">
+				<p>
+					<strong>Entreprise :</strong>
+					Electrika Antibes</p>
+				<p>Email : contact@votreentreprise.com</p>
+				<p>Adresse : 123 Rue Exemple, 75001 Paris, France</p>
+			</div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Article</th>
-                    <th>Quantité</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in event_details %}
-                    <tr>
-                        <td>{{ item.event.name }}</td>
-                        <td>{{ item.quantity }}</td>
-                    </tr>
-                {% endfor %}
+			<div class="client-info">
+				<p>
+					<strong>Fait par :</strong>
+					{{ user.firstName }}</p>
+				<p>ID Client :
+					{{ user.id }}</p>
+			</div>
 
-            </tbody>
-        </table>
+			<table>
+				<thead>
+					<tr>
+						<th>Article</th>
+						<th>Quantité</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for item in event_details %}
+						<tr>
+							<td>{{ item.product.name }}</td>
+							<td>{{ item.quantity }}</td>
+						</tr>
+					{% endfor %}
 
-        <div class="footer">
-            <p>Merci de reverifier vos prepa et livraison  !</p>
-            <p>Entreprise XYZ - SIRET : 123456789 - contact@votreentreprise.com</p>
-        </div>
-    </div>
-</body>
+				</tbody>
+			</table>
+
+			<div class="footer">
+				<p>Merci de reverifier vos prepa et livraison  !</p>
+				<p>Entreprise XYZ - SIRET : 123456789 - contact@votreentreprise.com</p>
+			</div>
+		</div>
+	</body>
 </html>

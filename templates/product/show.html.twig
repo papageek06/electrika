@@ -29,6 +29,7 @@
 					{{ product.hs }}</p>
 				<p class="card-text">Lost :
 					{{ product.lost }}</p>
+					{{dump(product)}}
 				<button class="">
 					<a href="{{ path('app_product_edit',{'id' : product.id}) }}">edit</a>
 				</button>

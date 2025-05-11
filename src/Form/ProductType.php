@@ -3,11 +3,13 @@
 namespace App\Form;
 
 use App\Entity\Category;
+use App\Entity\Connector;
 use App\Entity\Product;
 use App\Repository\CategoryRepository;
 use Container4ldQ9nV\getCategoryRepositoryService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,8 +42,22 @@ class ProductType extends AbstractType
                         'mimeTypesMessage' => 'Veuillez télécharger une image au format JPEG ou PNG.',
                     ])
                 ],
-            ])
-        ;
+            ]);
+        
+        // ->add('connector', ChoiceType::class, [
+        //     'class' => Connector::class,
+        //     'choice_label' => 'type', // ou autre champ lisible (ex: 'type', 'power', etc.)
+        //     'multiple' => true,
+        //     'expanded' => false, // ou true pour checkboxes
+        //     'by_reference' => false, // important pour ManyToMany
+        //     'label' => 'Connecteurs associés'
+        // ]);
+        // ->add('connector', EntityType::class, [
+        //     'class' => Connector::class,
+        //     'choice_label' => 'type', // Affiche le nom de la catégorie dans la liste déroulante
+        //     'placeholder' => 'Sélectionner une catégorie',
+        //     'required' => false,
+        // ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

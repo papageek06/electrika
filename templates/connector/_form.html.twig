@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+	<div class="card shadow-sm">
+		<div class="card-header bg-primary text-white">
+			<h5 class="mb-0">Ajouter un connecteur</h5>
+		</div>
+		<div class="card-body">
+			{{ form_start(form, { attr: { class: 'row g-3' } }) }}
+
+			{# Ligne 1 : in_out + type #}
+			<div class="col-md-6">
+				{{ form_label(form.in_out) }}
+				{{ form_widget(form.in_out, { attr: { class: 'form-select' } }) }}
+				{{ form_errors(form.in_out) }}
+			</div>
+
+			<div class="col-md-6">
+				{{ form_label(form.type) }}
+				{{ form_widget(form.type, { attr: { class: 'form-select' } }) }}
+				{{ form_errors(form.type) }}
+			</div>
+
+			{# Ligne 2 : power + phase_type #}
+			<div class="col-md-6">
+				{{ form_label(form.power) }}
+				{{ form_widget(form.power, { attr: { class: 'form-select' } }) }}
+				{{ form_errors(form.power) }}
+			</div>
+
+			<div class="col-md-6">
+				{{ form_label(form.phase_type) }}
+				{{ form_widget(form.phase_type, { attr: { class: 'form-select' } }) }}
+				{{ form_errors(form.phase_type) }}
+			</div>
+
+			{# Soumission #}
+			<div class="col-12 mt-3">
+				<button type="submit" class="btn btn-success">Enregistrer</button>
+			</div>
+
+			{{ form_end(form) }}
+		</div>
+	</div>
+</div>
+{% endblock %}
+

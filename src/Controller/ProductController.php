@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Connector;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\CategoryRepository;

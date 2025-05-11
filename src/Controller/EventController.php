@@ -4,21 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Entity\EventDetail;
-use App\Entity\Product;
 use App\Form\EventType;
-use App\Repository\CategoryRepository;
 use App\Repository\EventDetailRepository;
 use App\Repository\EventRepository;
-use App\Repository\ProductRepository;
 use App\Service\EmailService;
 use App\Service\PdfGeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
-use PhpParser\Node\Stmt\TryCatch;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/event')]
@@ -79,16 +74,16 @@ final class EventController extends AbstractController
         }
         // ------------------ afficher les pdf lier ------------------
 
-$finder = new Finder();
-$finder->files()
-    ->in($this->getParameter('kernel.project_dir') . '/public/uploads/invoices')
-    ->name('/^' . $event->getId() . '_.*\.pdf$/');
+        $finder = new Finder();
+        $finder->files()
+            ->in($this->getParameter('kernel.project_dir') . '/public/uploads/invoices')
+            ->name('/^' . $event->getId() . '_.*\.pdf$/');
 
-$pdfFiles = [];
+        $pdfFiles = [];
 
-foreach ($finder as $file) {
-    $pdfFiles[] = 'uploads/invoices/' . $file->getFilename();
-}
+        foreach ($finder as $file) {
+            $pdfFiles[] = 'uploads/invoices/' . $file->getFilename();
+        }
 
         return $this->render('event/show.html.twig', [
             'event' => $event,
@@ -145,7 +140,7 @@ foreach ($finder as $file) {
 
         foreach ($eventDetails as $eventDetail) {
 
-            //  dd($eventDetail->getMouve());
+
             if ($status == 'bp' && $eventDetail->getMouve() === 'new') {
                 $newDetail = new EventDetail();
                 $newDetail->setUser($eventDetail->getUser());
@@ -194,11 +189,15 @@ foreach ($finder as $file) {
             $invoicePDF = $pdfGeneratorService->generatePdf([
                 'user' => $this->getUser(),
                 'date' => new \DateTime(),
-                'event_details' => $eventDetailRepository->findBy(['mouve' => $status])
+                'event_details' => $eventDetailRepository->findBy(['event' => $event, 'mouve' => $status])
             ], $fileName, 'event_detail/pdf_send.html.twig', 'uploads/invoices/');
             $this->addFlash('success', 'Mises à jour enregistrées avec succès.');
         } catch (\Throwable $th) {
+                dump($th->getMessage()); // ou log l'erreur
             $this->addFlash('error', 'Erreur lors de la génération du PDF.');
+            if (!isset($invoicePDF)) {
+                return $this->redirectToRoute('app_event_show', ['id' => $id]);
+            }
         }
 
 
@@ -215,7 +214,7 @@ foreach ($finder as $file) {
                 ],
                 "Mouvement de commande !",
                 "email/order_send.html.twig"
-                
+
             );
             $this->addFlash('success', 'Mail envoyer avec succès.');
         } catch (\Throwable $th) {
