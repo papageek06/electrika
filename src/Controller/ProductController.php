@@ -4,14 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Connector;
 use App\Entity\Product;
+use App\Entity\ProductConnector;
 use App\Form\ProductType;
 use App\Repository\CategoryRepository;
+use App\Repository\ConnectorRepository;
 use App\Repository\EventDetailRepository;
 use App\Repository\EventRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -22,12 +25,12 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 final class ProductController extends AbstractController
 {
     #[Route(name: 'app_product_index', methods: ['GET'])]
-    public function index(ProductRepository $productRepository,EventRepository $eventRepository,EventDetailRepository $eventDetail , EventRepository $event, SessionInterface $session, CategoryRepository $category): Response
+    public function index(ProductRepository $productRepository, EventRepository $eventRepository, EventDetailRepository $eventDetail, EventRepository $event, SessionInterface $session, CategoryRepository $category): Response
     {
         $retry = $eventDetail->countstockByProduct();
 
 
-       
+
         return $this->render('product/index.html.twig', [
             'products' => $productRepository->findAll(),
             'events' => $eventRepository->findAll(),
@@ -42,6 +45,8 @@ final class ProductController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $product = new Product();
+        $productConnector = new ProductConnector();
+        $product->addProductConnector($productConnector);
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
@@ -58,64 +63,64 @@ final class ProductController extends AbstractController
         ]);
     }
 
-       
-        #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
-        public function show(Product $product, EventDetailRepository $eventDetailRepository): Response
-        {
-            
-            $eventDetails = $eventDetailRepository->findByProduct($product->getId());
-            $calendarEvents = [];
-            $productId = $product->getId();
-            $stockInitial = $product->getStockInitial();
-            
-            $eventQuantities = []; // [eventId => total quantity]
-            
-            foreach ($eventDetails as $detail) {
-                // On ne garde que les lignes du bon produit + mouvement = 'new'
-                if (
-                    $detail->getProduct()->getId() === $productId &&
-                    $detail->getMouve() === 'new'
-                ) {
-                    $eventId = $detail->getEvent()->getId();
-                    if (!isset($eventQuantities[$eventId])) {
-                        $eventQuantities[$eventId] = [
-                            'event' => $detail->getEvent(),
-                            'total' => 0
-                        ];
-                    }
-            
-                    $eventQuantities[$eventId]['total'] += $detail->getQuantity();
+
+    #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
+    public function show(Product $product, EventDetailRepository $eventDetailRepository , ConnectorRepository $connectorRepository): Response
+    {
+
+        $eventDetails = $eventDetailRepository->findByProduct($product->getId());
+        $calendarEvents = [];
+        $productId = $product->getId();
+        $stockInitial = $product->getStockInitial();
+
+        $eventQuantities = []; // [eventId => total quantity]
+
+        foreach ($eventDetails as $detail) {
+            // On ne garde que les lignes du bon produit + mouvement = 'new'
+            if (
+                $detail->getProduct()->getId() === $productId &&
+                $detail->getMouve() === 'new'
+            ) {
+                $eventId = $detail->getEvent()->getId();
+                if (!isset($eventQuantities[$eventId])) {
+                    $eventQuantities[$eventId] = [
+                        'event' => $detail->getEvent(),
+                        'total' => 0
+                    ];
                 }
+
+                $eventQuantities[$eventId]['total'] += $detail->getQuantity();
             }
-            
-            // Formatage pour FullCalendar
-            foreach ($eventQuantities as $eventData) {
-                $event = $eventData['event'];
-                $quantity = $eventData['total'];
-            
-                $start = $event->getDateMontage();
-                $end = (clone $event->getDateEnd())->modify('+1 day');
-            
-                $calendarEvents[] = [
-                    'title' => $event->getName() . " - $quantity / $stockInitial",
-                    'start' => $start->format('Y-m-d'),
-                    'end'   => $end->format('Y-m-d'),
-                    'color' => $quantity > $stockInitial ? '#dc3545' : '#28a745'
-                ];
-            }
-            
-            return $this->render('product/show.html.twig', [
-                'product' => $product,
-                'calendarEvents' => $calendarEvents,
-    
-            ]);
-    
         }
 
-    
+        // Formatage pour FullCalendar
+        foreach ($eventQuantities as $eventData) {
+            $event = $eventData['event'];
+            $quantity = $eventData['total'];
+
+            $start = $event->getDateMontage();
+            $end = (clone $event->getDateEnd())->modify('+1 day');
+
+            $calendarEvents[] = [
+                'title' => $event->getName() . " - $quantity / $stockInitial",
+                'start' => $start->format('Y-m-d'),
+                'end'   => $end->format('Y-m-d'),
+                'color' => $quantity > $stockInitial ? '#dc3545' : '#28a745'
+            ];
+        }
+
+        return $this->render('product/show.html.twig', [
+            'product' => $product,
+            'calendarEvents' => $calendarEvents,
+            'connectors' => $connectorRepository->findAll(),
+
+        ]);
+    }
+
+
 
     #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager,SluggerInterface $slugger): Response
+    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
@@ -124,14 +129,14 @@ final class ProductController extends AbstractController
 
             $photoProduct = $form->get('picture')->getData(); // récupère le fichier
 
-            if($photoProduct) {
+            if ($photoProduct) {
 
                 $originalFilename = pathinfo($photoProduct->getClientOriginalName(), PATHINFO_FILENAME);
                 // Récupère le nom original du fichier sans son extension.
-                
+
                 $safeFilename = $slugger->slug($originalFilename);
                 // Transforme le nom original en une version sécurisée (supprime les caractères spéciaux, espaces, etc.).
-                
+
                 $newFilename = $safeFilename . '-' . uniqid() . '.' . $photoProduct->guessExtension();
                 // Génère un nom de fichier unique en ajoutant un identifiant unique (`uniqid()`) et en conservant l'extension d'origine.
 
@@ -145,7 +150,6 @@ final class ProductController extends AbstractController
                 } catch (FileException $e) {
                     $this->addFlash('danger', 'Erreur lors de l\'upload de l\'image.');
                 }
-
             }
             $entityManager->flush();
 
@@ -161,11 +165,47 @@ final class ProductController extends AbstractController
     #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $product->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($product);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/{id}/add-connector', name: 'app_product_add_connector', methods: ['POST'])]
+public function addConnector(
+    Request $request,
+    Product $product,
+    EntityManagerInterface $em
+): JsonResponse {
+    $data = json_decode($request->getContent(), true);
+
+    if (!isset($data['connector_id'], $data['quantity'], $data['plugDirection'])) {
+        return new JsonResponse(['error' => 'Données manquantes'], 400);
+    }
+
+    $connector = $em->getRepository(Connector::class)->find($data['connector_id']);
+    if (!$connector) {
+        return new JsonResponse(['error' => 'Connecteur introuvable'], 404);
+    }
+
+    $pc = new ProductConnector();
+    $pc->setProduct($product);
+    $pc->setConnector($connector);
+    $pc->setQuantity((int)$data['quantity']);
+    $pc->setPlugDirection($data['plugDirection']);
+
+    $em->persist($pc);
+    $em->flush();
+
+    return new JsonResponse([
+        'success' => true,
+        'message' => 'Connecteur ajouté',
+        'connectorLabel' => sprintf(' %dA %s', $connector->getPower(), $connector->getType()),
+        'quantity' => $pc->getQuantity(),
+        'plug' => $pc->getPlugDirection()
+    ]);
+}
+
 }

@@ -48,23 +48,20 @@ class Product
     private ?string $picture = null;
 
     /**
-     * @var Collection<int, SpareParts>
+     * @var Collection<int, ProductConnector>
      */
-    #[ORM\ManyToMany(targetEntity: SpareParts::class, mappedBy: 'product')]
-    private Collection $spareParts;
-
-    /**
-     * @var Collection<int, Connector>
-     */
-    #[ORM\ManyToMany(targetEntity: Connector::class, mappedBy: 'product')]
-    private Collection $connectors;
+    #[ORM\OneToMany(targetEntity: ProductConnector::class, mappedBy: 'product',cascade: ['persist'], orphanRemoval: true)]
+    private Collection $productConnectors;
 
     public function __construct()
     {
-        $this->eventDetails = new ArrayCollection();
-        $this->spareParts = new ArrayCollection();
-        $this->connectors = new ArrayCollection();
+        $this->productConnectors = new ArrayCollection();
     }
+
+
+
+
+    
 
     public function getId(): ?int
     {
@@ -199,56 +196,42 @@ class Product
     }
 
     /**
-     * @return Collection<int, SpareParts>
+     * @return Collection<int, ProductConnector>
      */
-    public function getSpareParts(): Collection
+    public function getProductConnectors(): Collection
     {
-        return $this->spareParts;
+        return $this->productConnectors;
     }
 
-    public function addSparePart(SpareParts $sparePart): static
+    public function addProductConnector(ProductConnector $productConnector): static
     {
-        if (!$this->spareParts->contains($sparePart)) {
-            $this->spareParts->add($sparePart);
-            $sparePart->addProduct($this);
+        if (!$this->productConnectors->contains($productConnector)) {
+            $this->productConnectors->add($productConnector);
+            $productConnector->setProduct($this);
         }
 
         return $this;
     }
 
-    public function removeSparePart(SpareParts $sparePart): static
+    public function removeProductConnector(ProductConnector $productConnector): static
     {
-        if ($this->spareParts->removeElement($sparePart)) {
-            $sparePart->removeProduct($this);
+        if ($this->productConnectors->removeElement($productConnector)) {
+            // set the owning side to null (unless already changed)
+            if ($productConnector->getProduct() === $this) {
+                $productConnector->setProduct(null);
+            }
         }
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Connector>
-     */
-    public function getConnectors(): Collection
-    {
-        return $this->connectors;
-    }
+    
 
-    public function addConnector(Connector $connector): static
-    {
-        if (!$this->connectors->contains($connector)) {
-            $this->connectors->add($connector);
-            $connector->addProduct($this);
-        }
+   
 
-        return $this;
-    }
+    
 
-    public function removeConnector(Connector $connector): static
-    {
-        if ($this->connectors->removeElement($connector)) {
-            $connector->removeProduct($this);
-        }
+   
 
-        return $this;
-    }
+    
 }

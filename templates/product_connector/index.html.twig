@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ProductConnector index{% endblock %}
+
+{% block body %}
+    <h1>ProductConnector index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Quantity</th>
+                <th>PlugDirection</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for product_connector in product_connectors %}
+            <tr>
+                <td>{{ product_connector.id }}</td>
+                <td>{{ product_connector.quantity }}</td>
+                <td>{{ product_connector.plugDirection }}</td>
+                <td>
+                    <a href="{{ path('app_product_connector_show', {'id': product_connector.id}) }}">show</a>
+                    <a href="{{ path('app_product_connector_edit', {'id': product_connector.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_product_connector_new') }}">Create new</a>
+{% endblock %}

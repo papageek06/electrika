@@ -28,7 +28,7 @@
                         </div>
                 </div>
             </div> 
-{{dump(site_event.contact)}}
+
              <div class="card m-4 p-0" style="width: 18rem;">
                 <h3 class="text-center">contact</h3>
                 {% for contact in site_event.contact %}      
@@ -39,6 +39,9 @@
                     {% else %}
                         <img class="card-img-top" src="{{ asset('uploads/pictures/homme-67d152475f1fb-67ebf984bbc84.jpg') }}" alt="Default image">
                     {% endif %}
+                    <h5 class="card-title">{{ contact.firstName }}</h5>
+                    <p class="card-text">telephone : {{contact.phoneNumber}}</p>
+                    <p class="card-text">email : {{contact.email}}</p>
 
                     {% endfor %}
                     

@@ -9,10 +9,8 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Type</th>
                 <th>Power</th>
-                <th>In_out</th>
-                <th>Phase_type</th>
+                <th>Type</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -20,10 +18,8 @@
         {% for connector in connectors %}
             <tr>
                 <td>{{ connector.id }}</td>
-                <td>{{ connector.type.label() }}</td>
-                <td>{{ connector.power.label() }}</td>
-                <td>{{ connector.inOut.label() }}</td>
-                <td>{{ connector.phaseType.label() }}</td>
+                <td>{{ connector.power }}</td>
+                <td>{{ connector.type }}</td>
                 <td>
                     <a href="{{ path('app_connector_show', {'id': connector.id}) }}">show</a>
                     <a href="{{ path('app_connector_edit', {'id': connector.id}) }}">edit</a>
@@ -31,7 +27,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="4">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

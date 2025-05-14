@@ -19,14 +19,7 @@ class SiteEventType extends AbstractType
             ->add('city')
             ->add('postalCode')
             ->add('description')
-            ->add('connectors', EntityType::class, [
-                'class' => Connector::class,
-                'choice_label' => 'type', // ou autre selon ce que tu veux afficher
-                'multiple' => true,
-                'expanded' => false,
-                'by_reference' => false,
-                'label' => 'Connecteurs associés'
-            ]);
+  ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

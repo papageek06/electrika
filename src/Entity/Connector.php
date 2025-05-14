@@ -16,38 +16,37 @@ class Connector
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    private ?string $power = null;
+
+    #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    #[ORM\Column]
-    private ?int $power = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $in_out = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $phase_type = null;
-
     /**
-     * @var Collection<int, product>
+     * @var Collection<int, ProductConnector>
      */
-    #[ORM\ManyToMany(targetEntity: product::class, inversedBy: 'connectors')]
-    private Collection $product;
-
-    /**
-     * @var Collection<int, SiteEvent>
-     */
-    #[ORM\ManyToMany(targetEntity: SiteEvent::class, inversedBy: 'connectors')]
-    private Collection $site;
+    #[ORM\OneToMany(targetEntity: ProductConnector::class, mappedBy: 'connector')]
+    private Collection $productConnectors;
 
     public function __construct()
     {
-        $this->product = new ArrayCollection();
-        $this->site = new ArrayCollection();
+        $this->productConnectors = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getPower(): ?string
+    {
+        return $this->power;
+    }
+
+    public function setPower(string $power): static
+    {
+        $this->power = $power;
+
+        return $this;
     }
 
     public function getType(): ?string
@@ -62,86 +61,32 @@ class Connector
         return $this;
     }
 
-    public function getPower(): ?int
-    {
-        return $this->power;
-    }
-
-    public function setPower(int $power): static
-    {
-        $this->power = $power;
-
-        return $this;
-    }
-
-    public function getInOut(): ?string
-    {
-        return $this->in_out;
-    }
-
-    public function setInOut(string $in_out): static
-    {
-        $this->in_out = $in_out;
-
-        return $this;
-    }
-
-    public function getPhaseType(): ?string
-    {
-        return $this->phase_type;
-    }
-
-    public function setPhaseType(string $phase_type): static
-    {
-        $this->phase_type = $phase_type;
-
-        return $this;
-    }
-
     /**
-     * @return Collection<int, product>
+     * @return Collection<int, ProductConnector>
      */
-    public function getProduct(): Collection
+    public function getProductConnectors(): Collection
     {
-        return $this->product;
+        return $this->productConnectors;
     }
 
-    public function addProduct(product $product): static
+    public function addProductConnector(ProductConnector $productConnector): static
     {
-        if (!$this->product->contains($product)) {
-            $this->product->add($product);
+        if (!$this->productConnectors->contains($productConnector)) {
+            $this->productConnectors->add($productConnector);
+            $productConnector->setConnector($this);
         }
 
         return $this;
     }
 
-    public function removeProduct(product $product): static
+    public function removeProductConnector(ProductConnector $productConnector): static
     {
-        $this->product->removeElement($product);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, SiteEvent>
-     */
-    public function getSite(): Collection
-    {
-        return $this->site;
-    }
-
-    public function addSite(SiteEvent $site): static
-    {
-        if (!$this->site->contains($site)) {
-            $this->site->add($site);
+        if ($this->productConnectors->removeElement($productConnector)) {
+            // set the owning side to null (unless already changed)
+            if ($productConnector->getConnector() === $this) {
+                $productConnector->setConnector(null);
+            }
         }
-
-        return $this;
-    }
-
-    public function removeSite(SiteEvent $site): static
-    {
-        $this->site->removeElement($site);
 
         return $this;
     }

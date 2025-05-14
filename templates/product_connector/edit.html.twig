@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit ProductConnector{% endblock %}
+
+{% block body %}
+    <h1>Edit ProductConnector</h1>
+
+    {{ include('product_connector/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_product_connector_index') }}">back to list</a>
+
+    {{ include('product_connector/_delete_form.html.twig') }}
+{% endblock %}

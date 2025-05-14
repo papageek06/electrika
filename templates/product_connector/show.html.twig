@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ProductConnector{% endblock %}
+
+{% block body %}
+    <h1>ProductConnector</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ product_connector.id }}</td>
+            </tr>
+            <tr>
+                <th>Quantity</th>
+                <td>{{ product_connector.quantity }}</td>
+            </tr>
+            <tr>
+                <th>PlugDirection</th>
+                <td>{{ product_connector.plugDirection }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_product_connector_index') }}">back to list</a>
+
+    <a href="{{ path('app_product_connector_edit', {'id': product_connector.id}) }}">edit</a>
+
+    {{ include('product_connector/_delete_form.html.twig') }}
+{% endblock %}

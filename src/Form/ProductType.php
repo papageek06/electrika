@@ -5,11 +5,10 @@ namespace App\Form;
 use App\Entity\Category;
 use App\Entity\Connector;
 use App\Entity\Product;
-use App\Repository\CategoryRepository;
-use Container4ldQ9nV\getCategoryRepositoryService;
+use App\Entity\ProductConnectors;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,7 +16,7 @@ use Symfony\Component\Validator\Constraints\File;
 
 class ProductType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options ): void
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name')
@@ -41,24 +40,23 @@ class ProductType extends AbstractType
                         'mimeTypes' => ['image/jpeg', 'image/png'],
                         'mimeTypesMessage' => 'Veuillez télécharger une image au format JPEG ou PNG.',
                     ])
+                ]
+            ])
+            ->add('productConnectors', CollectionType::class, [
+                'entry_type' => ProductConnectorForm::class,
+                'entry_options' => [
+                    'label' => false,
                 ],
-            ]);
-        
-        // ->add('connector', ChoiceType::class, [
-        //     'class' => Connector::class,
-        //     'choice_label' => 'type', // ou autre champ lisible (ex: 'type', 'power', etc.)
-        //     'multiple' => true,
-        //     'expanded' => false, // ou true pour checkboxes
-        //     'by_reference' => false, // important pour ManyToMany
-        //     'label' => 'Connecteurs associés'
-        // ]);
-        // ->add('connector', EntityType::class, [
-        //     'class' => Connector::class,
-        //     'choice_label' => 'type', // Affiche le nom de la catégorie dans la liste déroulante
-        //     'placeholder' => 'Sélectionner une catégorie',
-        //     'required' => false,
-        // ]);
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+            ])
+
+        ;
     }
+
+
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {

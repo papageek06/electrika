@@ -17,7 +17,19 @@
 <p>{{ form_widget(form.category) }}</p>
 <p>{{ form_label(form.picture) }}</p>
 <p>{{ form_widget(form.picture) }}</p>
-{# {{dump(form.connector)}} #}
+<h3>Connecteurs</h3>
+{% for connectorForm in form.productConnectors %}
+    <div class="card mb-2 p-2">
+        {{ form_row(connectorForm.connector) }}
+        {{ form_row(connectorForm.quantity) }}
+        {{ form_row(connectorForm.plugDirection) }}
+    </div>
+{% else %}
+    <p class="text-muted">Aucun connecteur configuré.</p>
+{% endfor %}
+{{ dump(form.productConnectors) }}
+
+
 <button type="submit" class="btn btn-primary">Ajouter</button>
 
 {{ form_end(form) }}</div>
