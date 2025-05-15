@@ -10,10 +10,12 @@ use App\Repository\EventRepository;
 use App\Service\EmailService;
 use App\Service\PdfGeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
+use PharIo\Manifest\Email;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/event')]
@@ -243,5 +245,8 @@ public function updateQuantities(Request $request, Event $event, EntityManagerIn
 
     return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
 }
+
+
+
 
 }
