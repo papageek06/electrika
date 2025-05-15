@@ -84,8 +84,8 @@ class EventDetailRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('e')
         ->select('IDENTITY(e.product) as product_id, SUM(e.quantity) as Tquantity')
-        ->where('e.mouve = :livrer')
-        ->setParameter('livrer', 'livrer') 
+        ->where('e.mouve = :bl')
+        ->setParameter('bl', 'bl') 
         ->groupBy('e.product')
         ->getQuery()
         ->getResult();

@@ -225,4 +225,23 @@ final class EventController extends AbstractController
 
         return $this->redirectToRoute('app_event_show', ['id' => $id]);
     }
+
+    #[Route('/{id}/update-quantities', name: 'app_event_quantity_update', methods: ['POST'])]
+public function updateQuantities(Request $request, Event $event, EntityManagerInterface $em): Response
+{
+    $quantities = $request->request->all('quantities');
+
+    foreach ($quantities as $id => $quantity) {
+        $detail = $em->getRepository(EventDetail::class)->find($id);
+        if ($detail && $detail->getEvent() === $event) {
+            $detail->setQuantity((int)$quantity);
+        }
+    }
+
+    $em->flush();
+    $this->addFlash('success', 'Quantités mises à jour.');
+
+    return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+}
+
 }

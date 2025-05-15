@@ -160,6 +160,28 @@ final class EventDetailController extends AbstractController
 
         return $this->redirectToRoute('app_event_detail_index');
     }
+
+    #[Route('/delete-all', name: 'app_event_detail_delete_all', methods: ['POST'])]
+public function deleteSelected(Request $request, EntityManagerInterface $em): Response
+{
+    $ids = $request->request->all('deleteIds');
+    if (!empty($ids)) {
+        $repository = $em->getRepository(EventDetail::class);
+        foreach ($ids as $id) {
+            $detail = $repository->find($id);
+            if ($detail) {
+                $em->remove($detail);
+            }
+        }
+        $em->flush();
+        $this->addFlash('success', 'Éléments supprimés avec succès.');
+    } else {
+        $this->addFlash('success', 'Aucun élément sélectionné.');
+    }
+
+    return $this->redirectToRoute('app_event_detail_index');
+}
+
  
 
 }

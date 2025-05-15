@@ -21,8 +21,6 @@
 			<div class="alert alert-danger">{{ message }}</div>
 		{% endfor %}
 
-		
-
 
 		<div class="row col-12 align-items-end justify-content-between ">
 			<h3 class="text-center">{{ event.name }}</h3>
@@ -70,7 +68,8 @@
 
 				<p>fin de demontage :
 					{{ event.dateEnd ? event.dateEnd|date('Y-m-d') : '' }}</p>
-				<h5>Fichiers PDF </h5>
+				<h5>Fichiers PDF
+				</h5>
 				<select name="file" id="fileSelect" class="form-select">
 					<option value="">Sélectionnez un fichier PDF</option>
 
@@ -133,30 +132,36 @@
 
 		<div class="container col-3 card MyDiv">
 			<h3>BP</h3>
-			<table class="">
-				<thead>
-					<tr>
-						<th class="CellStart">status</th>
-						<th class="MyCell">produit</th>
-						<th class="MyCell">--Q--</th>
-						<th class="cellEnd">date</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for eventDetail in eventDetails %}
-						{% if eventDetail.mouve == 'bp'  %}
+			<form id="form-bp" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
+				<table class="">
+					<thead>
+						<tr>
+							<th class="CellStart">status</th>
+							<th class="MyCell">produit</th>
+							<th class="MyCell">--Q--</th>
+							<th class="cellEnd">date</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for eventDetail in eventDetails %}
+							{% if eventDetail.mouve == 'bp'  %}
 
-							<tr>
-								<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
-								<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
-								<td>{{ eventDetail.quantity }}</td>
-								<td>{{ eventDetail.date|date('d/m') }}</td>
-							</tr>
-						{% endif %}
-					{% endfor  %}
-				</tbody>
+								<tr>
+									<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
+									<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+									<td>
+										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0"  data-original="{{ eventDetail.quantity }}"
+                                    data-target="bp">
+									</td>
+									<td>{{ eventDetail.date|date('d/m') }}</td>
+								</tr>
+							{% endif %}
+						{% endfor  %}
+					</tbody>
 
-			</table>
+				</table>
+				<button id="submit-quantity-bp" type="submit" class="btn btn-success mt-2" disabled>Valider les quantités</button>
+			</form>
 			{% if status  == 1 %}
 				<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bl' }) }}">BL -></a>
 
@@ -232,13 +237,38 @@
 
 	</div>
 
-{# --------------------------- gestion du selecteur de fichier --------------------------- #}
+	{# --------------------------- gestion du selecteur de fichier --------------------------- #}
 	<script>
 		document.getElementById('fileSelect').addEventListener('change', function () {
 const selectedUrl = this.value;
 if (selectedUrl) {
 window.open(selectedUrl, '_blank');
 }
+});
+
+		// --------------------------------Gestion de boutons de soumission------------------ //
+document.addEventListener('DOMContentLoaded', function () {
+    // On gère plusieurs groupes de champs si nécessaire (BP, BL, etc.)
+    const targets = ['bp']; // Ajoute ici 'bl', 'br'... si besoin
+
+    targets.forEach(target => {
+        const inputs = document.querySelectorAll(`.quantity-input[data-target="${target}"]`);
+        const submitButton = document.getElementById(`submit-quantity-${target}`);
+
+        const checkChanges = () => {
+            let hasChanged = false;
+            inputs.forEach(input => {
+                if (input.value !== input.getAttribute('data-original')) {
+                    hasChanged = true;
+                }
+            });
+            submitButton.disabled = !hasChanged;
+        };
+
+        inputs.forEach(input => {
+            input.addEventListener('input', checkChanges);
+        });
+    });
 });
 	</script>
 

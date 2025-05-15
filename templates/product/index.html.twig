@@ -70,69 +70,55 @@
 
 					</tr>
 				</thead>
-				<tbody>
-					{% for productList in products %}
-						<tr class="product-item" data-category="{{ productList.category.id }}" data-name="{{ productList.name|lower }}">
-							{% if productList.picture %}
-								<td class="CellStart d-none d-md-table-cell">
-									<img width="70px" src="{{ asset('uploads/pictures/' ~ productList.picture) }}" alt="{{ productList.name }}">
-								</td>
-							{% else %}
+<tbody>
+	{% for productList in products %}
+		<tr class="product-item" data-category="{{ productList.category.id }}" data-name="{{ productList.name|lower }}">
+			{# Image produit #}
+			<td class="CellStart d-none d-md-table-cell">
+				<img width="70px" src="{{ asset('uploads/pictures/' ~ (productList.picture ?? 'default.png')) }}" alt="{{ productList.name }}">
+			</td>
 
-								<td class="CellStart d-none d-md-table-cell"><img width="70px" src="{{ asset('uploads/pictures/default.png') }}" alt="photo"></td>
-							{% endif %}
-							<td class="MyCell" id="{{ productList.name }}">{{ productList.name }}</td>
-							<td class="MyCell d-none d-md-table-cell">{{ productList.category ? productList.category.name : "N/A" }}</td>
-							<td class="MyCell">{{ productList.stockInitial }}</td>
+			<td class="MyCell" id="{{ productList.name }}">{{ productList.name }}</td>
+			<td class="MyCell d-none d-md-table-cell">{{ productList.category ? productList.category.name : "N/A" }}</td>
+			<td class="MyCell">{{ productList.stockInitial }}</td>
 
-							{% for i in 1..6 %}
-								{# Calcule la date pour la semaine i #}
-								{% set stockDisponible = productList.stockInitial %}
-								{% set currentWeekDate = date()|date_modify('+' ~ (i * 7) ~ ' days') %}
+			{# Affichage du stock par semaine #}
+			{% for semaine in stockSemaines[productList.id] %}
+				<td class="MyCell d-none d-md-table-cell {{ semaine.stock|number_format and semaine.stock|number_format < 0 ? 'bg-danger text-white' : '' }}">
+					{{ semaine.stock }}
+				</td>
+			{% endfor %}
 
-								{# Calcule le stock disponible en parcourant les événements #}
-								{% for eventDetail in eventDetails %}
-									{% if eventDetail.product.id == productList.id and eventDetail.event.dateMontage < currentWeekDate and eventDetail.event.dateEnd > currentWeekDate %}
-										{% set stockDisponible = stockDisponible - eventDetail.quantity %}
-									{% endif %}
-								{% endfor %}
+			<td class="category-{{ productList.category.id }}" style="display:none;"></td>
 
-								{# Affiche la cellule avec fond rouge si stockDisponible < 0 #}
-								<td class="MyCell d-none d-md-table-cell {{  stockDisponible|number_format < 0 ?  'bg-danger text-white' : '' }}">
-									{{ stockDisponible }}
-								</td>
-							{% endfor %}
+			<form method="post" action="{{ path('app_cart_add') }}" data-turbo="false">
+				<td class="MyCell"><input class="col-4" type="number" name="quantity" value="1"></td>
+				<td class="MyCell col-1 ">
+					<a href="{{ path('app_product_show', {'id': productList.id}) }}" class="btn btn-primary col-9 m-1">Détails</a>
+					<input type="hidden" name="product_id" value="{{ productList.id }}">
+					<input type="hidden" name="user" value="{{ app.user.id }}">
+					<input type="hidden" name="event_id" id="eventIdInput" value="{{ cart_session['eventId'][0] ?? '' }}">
+					<button class="btn btn-warning mt-1  col-9 m-1" type="submit">add</button>
+				</td>
+			</form>
 
-							<td class="category-{{ productList.category.id }}" style="display:none;"></td>
-
-
-							<form method="post" action="{{ path('app_cart_add') }}" data-turbo="false">
-								<td class="MyCell"><input class="col-4" type="number" name="quantity" value="1"></td>
-								<td class="MyCell col-1 ">
-									<a href="{{ path('app_product_show', {'id': productList.id}) }}" class="btn btn-primary col-9 m-1">Détails</a>
-									<input type="hidden" name="product_id" value="{{ productList.id }}">
-									<input type="hidden" name="user" value="{{ app.user.id }}">
-									<input type="hidden" name="event_id" id="eventIdInput" value="{{ cart_session['eventId'][0] ?? '' }}">
-									<button class="btn btn-warning mt-1  col-9 m-1" type="submit">add</button>
-								</td>
-							</form>
-							<td class="cellEnd">
-								{% if cart_session %}
-									{% for  key, id in cart_session.idProduct %}
-
-										{% if productList.id == cart_session.idProduct[key] %}
-											{{cart_session.quantity[key]}}
-										{% endif %}
-									{% endfor %}
-								{% endif %}
-							</td>
-						</tr>
-					{% else %}
-						<tr>
-							<td colspan="8">Aucun produit trouvé</td>
-						</tr>
+			<td class="cellEnd">
+				{% if cart_session %}
+					{% for key, id in cart_session.idProduct %}
+						{% if productList.id == id %}
+							{{ cart_session.quantity[key] }}
+						{% endif %}
 					{% endfor %}
-				</tbody>
+				{% endif %}
+			</td>
+		</tr>
+	{% else %}
+		<tr>
+			<td colspan="14">Aucun produit trouvé</td>
+		</tr>
+	{% endfor %}
+</tbody>
+
 			</table>
 		</div>
 	</div>

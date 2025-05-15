@@ -24,20 +24,96 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route('/product')]
 final class ProductController extends AbstractController
 {
-    #[Route(name: 'app_product_index', methods: ['GET'])]
-    public function index(ProductRepository $productRepository, EventRepository $eventRepository, EventDetailRepository $eventDetail, EventRepository $event, SessionInterface $session, CategoryRepository $category): Response
-    {
-        $retry = $eventDetail->countstockByProduct();
+  #[Route(name: 'app_product_index', methods: ['GET'])]
+    public function index(
+        ProductRepository $productRepository,
+        EventRepository $eventRepository,
+        EventDetailRepository $eventDetailRepository,
+        EventRepository $event,
+        SessionInterface $session,
+        CategoryRepository $category
+    ): Response {
+        $products = $productRepository->findAll();
+        $eventDetails = $eventDetailRepository->findAll();
+        $stocksParProduit = [];
+        $today = new \DateTimeImmutable();
+
+        foreach ($products as $product) {
+            $stockInitial = $product->getStockInitial();
+            $stockParSemaine = [];
+
+           for ($i = 1; $i <= 6; $i++) {
+            $currentWeekDate = $today->modify('+' . ($i * 7) . ' days');
+    $startDate = $today->modify('+' . (($i - 1) * 7) . ' days');
+    $endDate = $startDate->modify('+6 days'); // intervalle sur 7 jours
+
+    $bl = [];
+    $bp = [];
+    $new = [];
+
+    foreach ($eventDetails as $ed) {
+        if ($ed->getProduct()->getId() !== $product->getId()) {
+            continue;
+        }
+
+        $montage = $ed->getEvent()->getDateMontage();
+        $fin = $ed->getEvent()->getDateEnd();
+
+        // Vérifie si l'événement chevauche la semaine en cours
+        if ($montage <= $endDate && $fin >= $startDate) {
+            switch ($ed->getMouve()) {
+                case 'bl':
+                    $bl[] = $ed;
+                    break;
+                case 'bp':
+                    $bp[] = $ed;
+                    break;
+                case 'new':
+                    $new[] = $ed;
+                    break;
+            }
+        }
+    }
 
 
+
+                $stock = $stockInitial;
+                $used = false;
+
+                if (!empty($bl)) {
+                    foreach ($bl as $ed) {
+                        $stock -= $ed->getQuantity();
+                    }
+                    $used = true;
+                } elseif (!empty($bp)) {
+                    foreach ($bp as $ed) {
+                        $stock -= $ed->getQuantity();
+                    }
+                    $used = true;
+                } elseif (!empty($new)) {
+                    foreach ($new as $ed) {
+                        $stock -= $ed->getQuantity();
+                    }
+                    $used = true;
+                }
+
+                $stockParSemaine[] = [
+                    'semaine' => $currentWeekDate->format('Y-m-d'),
+                    'stock' => $used ? $stock : 'N/A'
+                ];
+            }
+
+            $stocksParProduit[$product->getId()] = $stockParSemaine;
+        }
 
         return $this->render('product/index.html.twig', [
-            'products' => $productRepository->findAll(),
+            'products' => $products,
             'events' => $eventRepository->findAll(),
-            'eventDetails' => $eventDetail->findAll(),
-            'retry' => $retry,
+            'eventDetails' => $eventDetails,
+            'retry' => $eventDetailRepository->countstockByProduct(),
             'cart_session' => $session->get('cart', []),
-            'categorys' => $category->findAll()
+            'categorys' => $category->findAll(),
+            'stockSemaines' => $stocksParProduit,
         ]);
     }
 

@@ -43,7 +43,12 @@
 		<div class="MyDiv  m-md-4 p-md-4 m-0 p-0">
 			<table class="table  ">
 				<form method="POST" action="{{ path('app_event_detail_update_all') }}" data-turbo="false">
-					<button type="submit" class="btn btn-primary ">Valider les modifications</button>
+					<div>
+						<button type="submit" class="btn btn-primary ">Valider les modifications</button>
+						<button type="submit" formaction="{{ path('app_event_detail_delete_all') }}" formmethod="POST" class="btn btn-danger" onclick="return confirm('Confirmer la suppression de tous les éléments sélectionnés ?');">
+							Supprimer la sélection
+						</button>
+					</div>
 
 
 					<thead>
@@ -62,7 +67,10 @@
 							<th class="MyCell">Article</th>
 							<th class="MyCell">Q</th>
 							<th class="MyCell d-none d-md-table-cell">Date</th>
-							<th class="cellEnd">x</th>
+							<th class="cellEnd text-center">
+								<input type="checkbox" id="select-all">
+							</th>
+
 						</tr>
 					</thead>
 					<tbody>
@@ -83,9 +91,10 @@
 									<input type="number" name="quantities[{{ event_detail.id }}]" value="{{ event_detail.quantity }}" style="width: 10px; padding: 0; font-size: 0.8rem;">
 								</td>
 								<td class="MyCell d-none d-md-table-cell">{{ event_detail.date ? event_detail.date|date('Y-m-d') : '' }}</td>
-								<td class="cellEnd ">
-									<a class="btn bg-danger " href="{{ path('app_event_detail_delete', {'id': event_detail.id}) }}">x</a>
+								<td class="cellEnd text-center">
+									<input type="checkbox" name="deleteIds[]" value="{{ event_detail.id }}">
 								</td>
+
 							</tr>
 						{% else %}
 							<tr>
@@ -103,6 +112,16 @@
 
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
+
+    const selectAllCheckbox = document.getElementById("select-all");
+    const deleteCheckboxes = document.querySelectorAll('input[name="deleteIds[]"]');
+
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener("change", function () {
+            deleteCheckboxes.forEach(cb => cb.checked = this.checked);
+        });
+    }
+
 const statusAllSelect = document.getElementById("statusAll");
 const statusSelects = document.querySelectorAll(".statusSelect");
 
