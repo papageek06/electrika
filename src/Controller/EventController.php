@@ -233,6 +233,7 @@ try {
     $this->addFlash('success', 'Mail envoyé avec succès.');
 } catch (\Throwable $th) {
     $this->addFlash('error', 'Erreur lors de l\'envoi du mail : ' . $th->getMessage());
+    return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
 }
 
 

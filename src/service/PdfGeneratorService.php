@@ -44,6 +44,10 @@ public function generatePdf($data, $fileName, $template, $destinationPath): stri
     }
 
     $fullPath = $uploadDirectory . $fileName;
+    if (!is_writable($uploadDirectory)) {
+    throw new \RuntimeException("Le dossier n'est pas accessible en écriture : $uploadDirectory");
+}
+
     file_put_contents($fullPath, $invoicePDF);
 
     // 5 - Retourner le chemin complet du fichier enregistré

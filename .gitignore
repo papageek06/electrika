@@ -8,7 +8,7 @@
 /var/
 /vendor/
 /deploy.sh
-/public/uploads/invoices
+
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
