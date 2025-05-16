@@ -27,7 +27,7 @@ class EmailService {
         ->htmlTemplate($template)
         ->attach($attachedFile, $nameFile)
         ->context($data);
-        dump($email);
+
         $this->mailer->send($email);
 
     }
