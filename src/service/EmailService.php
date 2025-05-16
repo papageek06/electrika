@@ -19,16 +19,13 @@ class EmailService {
     public function sendEmail($emailUser, $attachedFile, $nameFile, $data, $subject, $template) {
 
 
-        $email = (new TemplatedEmail())
-        ->from($this->adminEmail)
-        ->to($this->adminEmail)
-        ->cc($emailUser)
-        ->subject($subject)
-        ->htmlTemplate($template)
-        ->attach($attachedFile, $nameFile)
-        ->context($data);
-        dump($email);
-        $this->mailer->send($email);
+$email = (new TemplatedEmail())
+    ->from($this->adminEmail)
+    ->to($this->adminEmail)
+    ->subject('Test de base')
+    ->html('<p>Email de test sans template</p>');
+
+$this->mailer->send($email);
 
     }
 
