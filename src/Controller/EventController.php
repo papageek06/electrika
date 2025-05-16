@@ -138,7 +138,7 @@ final class EventController extends AbstractController
         }
         $eventDetails = $eventDetailRepository->findBy(['event' => $event]);
 
-       
+
 
         foreach ($eventDetails as $eventDetail) {
 
@@ -185,56 +185,56 @@ final class EventController extends AbstractController
                 $entityManager->flush();
             }
         }
-        
-$fileName =$event->getId() . "_" . $status."_" . time() . ".pdf";
-try {
-    
-   
-    $pdfPath = $pdfGeneratorService->generatePdf(
-        [
-            'user' => $this->getUser(),
-            'date' => new \DateTime(),
-            'event_details' => $eventDetailRepository->findBy(['event' => $event, 'mouve' => $status])
-        ],
-        $fileName,
-        'event_detail/pdf_send.html.twig',
-         '/uploads/invoices/'
-    );
-    $this->addFlash('success', 'PDF généré avec succès.');
-} catch (\Throwable $th) {
-    $this->addFlash('error', 'Erreur lors de la génération du PDF.');
-    return $this->redirectToRoute('app_event_show', ['id' => $id]);
-}
+
+        $fileName = $event->getId() . "_" . $status . "_" . time() . ".pdf";
+        try {
+
+
+            $pdfPath = $pdfGeneratorService->generatePdf(
+                [
+                    'user' => $this->getUser(),
+                    'date' => new \DateTime(),
+                    'event_details' => $eventDetailRepository->findBy(['event' => $event, 'mouve' => $status])
+                ],
+                $fileName,
+                'event_detail/pdf_send.html.twig',
+                '/uploads/invoices/'
+            );
+            $this->addFlash('success', 'PDF généré avec succès.');
+        } catch (\Throwable $th) {
+            $this->addFlash('error', 'Erreur lors de la génération du PDF.');
+            return $this->redirectToRoute('app_event_show', ['id' => $id]);
+        }
 
 
 
-    try {
-    if (!file_exists($pdfPath)) {
-        throw new \RuntimeException("Fichier PDF introuvable : $pdfPath");
-    }
+        try {
+            if (!file_exists($pdfPath)) {
+                throw new \RuntimeException("Fichier PDF introuvable : $pdfPath");
+            }
 
-    $emailService->sendEmail(
-        $this->getUser()->getUserIdentifier(),
-        $pdfPath,
-        basename($pdfPath), // nom du fichier
-        [
-            'user' => $this->getUser(),
-            'date' => new \DateTime(),
-            'event_details' => $eventDetailRepository->findBy([
-    'event' => $event,
-    'mouve' => $status
-]),
-            'event' => $event
-        ],
-        "Mouvement de commande !",
-        "email/order_send.html.twig"
-    );
+            $emailService->sendEmail(
+                $this->getUser()->getUserIdentifier(),
+                $pdfPath,
+                basename($pdfPath), // nom du fichier
+                [
+                    'user' => $this->getUser(),
+                    'date' => new \DateTime(),
+                    'event_details' => $eventDetailRepository->findBy([
+                        'event' => $event,
+                        'mouve' => $status
+                    ]),
+                    'event' => $event
+                ],
+                "Mouvement de commande !",
+                "email/order_send.html.twig"
+            );
 
-    $this->addFlash('success', 'Mail envoyé avec succès.');
-} catch (\Throwable $th) {
-    $this->addFlash('error', 'Erreur lors de l\'envoi du mail : ' . $th->getMessage());
-    return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
-}
+            $this->addFlash('success', 'Mail envoyé avec succès.');
+        } catch (\Throwable $th) {
+            $this->addFlash('error', 'Erreur lors de l\'envoi du mail : ' . $th->getMessage());
+            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+        }
 
 
 
@@ -242,24 +242,20 @@ try {
     }
 
     #[Route('/{id}/update-quantities', name: 'app_event_quantity_update', methods: ['POST'])]
-public function updateQuantities(Request $request, Event $event, EntityManagerInterface $em): Response
-{
-    $quantities = $request->request->all('quantities');
+    public function updateQuantities(Request $request, Event $event, EntityManagerInterface $em): Response
+    {
+        $quantities = $request->request->all('quantities');
 
-    foreach ($quantities as $id => $quantity) {
-        $detail = $em->getRepository(EventDetail::class)->find($id);
-        if ($detail && $detail->getEvent() === $event) {
-            $detail->setQuantity((int)$quantity);
+        foreach ($quantities as $id => $quantity) {
+            $detail = $em->getRepository(EventDetail::class)->find($id);
+            if ($detail && $detail->getEvent() === $event) {
+                $detail->setQuantity((int)$quantity);
+            }
         }
+
+        $em->flush();
+        $this->addFlash('success', 'Quantités mises à jour.');
+
+        return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
     }
-
-    $em->flush();
-    $this->addFlash('success', 'Quantités mises à jour.');
-
-    return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
-}
-
-
-
-
 }

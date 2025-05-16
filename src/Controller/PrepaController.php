@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Repository\ProductRepository;
-use SessionIdInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,8 +12,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 final class PrepaController extends AbstractController
 {
     #[Route('/prepa', name: 'app_prepa')]
-    public function index(Request $request): Response
+    public function index(Request $request, SessionInterface $session): Response
     {
+
 
         $session = $request->getSession();
 
@@ -28,7 +28,8 @@ final class PrepaController extends AbstractController
     public function addArticleToPrepa(int $id, Request $request, ProductRepository $productRepository): Response
     {
 
-        // créer la session
+        // créer la session si elle n'existe pas
+        
         $session = $request->getSession();
 
         // si elle existe pas je la créé
@@ -68,4 +69,5 @@ final class PrepaController extends AbstractController
  
          return $this->redirectToRoute('app_prepa');
 }
+
 }
