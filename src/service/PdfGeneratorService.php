@@ -18,34 +18,38 @@ class PdfGeneratorService {
         $this->kernel = $kernelInterface;
     }
 
-    public function generatePdf($data, $fileName, $template, $destinationPath) {
+public function generatePdf($data, $fileName, $template, $destinationPath): string
+{
+    // 1 - Mettre en place les options du PDF
+    $pdfOptions = new Options();
+    $pdfOptions->set(['defaultFont' => 'Arial', 'enable_remote' => true]);
 
-        // 1 - mettre en place les options du pdf
-        $pdfOptions = new Options();
-        $pdfOptions->set(['defaultFont' => 'Arial', 'enable_remote' => true]);
+    // 2 - Créer le PDF
+    $domPdf = new Dompdf($pdfOptions);
 
-        // 2 - je créer le pdf
-        $domPdf = new Dompdf($pdfOptions);
+    // 3 - Préparer le template
+    $html = $this->twig->render($template, $data);
 
-        // 3 - préparer le template
-        $html = $this->twig->render($template, $data);
+    $domPdf->loadHtml($html);
+    $domPdf->setPaper('A4', 'portrait');
+    $domPdf->render();
 
-        $domPdf->loadHtml($html);
-        $domPdf->setPaper('A4', 'portrait');
+    $invoicePDF = $domPdf->output();
 
-        $domPdf->render();
-        $invoicePDF = $domPdf->output();
+    // 4 - Déterminer le chemin d’enregistrement (public/...)
+    $uploadDirectory = rtrim($this->kernel->getProjectDir(), '/') . '/public/' . trim($destinationPath, '/') . '/';
 
-        $uploadDirectory = $this->kernel->getProjectDir() . "/public/" . $destinationPath;
-        if (!file_exists($uploadDirectory)) {
-            mkdir($uploadDirectory, 0777, true);
-        }
-
-        file_put_contents($uploadDirectory . $fileName, $invoicePDF);
-
-        return $invoicePDF;
-
+    if (!file_exists($uploadDirectory)) {
+        mkdir($uploadDirectory, 0777, true);
     }
+
+    $fullPath = $uploadDirectory . $fileName;
+    file_put_contents($fullPath, $invoicePDF);
+
+    // 5 - Retourner le chemin complet du fichier enregistré
+    return $fullPath;
+}
+
 
 }
 

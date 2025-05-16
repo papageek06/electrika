@@ -138,7 +138,7 @@ final class EventController extends AbstractController
         }
         $eventDetails = $eventDetailRepository->findBy(['event' => $event]);
 
-        dump($status);
+       
 
         foreach ($eventDetails as $eventDetail) {
 
@@ -185,43 +185,55 @@ final class EventController extends AbstractController
                 $entityManager->flush();
             }
         }
-        $fileName = $event->getId() . "_" . $status  . time() . ".pdf";
+        
+$fileName =$event->getId() . "_" . $status."_" . time() . ".pdf";
+try {
+    
+   
+    $pdfPath = $pdfGeneratorService->generatePdf(
+        [
+            'user' => $this->getUser(),
+            'date' => new \DateTime(),
+            'event_details' => $eventDetailRepository->findBy(['event' => $event, 'mouve' => $status])
+        ],
+        $fileName,
+        'event_detail/pdf_send.html.twig',
+         '/uploads/invoices/'
+    );
+    $this->addFlash('success', 'PDF généré avec succès.');
+} catch (\Throwable $th) {
+    $this->addFlash('error', 'Erreur lors de la génération du PDF.');
+    return $this->redirectToRoute('app_event_show', ['id' => $id]);
+}
 
-        try {
-            $invoicePDF = $pdfGeneratorService->generatePdf([
-                'user' => $this->getUser(),
-                'date' => new \DateTime(),
-                'event_details' => $eventDetailRepository->findBy(['event' => $event, 'mouve' => $status])
-            ], $fileName, 'event_detail/pdf_send.html.twig', 'uploads/invoices/');
-            $this->addFlash('success', 'Mises à jour enregistrées avec succès.');
-        } catch (\Throwable $th) {
-                dump($th->getMessage()); // ou log l'erreur
-            $this->addFlash('error', 'Erreur lors de la génération du PDF.');
-            if (!isset($invoicePDF)) {
-                return $this->redirectToRoute('app_event_show', ['id' => $id]);
-            }
-        }
 
 
-        try {
-            $emailService->sendEmail(
-                $this->getUser()->getUserIdentifier(),
-                $invoicePDF,
-                sprintf('Bon de commande-' . $event->getId() . 'ecosymfony.pdf'),
-                [
-                    'user' => $this->getUser(),
-                    'date' => new \DateTime(),
-                    'event_details' => $eventDetailRepository->findBy(['mouve' => $status]),
-                    'event' => $event
-                ],
-                "Mouvement de commande !",
-                "email/order_send.html.twig"
+    try {
+    if (!file_exists($pdfPath)) {
+        throw new \RuntimeException("Fichier PDF introuvable : $pdfPath");
+    }
 
-            );
-            $this->addFlash('success', 'Mail envoyer avec succès.');
-        } catch (\Throwable $th) {
-            $this->addFlash('error', 'Erreur lors de l\'envoi du mail.');
-        }
+    $emailService->sendEmail(
+        $this->getUser()->getUserIdentifier(),
+        $pdfPath,
+        basename($pdfPath), // nom du fichier
+        [
+            'user' => $this->getUser(),
+            'date' => new \DateTime(),
+            'event_details' => $eventDetailRepository->findBy([
+    'event' => $event,
+    'mouve' => $status
+]),
+            'event' => $event
+        ],
+        "Mouvement de commande !",
+        "email/order_send.html.twig"
+    );
+
+    $this->addFlash('success', 'Mail envoyé avec succès.');
+} catch (\Throwable $th) {
+    $this->addFlash('error', 'Erreur lors de l\'envoi du mail : ' . $th->getMessage());
+}
 
 
 
