@@ -187,10 +187,6 @@ final class EventController extends AbstractController
         }
         $fileName = $event->getId() . "_" . $status  . time() . ".pdf";
 
-        if (!$this->getUser()) {
-            throw new \LogicException("Utilisateur non connecté.");
-        }
-
         try {
             $invoicePDF = $pdfGeneratorService->generatePdf([
                 'user' => $this->getUser(),
@@ -199,17 +195,14 @@ final class EventController extends AbstractController
             ], $fileName, 'event_detail/pdf_send.html.twig', 'uploads/invoices/');
             $this->addFlash('success', 'Mises à jour enregistrées avec succès.');
         } catch (\Throwable $th) {
-            dump($th->getMessage()); // ou log l'erreur
+                dump($th->getMessage()); // ou log l'erreur
             $this->addFlash('error', 'Erreur lors de la génération du PDF.');
             if (!isset($invoicePDF)) {
                 return $this->redirectToRoute('app_event_show', ['id' => $id]);
             }
         }
 
-        if (!isset($invoicePDF) || !file_exists($invoicePDF)) {
-            $this->addFlash('error', 'PDF non généré, envoi de mail annulé.');
-            return $this->redirectToRoute('app_event_show', ['id' => $id]);
-        }
+
         try {
             $emailService->sendEmail(
                 $this->getUser()->getUserIdentifier(),
@@ -236,20 +229,24 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}/update-quantities', name: 'app_event_quantity_update', methods: ['POST'])]
-    public function updateQuantities(Request $request, Event $event, EntityManagerInterface $em): Response
-    {
-        $quantities = $request->request->all('quantities');
+public function updateQuantities(Request $request, Event $event, EntityManagerInterface $em): Response
+{
+    $quantities = $request->request->all('quantities');
 
-        foreach ($quantities as $id => $quantity) {
-            $detail = $em->getRepository(EventDetail::class)->find($id);
-            if ($detail && $detail->getEvent() === $event) {
-                $detail->setQuantity((int)$quantity);
-            }
+    foreach ($quantities as $id => $quantity) {
+        $detail = $em->getRepository(EventDetail::class)->find($id);
+        if ($detail && $detail->getEvent() === $event) {
+            $detail->setQuantity((int)$quantity);
         }
-
-        $em->flush();
-        $this->addFlash('success', 'Quantités mises à jour.');
-
-        return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
     }
+
+    $em->flush();
+    $this->addFlash('success', 'Quantités mises à jour.');
+
+    return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+}
+
+
+
+
 }
