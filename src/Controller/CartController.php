@@ -182,9 +182,10 @@ EntityManagerInterface $entityManager
         }
       
         $entityManager->flush();
+        $session->remove('cart');
         
     }
-    return $this->redirectToRoute('app_event_detail_index');
+    return $this->redirectToRoute('app_event_index');
 }
 
     

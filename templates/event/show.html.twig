@@ -5,15 +5,14 @@
 
 {% block body %}
 	<style>
-		.card-correction {
-			height: 310px;
-			justify-content: space-between;
-		}
+		table {
+			width:100%;
+		} 
 	</style>
 
 
 	<h2 class="text-center m-2">Event</h2>
-	<div class=" MyDiv ">
+	<div class=" MyDiv col-12 jutify-items-arround m-2">
 		{% for message in app.flashes('success') %}
 			<div class="alert alert-success">{{ message }}</div>
 		{% endfor %}
@@ -22,9 +21,9 @@
 		{% endfor %}
 
 
-		<div class="row col-12 align-items-end justify-content-between ">
+		<div class="row  align-items-end justify-content-between ">
 			<h3 class="text-center">{{ event.name }}</h3>
-			<div class="container col-3 card MyDiv card-correction ">
+			<div class="container col-10 col-md-3 card MyDiv card-correction ">
 				<h4 class="text-center">CONTACT</h4>
 				<p>
 					{{ event.contact ? event.contact.lastName : 'N/A'}}-{{ event.contact ? event.contact.firstName : 'N/A'}}
@@ -40,7 +39,7 @@
 					<a href="{{ path('app_contact_edit', {'id': event.contact.id}) }}">Edit</a>
 				</button>
 			</div>
-			<div class="container col-3 card MyDiv card-correction">
+			<div class="container col-10 col-md-3 card MyDiv card-correction">
 				<h4 class="text-center">SITE</h4>
 
 				<p>
@@ -56,7 +55,7 @@
 				</button>
 
 			</div>
-			<div class="container col-3 card MyDiv card-correction ">
+			<div class="container col-10 col-md-3 card MyDiv card-correction ">
 				<h4 class="text-center">DATE</h4>
 				<p>Montage :
 					{{ event.dateMontage ? event.dateMontage|date('Y-m-d') : '' }}</p>
@@ -88,11 +87,10 @@
 		</div>
 	</div>
 
-	<div
-		class="row">
+	<div class="row justify-content-around">
 
 		{# ---------------------------------------cad new -------------------------------- #}
-		<div class="container col-3 card MyDiv ">
+		<div class=" col-11 col-md-3 card MyDiv m-0  ">
 
 			<h3>new</h3>
 			<table class="">
@@ -130,7 +128,7 @@
 
 		{# ------------------------------------------card pret-----------------------------------  #}
 
-		<div class="container col-3 card MyDiv">
+		<div class=" col-11 col-md-3 card MyDiv m-0 m-md-2">
 			<h3>BP</h3>
 			<form id="form-bp" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
 				<table class="">
@@ -171,8 +169,9 @@
 
 		{# -------------------------------------card livret----------------------------------- #}
 
-		<div class="container col-3 card MyDiv">
+		<div class=" col-11 col-md-3 card MyDiv m-0 m-md-2">
 			<h3>BL</h3>
+			<form id="form-bp" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
 			<table class="">
 				<thead>
 					<tr>
@@ -189,23 +188,28 @@
 							<tr>
 								<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
 								<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
-								<td>{{ eventDetail.quantity }}</td>
+																	<td>
+										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0"  data-original="{{ eventDetail.quantity }}"
+                                    data-target="bl">
+									</td>
 								<td>{{ eventDetail.date|date('d/m') }}</td>
 							</tr>
 						{% endif %}
 					{% endfor  %}
 				</tbody>
 			</table>
+			<button id="submit-quantity-bl" type="submit" class="btn btn-success mt-2" disabled>Valider les quantités</button>
 			{% if status == 2 %}
 				<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'br' }) }}">BR -></a>
 				<a class="btn btn-warning m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bf' }) }}">BF -></a>
 			{% endif %}
+			</form>
 		</div>
 
 
 		{# ----------------------------------card retour ----------------------------------- #}
 
-		<div class="container col-3 card MyDiv">
+		<div class=" col-11 col-md-3 card MyDiv m-0 m-md-2">
 
 			<h3>BR</h3>
 			<table class="">

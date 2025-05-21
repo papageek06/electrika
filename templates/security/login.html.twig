@@ -5,8 +5,15 @@
 
 
 {% block body %}
+<style>
+ .login {
+	justify-items: center;
+	
+}
+</style>
 	<h2 class="text-center mb-5">SITE EN CONSTRUCTION !!</h2>
-	<div class="container col-4 card MyDiv p-4 justify-content-center">
+	<div class="login">
+	<div class="container col-md-4 col-12 card MyDiv p-4 m-2 justify-item-center">
 		<form method="post">
 			{% if error %}
 				<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -31,6 +38,7 @@
 				Sign in
 			</button>
 		</form>
+	</div>
 	</div>
 
 	{#
