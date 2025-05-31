@@ -6,8 +6,8 @@
 {% block body %}
 	<style>
 		table {
-			width:100%;
-		} 
+			width: 100%;
+		}
 	</style>
 
 
@@ -87,7 +87,8 @@
 		</div>
 	</div>
 
-	<div class="row justify-content-around">
+	<div
+		class="row justify-content-around">
 
 		{# ---------------------------------------cad new -------------------------------- #}
 		<div class=" col-11 col-md-3 card MyDiv m-0  ">
@@ -148,8 +149,7 @@
 									<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
 									<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
 									<td>
-										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0"  data-original="{{ eventDetail.quantity }}"
-                                    data-target="bp">
+										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0" data-original="{{ eventDetail.quantity }}" data-target="bp">
 									</td>
 									<td>{{ eventDetail.date|date('d/m') }}</td>
 								</tr>
@@ -171,73 +171,123 @@
 
 		<div class=" col-11 col-md-3 card MyDiv m-0 m-md-2">
 			<h3>BL</h3>
-			<form id="form-bp" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
-			<table class="">
-				<thead>
-					<tr>
-						<th class="CellStart">status</th>
-						<th class="MyCell">produit</th>
-						<th class="MyCell">--Q--</th>
-						<th class="cellEnd">date</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for eventDetail in eventDetails %}
-						{% if eventDetail.mouve == 'bl' %}
+			<form id="form-bl" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
+				<table class="">
+					<thead>
+						<tr>
+							<th class="CellStart">status</th>
+							<th class="MyCell">produit</th>
+							<th class="MyCell">--Q--</th>
+							<th class="cellEnd">date</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for eventDetail in eventDetails %}
+							{% if eventDetail.mouve == 'bl' %}
 
-							<tr>
-								<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
-								<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
-																	<td>
-										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0"  data-original="{{ eventDetail.quantity }}"
-                                    data-target="bl">
+								<tr>
+									<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
+									<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+									<td>
+										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0" data-original="{{ eventDetail.quantity }}" data-target="bl">
 									</td>
-								<td>{{ eventDetail.date|date('d/m') }}</td>
-							</tr>
-						{% endif %}
-					{% endfor  %}
-				</tbody>
-			</table>
-			<button id="submit-quantity-bl" type="submit" class="btn btn-success mt-2" disabled>Valider les quantités</button>
-			{% if status == 2 %}
-				<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'br' }) }}">BR -></a>
-				<a class="btn btn-warning m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bf' }) }}">BF -></a>
-			{% endif %}
+									<td>{{ eventDetail.date|date('d/m') }}</td>
+								</tr>
+							{% endif %}
+						{% endfor  %}
+					</tbody>
+				</table>
+				<button id="submit-quantity-bl" type="submit" class="btn btn-success mt-2" disabled>Valider les quantités</button>
+				{% if status == 2 %}
+					<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'br' }) }}">BR -></a>
+					<a class="btn btn-warning m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bf' }) }}">BF -></a>
+				{% endif %}
 			</form>
 		</div>
 
 
 		{# ----------------------------------card retour ----------------------------------- #}
 
-		<div class=" col-11 col-md-3 card MyDiv m-0 m-md-2">
+		{# <div class=" col-11 col-md-3 card MyDiv m-0 m-md-2">
 
 			<h3>BR</h3>
-			<table class="">
+			<form id="form-br" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
+				<table class="">
+					<thead>
+						<tr>
+							<th class="CellStart">status</th>
+							<th class="MyCell">produit</th>
+							<th class="MyCell">--Q--</th>
+							<th class="cellEnd">date</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for eventDetail in eventDetails %}
+							{% if eventDetail.mouve == 'bl' %}
 
-				<thead>
-					<tr>
-						<th class="CellStart">status</th>
-						<th class="MyCell">produit</th>
-						<th class="MyCell">--Q--</th>
-						<th class="cellEnd">date</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for eventDetail in eventDetails %}
-						{% if eventDetail.mouve == 'br' %}
+								<tr>
+									<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
+									<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+									<td>
+										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0" data-original="{{ eventDetail.quantity }}" data-target="br">
+									</td>
+									<td>{{ eventDetail.date|date('d/m') }}</td>
+								</tr>
+							{% endif %}
+						{% endfor  %}
+					</tbody>
+				</table>
+				<button id="submit-quantity-br" type="submit" class="btn btn-success mt-2" disabled>Valider les quantités</button>
 
-							<tr>
-								<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
-								<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
-								<td>{{ eventDetail.quantity }}</td>
-								<td>{{ eventDetail.date|date('d/m') }}</td>
-							</tr>
-						{% endif %}
-					{% endfor  %}
-				</tbody>
+			</form>
 
-			</table>
-		</div>
+
+		</div> #}
+		{# Section BR (retour) #}
+<div class="col-11 col-md-4 card MyDiv m-0 m-md-2">
+    <h3>BR (retour)</h3>
+
+    {% if blQuantities is not empty %}
+        <form id="form-br" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Quantité livrée</th>
+                        <th>Déjà retournée</th>
+                        <th>Nouveau retour</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for productId, blQty in blQuantities %}
+                        {% set product = eventDetails|filter(e => e.product.id == productId)|first.product %}
+                        {% set brQty = brQuantities[productId] ?? 0 %}
+
+                        <tr>
+                            <td>{{ product.name }}</td>
+                            <td>{{ blQty }}</td>
+                            <td>{{ brQty }}</td>
+                            <td>
+                                <input type="number"
+                                       name="newReturns[{{ productId }}]"
+                                       value="0"
+                                       min="0"
+                                       class="form-control form-control-sm return-input"
+                                       data-original="0">
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button id="submit-return" class="btn btn-success mt-2" type="submit" disabled>
+                Valider les retours
+            </button>
+        </form>
+    {% else %}
+        <p>Aucune livraison (BL) n’a encore été enregistrée pour cet événement.</p>
+    {% endif %}
+</div>
+
 
 	</div>
 
@@ -250,29 +300,29 @@ window.open(selectedUrl, '_blank');
 }
 });
 
-		// --------------------------------Gestion de boutons de soumission------------------ //
+// --------------------------------Gestion de boutons de soumission------------------ //
 document.addEventListener('DOMContentLoaded', function () {
-    // On gère plusieurs groupes de champs si nécessaire (BP, BL, etc.)
-    const targets = ['bp']; // Ajoute ici 'bl', 'br'... si besoin
 
-    targets.forEach(target => {
-        const inputs = document.querySelectorAll(`.quantity-input[data-target="${target}"]`);
-        const submitButton = document.getElementById(`submit-quantity-${target}`);
+const targets = ['bp', 'bl','br'];
 
-        const checkChanges = () => {
-            let hasChanged = false;
-            inputs.forEach(input => {
-                if (input.value !== input.getAttribute('data-original')) {
-                    hasChanged = true;
-                }
-            });
-            submitButton.disabled = !hasChanged;
-        };
+targets.forEach(target => {
+const inputs = document.querySelectorAll (`.quantity-input[data-target="${target}"]`);
+const submitButton = document.getElementById (`submit-quantity-${target}`);
 
-        inputs.forEach(input => {
-            input.addEventListener('input', checkChanges);
-        });
-    });
+const checkChanges = () => {
+let hasChanged = false;
+inputs.forEach(input => {
+if (input.value !== input.getAttribute('data-original')) {
+hasChanged = true;
+}
+});
+submitButton.disabled = ! hasChanged;
+};
+
+inputs.forEach(input => {
+input.addEventListener('input', checkChanges);
+});
+});
 });
 	</script>
 

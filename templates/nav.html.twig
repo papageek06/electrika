@@ -1,131 +1,145 @@
 <style>
-a {
-    color: black !important;
-    text-decoration: none; /* Supprime le soulignement si nécessaire */
-}
-nav {
-	/* background-color:rgb(53, 53, 61); */
-	color: white !important;
-	 }
-
+	a {
+		color: black !important;
+		text-decoration: none; /* Supprime le soulignement si nécessaire */
+	}
+	nav {
+		/* background-color:rgb(53, 53, 61); */
+		color: white !important;
+	}
 </style>
-		
+
 <div class=" bg-secondary p-0  ">
-<nav class="navbar navbar-expand-lg   ">
-	<div class="container-fluid  ">
-		
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse  " id="navbarNav">
-			<ul class="navbar-nav w-100 d-flex justify-content-between navbar-spaced ">
+	<nav class="navbar navbar-expand-lg bg-secondary px-3" role="navigation" aria-label="Menu principal">
+		<div class="container-fluid">
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav w-100 d-flex justify-content-between align-items-center">
 
-
-				{% if app.user %}
-				
+					{% if app.user %}
 						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
+							<a class="nav-link{% if app.request.get('_route') == 'app_home' %} active{% endif %}" aria-current="{% if app.request.get('_route') == 'app_home' %}page{% endif %}" href="{{ path('app_home') }}">Accueil</a>
 						</li>
 						<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_product_index') }}">Stock</a>
-						</li>					
-						<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_event_detail_index') }}">Commande</a>
-						</li>						
-						<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_cart') }}">Prépa </a>
-						</li>					
-						<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_event_index') }}">Evenment </a>
-						</li>					
-						<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_site_event_index') }}">Site d'events</a>
-						</li>				
-						<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_contact_index') }}">Contact</a>
-						</li>											
-						<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_user_show' , {'id' : app.user.id}) }}">Profile</a>
+							<a class="nav-link" href="{{ path('app_product_index') }}">Stock</a>
 						</li>
 						<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_galery_picture_index')}}">Picture</a>
-						</li>					
-						<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
+							<a class="nav-link" href="{{ path('app_event_detail_index') }}">Commande</a>
 						</li>
-						
-						{% if is_granted('ROLE_ADMIN') %}					
-								<li class="nav-item">
-								<a href="/admin">dashbord</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
-								</li>					
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_cart') }}">Prépa
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_event_index') }}">Evenment
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_site_event_index') }}">Site d'events</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_contact_index') }}">Contact</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_user_show' , {'id' : app.user.id}) }}">Profile</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_galery_picture_index')}}">Picture</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
+						</li>
+
+						{% if is_granted('ROLE_ADMIN') %}
+							<li class="nav-item">
+								<a class="nav-link" href="/admin">Dashboard</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+							</li>
 						{% endif %}
-				
-				{% else %}
-					
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
+						</li>
+					{% else %}
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+						</li>
+					{% endif %}
+
 					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" role="switch" id="darkMode" aria-label="Activer le mode sombre">
+							<label class="form-check-label" id="labelDarkMode" for="darkMode">Light mode</label>
+						</div>
 					</li>
-					
-				{% endif %}
-				<li class="nav-item">
-					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" role="switch" id="darkMode">
-						<label class="form-check-label" id="labelDarkMode" for="darkMode">Light mode</label>
-					</div>
-				</li>
 
-
-
-
-			</ul>
-
+				</ul>
+			</div>
 		</div>
-	</div>
-</nav>
+	</nav>
 </div>
 <script>
 	// au chargement de la page, j'enlève la transition à mes éléments html pour ne pas avoir de transition
-		// a chaque chargement de page et avoir un effet pénible qui passe du light mode au darkmode
-		document.body.classList.add("no-transition");
+// a chaque chargement de page et avoir un effet pénible qui passe du light mode au darkmode
+document.body.classList.add("no-transition");
 
-		// si en session j'ai le darkMode je l'applique sur mon body
-		if (localStorage.getItem("darkMode") === "enabled") {
-			console.log("dark-mode")
-			document.body.classList.add("dark-mode");
-			document.getElementById("darkMode").checked = true;
-			document.getElementById("labelDarkMode").innerHTML = "Dark Mode";
-		}
+// si en session j'ai le darkMode je l'applique sur mon body
+if (localStorage.getItem("darkMode") === "enabled") {
+console.log("dark-mode")
+document.body.classList.add("dark-mode");
+document.getElementById("darkMode").checked = true;
+document.getElementById("labelDarkMode").innerHTML = "Dark Mode";
+}
 
-		// Supprimer la classe 'no-transition' après un court délai
-		// pour que la transition puisse s'appliquer onChange
-		setTimeout(() => {
-			document.body.classList.remove("no-transition");
-		}, 20);
+// Supprimer la classe 'no-transition' après un court délai
+// pour que la transition puisse s'appliquer onChange
+setTimeout(() => {
+document.body.classList.remove("no-transition");
+}, 20);
 
-		// Une fois que le mode est appliqué, on affiche le contenu
-    	document.body.classList.add("loaded");
+// Une fois que le mode est appliqué, on affiche le contenu
+document.body.classList.add("loaded");
 
-		// je capte le moment ou j'active/désactive le darkMode
-		document.getElementById("darkMode").addEventListener("change", function() {
+// je capte le moment ou j'active/désactive le darkMode
+document.getElementById("darkMode").addEventListener("change", function () {
 
-				document.body.classList.toggle("dark-mode");
+document.body.classList.toggle("dark-mode");
 
-				// si mon body a la classe dark-mode
-				// je le stock dans le cache du navigateur pour la prochaine page que je vais parcourir
-				if (document.body.classList.contains("dark-mode")) {
-					document.getElementById("labelDarkMode").innerHTML = "Dark Mode";
-					localStorage.setItem("darkMode", "enabled");
-				} else {
-					document.getElementById("labelDarkMode").innerHTML = "Light Mode";
-					localStorage.setItem("darkMode", "disabled");
-				}
+// si mon body a la classe dark-mode
+// je le stock dans le cache du navigateur pour la prochaine page que je vais parcourir
+if (document.body.classList.contains("dark-mode")) {
+document.getElementById("labelDarkMode").innerHTML = "Dark Mode";
+localStorage.setItem("darkMode", "enabled");
+} else {
+document.getElementById("labelDarkMode").innerHTML = "Light Mode";
+localStorage.setItem("darkMode", "disabled");
+}
 
-		});
+});
 
-	
+document.addEventListener('DOMContentLoaded', function () {
+const navbarCollapse = document.querySelector('.navbar-collapse');
+const toggler = document.querySelector('.navbar-toggler');
 
+// Fermer au clic sur un lien du menu
+document.querySelectorAll('.navbar-collapse .nav-link').forEach(function (link) {
+link.addEventListener('click', function () {
+if (navbarCollapse.classList.contains('show')) {
+new bootstrap.Collapse(navbarCollapse).hide();
+}
+});
+});
+
+// Fermer au clic en dehors de la navbar (mobile uniquement)
+document.addEventListener('click', function (event) {
+const isClickInside = navbarCollapse.contains(event.target) || toggler.contains(event.target);
+if (! isClickInside && navbarCollapse.classList.contains('show')) {
+new bootstrap.Collapse(navbarCollapse).hide();
+}
+});
+});
 </script>

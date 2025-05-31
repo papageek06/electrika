@@ -49,6 +49,7 @@ final class SiteEventController extends AbstractController
         return $this->render('site_event/show.html.twig', [
             'site_event' => $siteEvent,
             'events' => $eventRepository->findBy(['site' => $siteEvent->getId()]),
+            'address' => $siteEvent->getAddress() . ', ' . $siteEvent->getPostalCode() . ' ' . $siteEvent->getCity()
         ]);
     }
 

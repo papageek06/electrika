@@ -4,10 +4,10 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Product</h1>
+	<h2>Product</h2>
 
-	<div class="row " style="justify-content space-around;">
-		<div class="MyDiv m-3 " style="width: fit-content;">
+	<div class="container ">
+		<div class="MyDiv  " style="width: fit-content;">
 			<div class="card-header">
 				{% if product.picture is not null %}
 					<img src="{{ asset('uploads/pictures/' ~ product.picture) }}" alt="Product Image" class="img-fluid" style="max-width: 100%; height: auto;">
@@ -32,34 +32,37 @@
 				<ul id="connector-list">
 					{% for pc in product.productConnectors %}
 						<li>
-							{{ pc.connector.power }}A
+							{{ pc.quantity }}
+							X
+							{{ pc.connector.power }}
 							{{ pc.connector.type }}
-							({{ pc.plugDirection }},
-							{{ pc.quantity }})</li>
+							({{ pc.plugDirection }})
+							<button class="btn btn-danger btn-sm delete-connector" data-product-connector-id="{{ pc.id }}">X</button>
+						</li>
 					{% endfor %}
 				</ul>
-<div>
-			<h3>Ajouter un connecteur</h3>
-			<div id="connector-form">
-				<select id="connector-id">
-					{% for c in connectors %}
-						<option value="{{ c.id }}">
-							{{ c.power }}A				
-							{{ c.type }}
-						</option>
-					{% endfor %}
-				</select>
+				<div>
+					<h3>Ajouter un connecteur</h3>
+					<div id="connector-form">
+						<select id="connector-id">
+							{% for c in connectors %}
+								<option value="{{ c.id }}">
+									{{ c.power }}A
+									{{ c.type }}
+								</option>
+							{% endfor %}
+						</select>
 
-				<input type="number" id="connector-quantity" placeholder="Quantité" min="1" value="1">
-				<select id="connector-plug">
-					<option value="alim">Alim</option>
-					<option value="sortie">Sortie</option>
-				</select>
+						<input type="number" id="connector-quantity" placeholder="Quantité" min="1" value="1">
+						<select id="connector-plug">
+							<option value="alim">Alim</option>
+							<option value="sortie">Sortie</option>
+						</select>
 
-				<button id="add-connector-btn" data-product-id="{{ product.id }}">Ajouter</button>
-			</div>
+						<button id="add-connector-btn" data-product-id="{{ product.id }}">Ajouter</button>
+					</div>
 
-		</div>
+				</div>
 
 				<button class="">
 					<a href="{{ path('app_product_edit',{'id' : product.id}) }}">edit</a>
@@ -70,10 +73,9 @@
 
 			</div>
 		</div>
-		
 
 
-		<div id="calendar" class="MyDiv col-7 m-3"></div>
+		<div id="calendar" class="MyDiv col-mg-7"></div>
 	</div>
 	<!-- CSS FullCalendar -->
 	<link
@@ -84,8 +86,8 @@
 
 
 	<script>
-// Initialize the calendar
-		document.addEventListener('DOMContentLoaded', function () {
+		// Initialize the calendar
+document.addEventListener('DOMContentLoaded', function () {
 const calendarEl = document.getElementById('calendar');
 
 const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -98,37 +100,72 @@ events: {{ calendarEvents|json_encode|raw }}
 calendar.render();
 });
 
-	// Add event listener to the button
+// Add event listener to the button
 document.getElementById('add-connector-btn').addEventListener('click', async function () {
-    const productId = this.dataset.productId;
-    const connectorId = document.getElementById('connector-id').value;
-    const quantity = document.getElementById('connector-quantity').value;
-    const plug = document.getElementById('connector-plug').value;
+const productId = this.dataset.productId;
+const connectorId = document.getElementById('connector-id').value;
+const quantity = document.getElementById('connector-quantity').value;
+const plug = document.getElementById('connector-plug').value;
 
-    const response = await fetch(`/product/${productId}/add-connector`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify({
-            connector_id: connectorId,
-            quantity: quantity,
-            plugDirection: plug
-        })
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-        const li = document.createElement('li');
-        li.innerText = `${data.connectorLabel} (${data.plug}, ${data.quantity})`;
-        document.getElementById('connector-list').appendChild(li);
-    } else {
-        alert('Erreur : ' + data.error);
-    }
+const response = await fetch (`/product/${productId}/add-connector`, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+'X-Requested-With': 'XMLHttpRequest'
+},
+body: JSON.stringify(
+{connector_id: connectorId, quantity: quantity, plugDirection: plug}
+)
 });
 
+const data = await response.json();
+
+if (data.success) {
+const li = document.createElement('li');
+li.innerText = `${
+data.connectorLabel
+} (${
+data.plug
+}, ${
+data.quantity
+})`;
+document.getElementById('connector-list').appendChild(li);
+} else {
+alert('Erreur : ' + data.error);
+}
+});
+
+// Add event listener to the delete buttons
+// delete connector
+document.querySelectorAll('.delete-connector').forEach(btn => {
+  btn.addEventListener('click', async function () {
+    const connectorId = this.dataset.productConnectorId;
+    console.log("Suppression connector ID :", connectorId);
+
+    if (!confirm("Supprimer ce connecteur ?")) return;
+
+    try {
+      const response = await fetch(`/product/delete-connector/${connectorId}`, {
+        method: 'DELETE',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        this.closest('li').remove();
+      } else {
+        alert('Erreur : ' + data.error);
+      }
+
+    } catch (e) {
+      console.error("Erreur AJAX :", e);
+      alert("Une erreur s'est produite. Voir la console.");
+    }
+  });
+});
 
 	</script>
 

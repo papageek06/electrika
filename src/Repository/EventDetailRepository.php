@@ -75,6 +75,8 @@ class EventDetailRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('e')
             ->select('e.mouve AS status, COUNT(e.id) AS total')
+                    ->where('e.date > :today')
+        ->setParameter('today', new \DateTimeImmutable('today'))
             ->groupBy('e.mouve')
             ->getQuery()
             ->getResult();

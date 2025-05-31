@@ -8,7 +8,7 @@
 
 
 	<div class="m-2 ">
-		<h1 class="text-center mt-5">Liste des Produits</h1>
+		<h2 class="text-center mt-5">Liste des Produits</h2>
 
 		{# Message d'alerte selon le statut du panier #}
 		<div class="alert alert-warning text-center">
@@ -52,7 +52,9 @@
 		{# ----------------------------------------------tableau product------------------------------------------- #}
 
 		<div class="MyDiv m-0 m-sm-2">
-			<table class=" ">
+			<table role="table" class="table">
+				<caption class="visually-hidden">Tableau des produits disponibles</caption>
+
 				<thead>
 					<tr>
 						<th class="CellStart d-none d-md-table-cell">></th>
@@ -70,54 +72,58 @@
 
 					</tr>
 				</thead>
-<tbody>
-	{% for productList in products %}
-		<tr class="product-item" data-category="{{ productList.category.id }}" data-name="{{ productList.name|lower }}">
-			{# Image produit #}
-			<td class="CellStart d-none d-md-table-cell">
-				<img width="70px" src="{{ asset('uploads/pictures/' ~ (productList.picture ?? 'default.png')) }}" alt="{{ productList.name }}">
-			</td>
+				<tbody>
+					{% for productList in products %}
+						<tr
+							class="product-item" data-category="{{ productList.category.id }}" data-name="{{ productList.name|lower }}">
+							{# Image produit #}
+							<form method="post" action="{{ path('app_cart_add') }}" data-turbo="false">
+								<td class="CellStart d-none d-md-table-cell">
+									<img width="70px" loading="lazy" src="{{ asset('uploads/pictures/' ~ (productList.picture ?? 'default.png')) }}" alt="{{ productList.name }}">
+								</td>
 
-			<td class="MyCell" id="{{ productList.name }}">{{ productList.name }}</td>
-			<td class="MyCell d-none d-md-table-cell">{{ productList.category ? productList.category.name : "N/A" }}</td>
-			<td class="MyCell">{{ productList.stockInitial }}</td>
+								<td class="MyCell" id="{{ productList.name }}">{{ productList.name }}</td>
+								<td class="MyCell d-none d-md-table-cell">{{ productList.category ? productList.category.name : "N/A" }}</td>
+								<td class="MyCell">{{ productList.stockInitial }}</td>
 
-			{# Affichage du stock par semaine #}
-			{% for semaine in stockSemaines[productList.id] %}
-				<td class="MyCell d-none d-md-table-cell {{ semaine.stock|number_format and semaine.stock|number_format < 0 ? 'bg-danger text-white' : '' }}">
-					{{ semaine.stock }}
-				</td>
-			{% endfor %}
+								{# Affichage du stock par semaine #}
+								{% for semaine in stockSemaines[productList.id] %}
+									<td class="MyCell d-none d-md-table-cell {{ semaine.stock|number_format and semaine.stock|number_format < 0 ? 'text-danger text-white' : '' }}">
+										{{ semaine.stock }}
+									</td>
+								{% endfor %}
 
-			<td class="category-{{ productList.category.id }}" style="display:none;"></td>
+								<td class="category-{{ productList.category.id }}" style="display:none;"></td>
 
-			<form method="post" action="{{ path('app_cart_add') }}" data-turbo="false">
-				<td class="MyCell"><input class="col-4" type="number" name="quantity" value="1"></td>
-				<td class="MyCell col-1 ">
-					<a href="{{ path('app_product_show', {'id': productList.id}) }}" class="btn btn-primary col-9 m-1">Détails</a>
-					<input type="hidden" name="product_id" value="{{ productList.id }}">
-					<input type="hidden" name="user" value="{{ app.user.id }}">
-					<input type="hidden" name="event_id" id="eventIdInput" value="{{ cart_session['eventId'][0] ?? '' }}">
-					<button class="btn btn-warning mt-1  col-9 m-1" type="submit">add</button>
-				</td>
-			</form>
 
-			<td class="cellEnd">
-				{% if cart_session %}
-					{% for key, id in cart_session.idProduct %}
-						{% if productList.id == id %}
-							{{ cart_session.quantity[key] }}
-						{% endif %}
+								<td class="MyCell"><input class="col-4" type="number" name="quantity" value="1"></td>
+								<td class="MyCell col-1 ">
+									<a href="{{ path('app_product_show', {'id': productList.id}) }}" class="btn btn-primary col-9 m-1" aria-label="Voirle detail de {{ productList.name }}">Détails</a>
+									<input type="hidden" name="product_id" value="{{ productList.id }}">
+									<input type="hidden" name="user" value="{{ app.user.id }}">
+									<input type="hidden" name="event_id" id="eventIdInput" value="{{ cart_session['eventId'][0] ?? '' }}">
+									<button class="btn btn-warning mt-1  col-9 m-1" aria-label="Ajouter {{ productList.name }} au panier" type="submit">add</button>
+								</td>
+							</form>
+
+							<td class="cellEnd">
+								{% if cart_session %}
+									{% for key, id in cart_session.idProduct %}
+										{% if productList.id == id %}
+											{{ cart_session.quantity[key] }}
+										{% endif %}
+									{% endfor %}
+								{% endif %}
+							</td>
+						</tr>
+
+					{% else %}
+						<tr>
+							<td colspan="14">Aucun produit trouvé</td>
+						</tr>
 					{% endfor %}
-				{% endif %}
-			</td>
-		</tr>
-	{% else %}
-		<tr>
-			<td colspan="14">Aucun produit trouvé</td>
-		</tr>
-	{% endfor %}
-</tbody>
+
+				</tbody>
 
 			</table>
 		</div>
@@ -194,5 +200,9 @@ input.value = selectedEventId;
 });
 });
 });
+
+// ----------JavaScript to handle the no results message ----------
+const noResults = document.getElementById('no-results');
+noResults.style.display = foundMatch ? 'none' : 'block';
 	</script>
 {% endblock %}

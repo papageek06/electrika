@@ -1,4 +1,4 @@
-@import "~bootstrap/scss/bootstrap";
+@use "~bootstrap/scss/bootstrap";
 
 $primary : #6c5ce7;
 $secondary : #d63031;
@@ -26,6 +26,13 @@ body {
 body.loaded {
     visibility: visible;
     /* Affiche quand le JS est prêt */
+}
+
+.monTitre {
+    background-color: rgb(29, 28, 34);
+    color: white;
+    padding: 20px;
+    text-align: center;
 }
 
 .no-transition,
@@ -212,6 +219,7 @@ input[type="number"] {
 
     cursor: pointer;
 }
+
 input[type="number"] {
     width: 3rem !important;
     padding: 0;
@@ -230,3 +238,24 @@ input[type="number"] {
     border-radius: 10px;
     Border: 1px solid black
 }
+
+a {
+  color: black !important;
+  text-decoration: none;
+}
+
+nav {
+  color: white !important;
+}
+.modal-form {
+  display: none;
+  position: fixed;
+  top: 5%;
+  left: 10%;
+  z-index: 1000;
+  background-color: rgb(83, 142, 231);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid black;
+}
+

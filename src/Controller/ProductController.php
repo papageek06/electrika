@@ -10,6 +10,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\ConnectorRepository;
 use App\Repository\EventDetailRepository;
 use App\Repository\EventRepository;
+use App\Repository\ProductConnectorRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +25,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route('/product')]
 final class ProductController extends AbstractController
 {
-  #[Route(name: 'app_product_index', methods: ['GET'])]
+    #[Route(name: 'app_product_index', methods: ['GET'])]
     public function index(
         ProductRepository $productRepository,
         EventRepository $eventRepository,
@@ -42,38 +43,38 @@ final class ProductController extends AbstractController
             $stockInitial = $product->getStockInitial();
             $stockParSemaine = [];
 
-           for ($i = 1; $i <= 6; $i++) {
-            $currentWeekDate = $today->modify('+' . ($i * 7) . ' days');
-    $startDate = $today->modify('+' . (($i - 1) * 7) . ' days');
-    $endDate = $startDate->modify('+6 days'); // intervalle sur 7 jours
+            for ($i = 1; $i <= 6; $i++) {
+                $currentWeekDate = $today->modify('+' . ($i * 7) . ' days');
+                $startDate = $today->modify('+' . (($i - 1) * 7) . ' days');
+                $endDate = $startDate->modify('+6 days'); // intervalle sur 7 jours
 
-    $bl = [];
-    $bp = [];
-    $new = [];
+                $bl = [];
+                $bp = [];
+                $new = [];
 
-    foreach ($eventDetails as $ed) {
-        if ($ed->getProduct()->getId() !== $product->getId()) {
-            continue;
-        }
+                foreach ($eventDetails as $ed) {
+                    if ($ed->getProduct()->getId() !== $product->getId()) {
+                        continue;
+                    }
 
-        $montage = $ed->getEvent()->getDateMontage();
-        $fin = $ed->getEvent()->getDateEnd();
+                    $montage = $ed->getEvent()->getDateMontage();
+                    $fin = $ed->getEvent()->getDateEnd();
 
-        // Vérifie si l'événement chevauche la semaine en cours
-        if ($montage <= $endDate && $fin >= $startDate) {
-            switch ($ed->getMouve()) {
-                case 'bl':
-                    $bl[] = $ed;
-                    break;
-                case 'bp':
-                    $bp[] = $ed;
-                    break;
-                case 'new':
-                    $new[] = $ed;
-                    break;
-            }
-        }
-    }
+                    // Vérifie si l'événement chevauche la semaine en cours
+                    if ($montage <= $endDate && $fin >= $startDate) {
+                        switch ($ed->getMouve()) {
+                            case 'bl':
+                                $bl[] = $ed;
+                                break;
+                            case 'bp':
+                                $bp[] = $ed;
+                                break;
+                            case 'new':
+                                $new[] = $ed;
+                                break;
+                        }
+                    }
+                }
 
 
 
@@ -82,17 +83,17 @@ final class ProductController extends AbstractController
 
                 if (!empty($bl)) {
                     foreach ($bl as $ed) {
-                        $stock -= $ed->getQuantity();
+                        $stock = $stock - $ed->getQuantity();
                     }
                     $used = true;
                 } elseif (!empty($bp)) {
                     foreach ($bp as $ed) {
-                        $stock -= $ed->getQuantity();
+                        $stock = $stock - $ed->getQuantity();
                     }
                     $used = true;
                 } elseif (!empty($new)) {
                     foreach ($new as $ed) {
-                        $stock -= $ed->getQuantity();
+                        $stock  = $stock - $ed->getQuantity();
                     }
                     $used = true;
                 }
@@ -141,7 +142,7 @@ final class ProductController extends AbstractController
 
 
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
-    public function show(Product $product, EventDetailRepository $eventDetailRepository , ConnectorRepository $connectorRepository): Response
+    public function show(Product $product, EventDetailRepository $eventDetailRepository, ConnectorRepository $connectorRepository): Response
     {
 
         $eventDetails = $eventDetailRepository->findByProduct($product->getId());
@@ -250,38 +251,59 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/{id}/add-connector', name: 'app_product_add_connector', methods: ['POST'])]
-public function addConnector(
-    Request $request,
-    Product $product,
-    EntityManagerInterface $em
-): JsonResponse {
-    $data = json_decode($request->getContent(), true);
+    public function addConnector(
+        Request $request,
+        Product $product,
+        EntityManagerInterface $em
+    ): JsonResponse {
+        $data = json_decode($request->getContent(), true);
 
-    if (!isset($data['connector_id'], $data['quantity'], $data['plugDirection'])) {
-        return new JsonResponse(['error' => 'Données manquantes'], 400);
+        if (!isset($data['connector_id'], $data['quantity'], $data['plugDirection'])) {
+            return new JsonResponse(['error' => 'Données manquantes'], 400);
+        }
+
+        $connector = $em->getRepository(Connector::class)->find($data['connector_id']);
+        if (!$connector) {
+            return new JsonResponse(['error' => 'Connecteur introuvable'], 404);
+        }
+
+        $pc = new ProductConnector();
+        $pc->setProduct($product);
+        $pc->setConnector($connector);
+        $pc->setQuantity((int)$data['quantity']);
+        $pc->setPlugDirection($data['plugDirection']);
+
+        $em->persist($pc);
+        $em->flush();
+
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Connecteur ajouté',
+            'connectorLabel' => sprintf(' %dA %s', $connector->getPower(), $connector->getType()),
+            'quantity' => $pc->getQuantity(),
+            'plug' => $pc->getPlugDirection()
+        ]);
+    }
+   #[Route('/delete-connector/{connectorId}', name: 'product_delete_connector', methods: ['DELETE'])]
+public function deleteConnector(
+    int $connectorId,
+    ProductConnectorRepository $repository,
+    EntityManagerInterface $em,
+    Request $request
+): JsonResponse {
+    if (!$request->isXmlHttpRequest()) {
+        return new JsonResponse(['error' => 'Requête non autorisée'], 403);
     }
 
-    $connector = $em->getRepository(Connector::class)->find($data['connector_id']);
+    $connector = $repository->find($connectorId);
     if (!$connector) {
         return new JsonResponse(['error' => 'Connecteur introuvable'], 404);
     }
 
-    $pc = new ProductConnector();
-    $pc->setProduct($product);
-    $pc->setConnector($connector);
-    $pc->setQuantity((int)$data['quantity']);
-    $pc->setPlugDirection($data['plugDirection']);
-
-    $em->persist($pc);
+    $em->remove($connector);
     $em->flush();
 
-    return new JsonResponse([
-        'success' => true,
-        'message' => 'Connecteur ajouté',
-        'connectorLabel' => sprintf(' %dA %s', $connector->getPower(), $connector->getType()),
-        'quantity' => $pc->getQuantity(),
-        'plug' => $pc->getPlugDirection()
-    ]);
+    return new JsonResponse(['success' => true]);
 }
 
 }

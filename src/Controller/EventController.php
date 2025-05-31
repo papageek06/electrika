@@ -86,6 +86,25 @@ final class EventController extends AbstractController
         foreach ($finder as $file) {
             $pdfFiles[] = 'uploads/invoices/' . $file->getFilename();
         }
+        // Regrouper les quantités livrées et retournées par produit
+        $blDetails = [];
+        $brDetails = [];
+
+        foreach ($event->getEventDetails() as $detail) {
+            if ($detail->getMouve() === 'bl') {
+                $productId = $detail->getProduct()->getId();
+                $blDetails[$productId] = ($blDetails[$productId] ?? 0) + $detail->getQuantity();
+            }
+
+            if ($detail->getMouve() === 'br') {
+                $productId = $detail->getProduct()->getId();
+                $brDetails[$productId] = ($brDetails[$productId] ?? 0) + $detail->getQuantity();
+            }
+        }
+
+
+    
+
 
         return $this->render('event/show.html.twig', [
             'event' => $event,
@@ -93,6 +112,8 @@ final class EventController extends AbstractController
             'site' => $event->getSite(),
             'status' => $status,
             'pdfFiles' => $pdfFiles,
+            'blQuantities' => $blDetails,
+            'brQuantities' => $brDetails,
         ]);
     }
 
@@ -258,4 +279,6 @@ final class EventController extends AbstractController
 
         return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
     }
+
+    
 }

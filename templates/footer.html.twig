@@ -1,31 +1,39 @@
-<footer class="bg-dark text-white text-center text-lg-start mt-5">
-    <div class="container p-4">
-        <div class="row">
-            <div class="col-lg-6 col-md-12 mb-4">
-                <h5 class="text-uppercase">Mon Site</h5>
-                <p>
-                    Votre plateforme pour apprendre et découvrir de nouvelles technologies.
-                </p>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-4">
-                <h5 class="text-uppercase">Liens utiles</h5>
-                <ul class="list-unstyled">
-                    <li><a href="#" class="text-white">Accueil</a></li>
-                    <li><a href="#" class="text-white">À propos</a></li>
-                    <li><a href="#" class="text-white">Contact</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-4">
-                <h5 class="text-uppercase">Réseaux Sociaux</h5>
-                <ul class="list-unstyled">
-                    <li><a href="https://twitter.com" class="text-white">Twitter</a></li>
-                    <li><a href="https://facebook.com" class="text-white">Facebook</a></li>
-                    <li><a href="https://linkedin.com" class="text-white">LinkedIn</a></li>
-                </ul>
-            </div>
-        </div>
+<footer class="bg-dark text-white pt-4 mt-5">
+  <div class="container">
+    <div class="row">
+
+      <!-- Présentation -->
+      <div class="col-lg-6 col-md-12 mb-4">
+        <h5 class="text-uppercase fw-bold">ELECTRIKA Gestion</h5>
+        <p>
+          Plateforme interne pour la gestion de matériel événementiel : disponibilité, stock, bons de préparation, livraison et retour.
+        </p>
+      </div>
+
+      <!-- Liens internes -->
+      <div class="col-lg-3 col-md-6 mb-4">
+        <h5 class="text-uppercase">Navigation</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ path('app_home') }}" class="text-white text-decoration-none">Accueil</a></li>
+          <li><a href="{{ path('app_product_index') }}" class="text-white text-decoration-none">Stock</a></li>
+          {# <li><a href="{{ path('app_contact_index') }}" class="text-white text-decoration-none">Contact</a></li> #}
+        </ul>
+      </div>
+
+      <!-- Réseaux ou mentions -->
+      <div class="col-lg-3 col-md-6 mb-4">
+        <h5 class="text-uppercase">Informations</h5>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-white text-decoration-none">Mentions légales</a></li>
+          <li><a href="#" class="text-white text-decoration-none">CGU</a></li>
+          <li><a href="mailto:contact@electrika.fr" class="text-white text-decoration-none">contact@electrika.fr</a></li>
+        </ul>
+      </div>
     </div>
-    <div class="text-center p-3 bg-secondary">
-        © {{ "now"|date("Y") }} Mon Site - Tous droits réservés.
-    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="text-center py-3 bg-secondary small">
+    © {{ "now"|date("Y") }} ELECTRIKA – Tous droits réservés
+  </div>
 </footer>
