@@ -97,7 +97,6 @@
 			<table class="">
 				<thead>
 					<tr>
-						<th class="CellStart">status</th>
 						<th class="MyCell">produit</th>
 						<th class="MyCell">--Q--</th>
 						<th class="cellEnd">date</th>
@@ -111,7 +110,6 @@
 
 
 							<tr>
-								<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
 								<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
 								<td>{{ eventDetail.quantity }}</td>
 								<td>{{ eventDetail.date|date('d/m') }}</td>
@@ -135,7 +133,7 @@
 				<table class="">
 					<thead>
 						<tr>
-							<th class="CellStart">status</th>
+
 							<th class="MyCell">produit</th>
 							<th class="MyCell">--Q--</th>
 							<th class="cellEnd">date</th>
@@ -146,7 +144,6 @@
 							{% if eventDetail.mouve == 'bp'  %}
 
 								<tr>
-									<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
 									<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
 									<td>
 										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0" data-original="{{ eventDetail.quantity }}" data-target="bp">
@@ -175,7 +172,6 @@
 				<table class="">
 					<thead>
 						<tr>
-							<th class="CellStart">status</th>
 							<th class="MyCell">produit</th>
 							<th class="MyCell">--Q--</th>
 							<th class="cellEnd">date</th>
@@ -186,7 +182,6 @@
 							{% if eventDetail.mouve == 'bl' %}
 
 								<tr>
-									<td>{{ eventDetail.mouve ? eventDetail.mouve : '' }}</td>
 									<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
 									<td>
 										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0" data-original="{{ eventDetail.quantity }}" data-target="bl">
