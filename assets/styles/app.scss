@@ -171,17 +171,19 @@ body.dark-mode {
     display: flex;
     justify-items: center;
     flex-direction: column;
+    align-self: normal;
+    justify-content: space-around;
 }
 
 .MyTable {
     background-color: rgb(132, 145, 172, 100) !important;
-    padding: 20px;
-    border-radius: 1rem;
-    margin: 2rem;
-    display: contents;
-
+    text-align: center;
 
 }
+td input {
+    display: inline-block;
+    margin: 0 auto;
+  }
 
 .CellStart {
     background-color: rgb(84, 92, 108, 100) !important;
@@ -258,4 +260,19 @@ nav {
   border-radius: 10px;
   border: 1px solid black;
 }
+td {
+    align-content: center;
+}
+.lightning-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+    display: block;
+    background-color: #0a0f2c;
+    pointer-events: none;
+  }
+  
 

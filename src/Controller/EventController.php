@@ -7,6 +7,7 @@ use App\Entity\EventDetail;
 use App\Form\EventType;
 use App\Repository\EventDetailRepository;
 use App\Repository\EventRepository;
+use App\Repository\ProductRepository;
 use App\Service\EmailService;
 use App\Service\PdfGeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -205,6 +206,17 @@ final class EventController extends AbstractController
                 $entityManager->persist($newDetail);
                 $entityManager->flush();
             }
+            else if ($status == 'newBr' ) {
+                $newDetail = new EventDetail();
+                $newDetail->setUser($eventDetail->getUser());
+                $newDetail->setProduct($eventDetail->getProduct());
+                $newDetail->setEvent($event);
+                $newDetail->setQuantity($eventDetail->getQuantity());
+                $newDetail->setDate(new \DateTime());
+                $newDetail->setMouve('br');
+                $entityManager->persist($newDetail);
+                $entityManager->flush();
+            }
         }
 
         $fileName = $event->getId() . "_" . $status . "_" . time() . ".pdf";
@@ -279,6 +291,41 @@ final class EventController extends AbstractController
 
         return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
     }
+
+    #[Route('/event/{id}/return', name: 'app_event_new_detail', methods: ['POST'])]
+    public function createReturns(
+        Request $request,
+        Event $event,
+        ProductRepository $productRepository,
+        EntityManagerInterface $em
+    ): Response {
+        $newReturns = $request->request->all('newReturns'); // récupère le tableau newReturns
+    
+        foreach ($newReturns as $productId => $quantity) {
+            if ((int)$quantity > 0) {
+                $product = $productRepository->find($productId);
+                if (!$product) {
+                    continue; // sécurité
+                }
+    
+                $eventDetail = new EventDetail();
+                $eventDetail->setEvent($event);
+                $eventDetail->setProduct($product);
+                $eventDetail->setQuantity((int)$quantity);
+                $eventDetail->setMouve('br'); // nouveau retour
+                $eventDetail->setDate(new \DateTime()); // facultatif selon ton modèle
+    
+                $em->persist($eventDetail);
+            }
+        }
+    
+        $em->flush();
+    
+        $this->addFlash('success', 'Retours enregistrés.');
+        return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+    }
+    
+        
 
     
 }

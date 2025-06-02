@@ -1,0 +1,49 @@
+<canvas id="lightningCanvas" class="lightning-background"></canvas>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+const canvas = document.getElementById('lightningCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+}
+
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function drawLightning(x, y, segments = 10, spread = 20) {
+ctx.beginPath();
+ctx.moveTo(x, y);
+for (let i = 0; i < segments; i++) {
+x += (Math.random() - 0.5) * spread;
+y += canvas.height / segments;
+ctx.lineTo(x, y);
+}
+ctx.lineWidth = 4;
+ctx.strokeStyle = '#80d0ff';
+ctx.shadowBlur = 50;
+ctx.shadowColor = '#80d0ff';
+
+ctx.stroke();
+}
+
+function animate() {
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+ctx.fillStyle = '#0a0f2c'; // couleur fixe bleu nuit
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+
+if (Math.random() < 0.03) {
+const startX = Math.random() * canvas.width;
+const startY = Math.random() * (canvas.height / 2);
+drawLightning(startX, startY);
+}
+
+requestAnimationFrame(animate);
+}
+
+animate();
+});
+</script>
