@@ -33,11 +33,6 @@ class EventRepository extends ServiceEntityRepository
              ->select(' e.name, ed.mouve  , ed.date')
              ->innerJoin('e.eventDetails', 'ed')
              ->distinct('ed.mouve')
-             
-             // ->select( 'ed.mouve, e.event')
-
-
-
             ->getQuery()
             ->getResult()
         ;

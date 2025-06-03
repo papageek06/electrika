@@ -93,6 +93,16 @@ class EventDetailRepository extends ServiceEntityRepository
         ->getResult();
     }
 
+    public function findByEventDetailDistinct(): array
+{
+    return $this->createQueryBuilder('ed')
+        ->select('e.name, ed.mouve, ed.date as date')
+        ->join('ed.event', 'e')
+        ->groupBy('e.id, ed.mouve, ed.date')
+        ->getQuery()
+        ->getResult();
+}
+
 
     
 

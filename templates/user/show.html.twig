@@ -6,6 +6,13 @@
 {% block body %}
 	<h2>User</h2>
 
+	{% for label, messages in app.flashes %}
+		{% for message in messages %}
+			<div class="alert alert-{{ label }}">{{ message }}</div>
+		{% endfor %}
+	{% endfor %}
+
+
 	<div class="card m-4 p-0 MyDiv " style="width: 25rem;">
 		<div class="card-header">
 
@@ -21,7 +28,40 @@
 			<p class="card-text">Nom :{{ user.firstName }}</p>
 			<p class="card-text">Prenom :{{user.lastName}}</p>
 			<p class="card-text">Password :*****
-				<a class="btn bg-warning" href="" onclick="return confirm('Are you sure?')">changer</a>
+				<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+					Changer le mot de passe
+				</button>
+			<!-- Modale -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordLabel" aria-hidden="true">
+  <div class="modal-dialog">
+  {% if app.user.id != user.id %}
+    <form method="post" action="{{ path('app_user_change_password', {'id': app.user.id}) }}">
+	  {% elseif is_granted('ROLE_ADMIN') %}
+	  	<form method="post" action="{{ path('app_user_change_password', {'id': user.id}) }}">
+			  {% endif %}
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="changePasswordLabel">Changer le mot de passe</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label" for="password1">Nouveau mot de passe</label>
+            <input type="password" name="password1" id="password1" class="form-control" required minlength="6">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="password2">Confirmer le mot de passe</label>
+            <input type="password" name="password2" id="password2" class="form-control" required minlength="6">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Valider</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
 			</p>
 			<p class="card-text">{{ user.dateEntry ? user.dateEntry|date('d/m/Y') : '' }}</p>
 			<p class="card-text">statut :{{ user.status == "ROLE_ADMIN" ? 'Administateur' : 'Tech' }}</p>

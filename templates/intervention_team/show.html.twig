@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}InterventionTeam{% endblock %}
+
+{% block body %}
+    <h1>InterventionTeam</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ intervention_team.id }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ intervention_team.type }}</td>
+            </tr>
+            <tr>
+                <th>StardDate</th>
+                <td>{{ intervention_team.stardDate ? intervention_team.stardDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>EndDate</th>
+                <td>{{ intervention_team.endDate ? intervention_team.endDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_intervention_team_index') }}">back to list</a>
+
+    <a href="{{ path('app_intervention_team_edit', {'id': intervention_team.id}) }}">edit</a>
+
+    {{ include('intervention_team/_delete_form.html.twig') }}
+{% endblock %}

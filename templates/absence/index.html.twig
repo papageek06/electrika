@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Absence index{% endblock %}
+
+{% block body %}
+    <h1>Absence index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Type</th>
+                <th>StartDate</th>
+                <th>EndDate</th>
+                <th>Comment</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for absence in absences %}
+            <tr>
+                <td>{{ absence.id }}</td>
+                <td>{{ absence.type }}</td>
+                <td>{{ absence.startDate ? absence.startDate|date('Y-m-d') : '' }}</td>
+                <td>{{ absence.endDate ? absence.endDate|date('Y-m-d') : '' }}</td>
+                <td>{{ absence.comment }}</td>
+                <td>
+                    <a href="{{ path('app_absence_show', {'id': absence.id}) }}">show</a>
+                    <a href="{{ path('app_absence_edit', {'id': absence.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_absence_new') }}">Create new</a>
+{% endblock %}

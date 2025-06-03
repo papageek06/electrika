@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit InterventionTeam{% endblock %}
+
+{% block body %}
+    <h1>Edit InterventionTeam</h1>
+
+    {{ include('intervention_team/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_intervention_team_index') }}">back to list</a>
+
+    {{ include('intervention_team/_delete_form.html.twig') }}
+{% endblock %}

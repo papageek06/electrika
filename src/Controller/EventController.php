@@ -33,9 +33,13 @@ final class EventController extends AbstractController
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+
+
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
+
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($event);
@@ -104,7 +108,7 @@ final class EventController extends AbstractController
         }
 
 
-    
+
 
 
         return $this->render('event/show.html.twig', [
@@ -205,8 +209,7 @@ final class EventController extends AbstractController
                 $newDetail->setMouve('bf');
                 $entityManager->persist($newDetail);
                 $entityManager->flush();
-            }
-            else if ($status == 'newBr' ) {
+            } else if ($status == 'newBr') {
                 $newDetail = new EventDetail();
                 $newDetail->setUser($eventDetail->getUser());
                 $newDetail->setProduct($eventDetail->getProduct());
@@ -300,32 +303,28 @@ final class EventController extends AbstractController
         EntityManagerInterface $em
     ): Response {
         $newReturns = $request->request->all('newReturns'); // récupère le tableau newReturns
-    
+
         foreach ($newReturns as $productId => $quantity) {
             if ((int)$quantity > 0) {
                 $product = $productRepository->find($productId);
                 if (!$product) {
                     continue; // sécurité
                 }
-    
+
                 $eventDetail = new EventDetail();
                 $eventDetail->setEvent($event);
                 $eventDetail->setProduct($product);
                 $eventDetail->setQuantity((int)$quantity);
                 $eventDetail->setMouve('br'); // nouveau retour
                 $eventDetail->setDate(new \DateTime()); // facultatif selon ton modèle
-    
+
                 $em->persist($eventDetail);
             }
         }
-    
+
         $em->flush();
-    
+
         $this->addFlash('success', 'Retours enregistrés.');
         return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
     }
-    
-        
-
-    
 }

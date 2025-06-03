@@ -49,6 +49,12 @@ class Event
     #[ORM\ManyToMany(targetEntity: GaleryPicture::class, mappedBy: 'event')]
     private Collection $galeryPictures;
 
+    /**
+     * @var Collection<int, InterventionTeam>
+     */
+    #[ORM\OneToMany(targetEntity: InterventionTeam::class, mappedBy: 'event')]
+    private Collection $interventionTeams;
+
 
 
 
@@ -57,6 +63,7 @@ class Event
     {
         $this->eventDetails = new ArrayCollection();
         $this->galeryPictures = new ArrayCollection();
+        $this->interventionTeams = new ArrayCollection();
      
     }
 
@@ -201,6 +208,36 @@ class Event
     {
         if ($this->galeryPictures->removeElement($galeryPicture)) {
             $galeryPicture->removeEvent($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, InterventionTeam>
+     */
+    public function getInterventionTeams(): Collection
+    {
+        return $this->interventionTeams;
+    }
+
+    public function addInterventionTeam(InterventionTeam $interventionTeam): static
+    {
+        if (!$this->interventionTeams->contains($interventionTeam)) {
+            $this->interventionTeams->add($interventionTeam);
+            $interventionTeam->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInterventionTeam(InterventionTeam $interventionTeam): static
+    {
+        if ($this->interventionTeams->removeElement($interventionTeam)) {
+            // set the owning side to null (unless already changed)
+            if ($interventionTeam->getEvent() === $this) {
+                $interventionTeam->setEvent(null);
+            }
         }
 
         return $this;

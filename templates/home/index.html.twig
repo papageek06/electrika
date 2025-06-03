@@ -73,10 +73,11 @@
 
 		</div>
 
+
 		<div class="col-11 col-lg-7 m-3 d-none d-sm-block">
 			<div class="card">
 				<div class="card-header bg-dark text-white">Planning des événements</div>
-				<div class="card-body p-2" id="calendar-holder"></div>
+				<div class="card-body p-2" id="calendar"></div>
 			</div>
 		</div>
 	</div>
@@ -201,8 +202,9 @@
 	<script src='fullcalendar/core/locales-all.global.js'></script>
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
-var calendarEl = document.getElementById('calendar-holder');
-var calendar = new FullCalendar.Calendar(calendarEl, {
+const calendarEl = document.getElementById('calendar');
+
+const calendar = new FullCalendar.Calendar(calendarEl, {
 initialView: 'dayGridMonth',
 headerToolbar: {
 left: 'prev,next today',
@@ -210,16 +212,37 @@ center: 'title',
 right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
 },
 aspectRatio: 2.3,
-editable: true,
 locale: 'fr',
-events: {{ data|raw }}
+editable: false,
+events: {{ calendarData|raw }},
+eventClick: function (info) {
+alert(info.event.title + '\n\n' + info.event.extendedProps.comment);
+},
+dateClick: function (info) { // Ouvre une modale ou redirige
+openCreateChoiceModal(info.dateStr);
+},
+
 });
+
 calendar.render();
 
-calendar.on('eventClick', function (info) {
-var eventId = info.event.id;
-window.location.href = '/event/' + eventId;
-});
+
+
+// function openCreateChoiceModal(dateStr) {
+// const baseAbsence = '/absence/new?date=' + dateStr;
+// const baseEvent = '/event/new?date=' + dateStr;
+// const baseTeam = '/intervention/team/new?date=' + dateStr;
+
+// document.getElementById('link-create-absence').href = baseAbsence;
+// document.getElementById('link-create-event').href = baseEvent;
+// document.getElementById('link-create-intervention').href = baseTeam;
+
+// document.getElementById('selected-date-text').innerText = dateStr;
+
+// const modal = new bootstrap.Modal(document.getElementById('createChoiceModal'));
+// modal.show();
+// }
+
 });
 	</script>
 {% endblock %}
