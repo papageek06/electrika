@@ -32,55 +32,93 @@ class PlanningService
 
     public function generateCalendarData(): array
     {
-        $calendarData = [];
+        return array_merge(
+            $this->getEventData(),
+            $this->getEventDetailData(),
+            $this->getAbsenceData(),
+            $this->getInterventionTeamData()
+        );
+    }
 
-        // Events
+    private function getEventData(): array
+    {
+        $eventData = [];
         foreach ($this->eventRepository->findAll() as $event) {
-            $calendarData[] = [
+            // Montage
+            $eventData[] = [
                 'title' => $event->getName() . ' - Montage',
                 'start' => $event->getDateMontage()->format('Y-m-d'),
                 'end' => $event->getDateStartShow()->format('Y-m-d'),
-                'backgroundColor' => '#A0522D',
-                'extendedProps' => ['type' => 'event'],
+                'backgroundColor' => '#A0522D', // brown
+                'extendedProps' => [
+                    'type' => 'event',
+                    'eventId' => $event->getId()
+                ],
                 'url' => $this->urlGenerator->generate('app_event_show', ['id' => $event->getId()])
             ];
-            $calendarData[] = [
+
+            // Show
+            $eventData[] = [
                 'title' => $event->getName() . ' - Show',
                 'start' => $event->getDateStartShow()->format('Y-m-d'),
-                'end' => $event->getDateEndSHOW()->modify('+1 day')->format('Y-m-d'),
-                'backgroundColor' => '#FFD700',
-                'extendedProps' => ['type' => 'event'],
+                'end' => $event->getDateEndSHOW()->format('Y-m-d'),
+                'backgroundColor' => '#FFD700', // gold
+                'extendedProps' => [
+                    'type' => 'event',
+                    'eventId' => $event->getId()
+                ],
                 'url' => $this->urlGenerator->generate('app_event_show', ['id' => $event->getId()])
             ];
-            $calendarData[] = [
+
+            // Démontage
+            $eventData[] = [
                 'title' => $event->getName() . ' - Démontage',
                 'start' => $event->getDateEndSHOW()->format('Y-m-d'),
                 'end' => $event->getDateEnd()->modify('+1 day')->format('Y-m-d'),
-                'backgroundColor' => '#FF8C00',
-                'extendedProps' => ['type' => 'event'],
+                'backgroundColor' => '#FF8C00', // dark orange
+                'extendedProps' => [
+                    'type' => 'event',
+                    'eventId' => $event->getId()
+                ],
                 'url' => $this->urlGenerator->generate('app_event_show', ['id' => $event->getId()])
             ];
         }
+        return $eventData;
+    }
 
-        // EventDetails (grouped)
+    private function getEventDetailData(): array
+    {
+        $eventDetailData = [];
+        $colorMap = [
+            'bl' => '#228B22', // green
+            'bp' => '#FFA500', // orange
+            'new' => '#1E90FF', // blue
+            'br' => '#DC143C'  // red
+        ];
+
         foreach ($this->eventDetailRepository->findByEventDetailDistinct() as $item) {
-            $colorMap = ['bl' => 'green', 'bp' => 'orange', 'new' => 'blue', 'br' => 'red'];
-            $calendarData[] = [
+            $eventDetailData[] = [
                 'title' => $item['name'],
                 'start' => $item['date']->format('Y-m-d'),
                 'end' => $item['date']->modify('+1 day')->format('Y-m-d'),
-                'backgroundColor' => $colorMap[$item['mouve']] ?? 'grey',
-                // 'url' => $this->urlGenerator->generate('app_event_detail_show', ['id' => $item->getEvent()]),
+                'backgroundColor' => $colorMap[$item['mouve']] ?? '#808080', // grey as fallback
                 'extendedProps' => [
                     'type' => 'eventDetail',
+                    'eventId' => $item['eventId'],
+                    'eventDetailId' => $item['eventDetailId'],
                     'mouvement' => $item['mouve']
-                ]
+                ],
+                'url' => $this->urlGenerator->generate('app_event_show', ['id' => $item['eventId']])
             ];
         }
+        return $eventDetailData;
+    }
 
-        // Absences
+    private function getAbsenceData(): array
+    {
+        $absenceData = [];
         foreach ($this->absenceRepository->findAll() as $absence) {
-            $calendarData[] = [
+            $absenceData[] = [
                 'title' => $absence->getTechnician()->getUser()->getPrenom() . ' - ' . $absence->getType(),
                 'start' => $absence->getStartDate()->format('Y-m-d'),
                 'end' => $absence->getEndDate()->modify('+1 day')->format('Y-m-d'),
@@ -90,24 +128,28 @@ class PlanningService
                     'type' => 'absence',
                     'comment' => $absence->getComment()
                 ],
-                'url' => $this->urlGenerator->generate('app_event_show', ['id' => $absence->getId()])
+                'url' => $this->urlGenerator->generate('app_absence_show', ['id' => $absence->getId()])
             ];
         }
+        return $absenceData;
+    }
 
-        // Intervention Teams
+    private function getInterventionTeamData(): array
+    {
+        $teamData = [];
         foreach ($this->interventionTeamRepository->findAll() as $team) {
-            $calendarData[] = [
+            $teamData[] = [
                 'title' => 'Equipe - ' . $team->getEvent()->getName(),
                 'start' => $team->getStartDate()->format('Y-m-d'),
                 'end' => $team->getEndDate()->modify('+1 day')->format('Y-m-d'),
                 'backgroundColor' => '#20C997',
                 'extendedProps' => [
-                    'type' => 'interventionTeam'
+                    'type' => 'interventionTeam',
+                    'eventId' => $team->getEvent()->getId()
                 ],
-                'url' => $this->urlGenerator->generate('app_event_show', ['id' => $team->getId()])
+                'url' => $this->urlGenerator->generate('app_intervention_team_show', ['id' => $team->getId()])
             ];
         }
-
-        return $calendarData;
+        return $teamData;
     }
 }

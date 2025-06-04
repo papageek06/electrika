@@ -21,55 +21,67 @@
 
 					{% if app.user %}
 						<li class="nav-item">
-							<a class="nav-link{% if app.request.get('_route') == 'app_home' %} active{% endif %}" aria-current="{% if app.request.get('_route') == 'app_home' %}page{% endif %}" href="{{ path('app_home') }}">Accueil</a>
+							<a class="nav-link{% if app.request.get('_route') == 'app_home' %} active{% endif %}" aria-current="{% if app.request.get('_route') == 'app_home' %}page{% endif %}" href="{{ path('app_home') }}">{{ 'nav.home'|trans }}</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_product_index') }}">Stock</a>
+							<a class="nav-link" href="{{ path('app_product_index') }}">{{ 'nav.stock'|trans }}</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_event_detail_index') }}">Commande</a>
+							<a class="nav-link" href="{{ path('app_event_detail_index') }}">{{ 'nav.orders'|trans }}</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_cart') }}">Prépa
-							</a>
+							<a class="nav-link" href="{{ path('app_cart') }}">{{ 'nav.prep'|trans }}</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_event_index') }}">Evenment
-							</a>
+							<a class="nav-link" href="{{ path('app_event_index') }}">{{ 'nav.events'|trans }}</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_site_event_index') }}">Site d'events</a>
+							<a class="nav-link" href="{{ path('app_site_event_index') }}">{{ 'nav.sites'|trans }}</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_contact_index') }}">Contact</a>
+							<a class="nav-link" href="{{ path('app_contact_index') }}">{{ 'nav.contacts'|trans }}</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_user_show' , {'id' : app.user.id}) }}">Profile</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_galery_picture_index')}}">Picture</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
-						</li>
+
+						{# Nouveaux liens avec restrictions d'accès #}
+						{% if is_granted('ROLE_INTERVENTION_TEAM') or is_granted('ROLE_TECHNICIAN') %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{ path('app_intervention_team_index') }}">{{ 'nav.intervention'|trans }}</a>
+							</li>
+						{% endif %}
+
+						{% if is_granted('ROLE_TECHNICIAN') %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{ path('app_technician_index') }}">{{ 'nav.technician'|trans }}</a>
+							</li>
+						{% endif %}
 
 						{% if is_granted('ROLE_ADMIN') %}
 							<li class="nav-item">
-								<a class="nav-link" href="/admin">Dashboard</a>
-							</li>
-														<li class="nav-item">
-								<a class="nav-link" href="{{ path('app_user_index') }}">profils+</a>
+								<a class="nav-link" href="{{ path('app_absence_index') }}">{{ 'nav.absence'|trans }}</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+								<a class="nav-link" href="/admin">{{ 'nav.dashboard'|trans }}</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{ path('app_user_index') }}">{{ 'nav.users'|trans }}</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{ path('app_register') }}">{{ 'nav.register'|trans }}</a>
 							</li>
 						{% endif %}
+
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
+							<a class="nav-link" href="{{ path('app_user_show' , {'id' : app.user.id}) }}">{{ 'nav.profile'|trans }}</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_galery_picture_index')}}">{{ 'nav.pictures'|trans }}</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_logout') }}">{{ 'nav.logout'|trans }}</a>
 						</li>
 					{% else %}
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+							<a class="nav-link" href="{{ path('app_login') }}">{{ 'nav.login'|trans }}</a>
 						</li>
 					{% endif %}
 

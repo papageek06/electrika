@@ -9,6 +9,12 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+
+    role_hierarchy:
+        ROLE_INTERVENTION_TEAM: ROLE_USER
+        ROLE_TECHNICIAN: ROLE_USER
+        ROLE_ADMIN: [ROLE_INTERVENTION_TEAM, ROLE_TECHNICIAN]
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -36,6 +42,9 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/intervention, roles: [ROLE_INTERVENTION_TEAM, ROLE_TECHNICIAN, ROLE_ADMIN] }
+        - { path: ^/technician, roles: [ROLE_TECHNICIAN, ROLE_ADMIN] }
+        - { path: ^/absence, roles: ROLE_ADMIN }
 
 when@test:
     security:

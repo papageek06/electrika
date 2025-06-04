@@ -18,10 +18,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/event')]
 final class EventController extends AbstractController
 {
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     #[Route(name: 'app_event_index', methods: ['GET'])]
     public function index(EventRepository $eventRepository): Response
     {
@@ -236,9 +244,9 @@ final class EventController extends AbstractController
                 'event_detail/pdf_send.html.twig',
                 '/uploads/invoices/'
             );
-            $this->addFlash('success', 'PDF généré avec succès.');
+            $this->addFlash('success', $this->translator->trans('messages.success.pdf_generated'));
         } catch (\Throwable $th) {
-            $this->addFlash('error', 'Erreur lors de la génération du PDF.');
+            $this->addFlash('error', $this->translator->trans('messages.error.pdf_error'));
             return $this->redirectToRoute('app_event_show', ['id' => $id]);
         }
 
@@ -266,9 +274,9 @@ final class EventController extends AbstractController
                 "email/order_send.html.twig"
             );
 
-            $this->addFlash('success', 'Mail envoyé avec succès.');
+            $this->addFlash('success', $this->translator->trans('messages.success.email_sent'));
         } catch (\Throwable $th) {
-            $this->addFlash('error', 'Erreur lors de l\'envoi du mail : ' . $th->getMessage());
+            $this->addFlash('error', $this->translator->trans('messages.error.email_error'));
             return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
         }
 
@@ -290,7 +298,7 @@ final class EventController extends AbstractController
         }
 
         $em->flush();
-        $this->addFlash('success', 'Quantités mises à jour.');
+        $this->addFlash('success', $this->translator->trans('messages.success.quantities_updated'));
 
         return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
     }
@@ -324,7 +332,7 @@ final class EventController extends AbstractController
 
         $em->flush();
 
-        $this->addFlash('success', 'Retours enregistrés.');
+        $this->addFlash('success', $this->translator->trans('messages.success.returns_saved'));
         return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
     }
 }

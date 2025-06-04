@@ -30,7 +30,7 @@ class EventRepository extends ServiceEntityRepository
     public function findByEventDistinct(): array
     {
         return $this->createQueryBuilder('e')
-             ->select(' e.name, ed.mouve  , ed.date')
+             ->select('e.id as eventId, e.name, ed.mouve, ed.date, ed.id as eventDetailId')
              ->innerJoin('e.eventDetails', 'ed')
              ->distinct('ed.mouve')
             ->getQuery()
