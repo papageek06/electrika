@@ -3,7 +3,8 @@
 {% block title %}Technician index{% endblock %}
 
 {% block body %}
-    <h1>Technician index</h1>
+  <div class="theCard">
+      <h1>Technician index</h1>
 
     <table class="table" style="background-color: rgba(231, 239, 245, 0.9);">
         <thead>
@@ -36,4 +37,5 @@
     </table>
 
     <a href="{{ path('app_technician_new') }}">Create new</a>
+    </div>
 {% endblock %}

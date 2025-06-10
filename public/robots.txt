@@ -19,5 +19,6 @@ Disallow: /*.json$
 Disallow: /*.yaml$
 Disallow: /*.yml$
 Disallow: /*.xml$
+Allow: /sitemap.xml
 
 Sitemap: https://www.gestion.professionaldev.fr/sitemap.xml
