@@ -1,16 +1,23 @@
 User-agent: *
 Disallow: /admin/
-Disallow: /build/
-Disallow: /var/
-Disallow: /vendor/
 Disallow: /config/
-Disallow: /public/index.php
-Disallow: /*.php$
-Allow: /build/*.css
-Allow: /build/*.js
-Allow: /build/*.woff
-Allow: /build/*.woff2
-Allow: /build/*.ttf
-Allow: /build/*.svg
+Disallow: /vendor/
+Disallow: /var/
+Disallow: /bin/
+Disallow: /tests/
+Disallow: /node_modules/
+Disallow: /assets/
+Disallow: /translations/
+Disallow: /public/build/
+Disallow: /public/bundles/
+Allow: /
+
+# Empêcher l’indexation des URLs générées par les environnements de dev/test
+Disallow: /*_profiler
+Disallow: /*_wdt
+Disallow: /*.json$
+Disallow: /*.yaml$
+Disallow: /*.yml$
+Disallow: /*.xml$
 
 Sitemap: https://www.gestion.professionaldev.fr/sitemap.xml

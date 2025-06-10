@@ -58,9 +58,9 @@
 	<h3 class="text-center mb-4 theCard">Tous nos articles</h3>
 	<div class="d-flex flex-wrap justify-content-around">
 		{% for article in articles %}
-			<div class="card m-3 theCard" style="width: 15rem;" data-id="{{ article.id }}">
+			<div class="card m-3 theCard" style="width: 15rem; " data-id="{{ article.id }}">
 
-				<img class="card-img-top" src="/uploads/pictures/{{ article.picture ?: 'default.png' }}" alt="{{ article.name }}">
+				<img class="card-img-top" style="height: 10rem;" src="/uploads/pictures/{{ article.picture ?: 'default.png' }}" alt="{{ article.name }}">
 				<div class="card-body">
 					<h5 class="card-title">{{ article.name }}</h5>
 					<p class="card-text">{{ article.description }}</p>

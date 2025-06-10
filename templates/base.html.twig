@@ -2,13 +2,15 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="ELECTRIKA">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Application de gestion de matériel événementiel ELECTRIKA. Suivi de stock, bons de livraison et planification.">
   <title>{% block title %}Gestion de stock{% endblock %}</title>
   <link rel="icon" href="/favicon.png" type="image/png">
 
   {% block stylesheets %}
-    {{ encore_entry_link_tags('app') }}
+    {{ encore_entry_link_tags('app.scss') }}
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet"/>
   {% endblock %}
 </head>
