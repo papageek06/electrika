@@ -1,160 +1,181 @@
+{# nav.html.twig #}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+
 <style>
 	a {
 		color: black !important;
-		text-decoration: none; /* Supprime le soulignement si nécessaire */
+		text-decoration: none;
 	}
 	nav {
-		/* background-color:rgb(53, 53, 61); */
 		color: white !important;
 	}
 </style>
 
-<div class=" bg-secondary p-0  ">
-	<nav class="navbar navbar-expand-lg bg-secondary px-3" role="navigation" aria-label="Menu principal">
+<div class="bg-secondary p-0">
+	<nav class="navbar navbar-expand-lg bg-secondary px-3 " role="navigation" aria-label="Menu principal">
 		<div class="container-fluid">
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 
-			<div class="collapse navbar-collapse" id="navbarNav">
-				<ul class="navbar-nav w-100 d-flex justify-content-between align-items-center">
-
-					{% if app.user %}
+			<div class="collapse navbar-collapse " id="navbarNav">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex justify-content-around w-100">
+					{% if is_granted('ROLE_USER') %}
 						<li class="nav-item">
-							<a class="nav-link{% if app.request.get('_route') == 'app_home' %} active{% endif %}" aria-current="{% if app.request.get('_route') == 'app_home' %}page{% endif %}" href="{{ path('app_home') }}">{{ 'nav.home'|trans }}</a>
+							<a class="nav-link" href="{{ path('app_vente') }}">Accueil</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_product_index') }}">{{ 'nav.stock'|trans }}</a>
+							<a class="nav-link" href="{{ path('app_user_show', {'id': app.user.id}) }}">Profil</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_event_detail_index') }}">{{ 'nav.orders'|trans }}</a>
+							<a class="nav-link" href="#">Commandes</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_cart') }}">{{ 'nav.prep'|trans }}</a>
+							<a class="nav-link" href="#">Contacts</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_event_index') }}">{{ 'nav.events'|trans }}</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_site_event_index') }}">{{ 'nav.sites'|trans }}</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_contact_index') }}">{{ 'nav.contacts'|trans }}</a>
-						</li>
-
-						{# Nouveaux liens avec restrictions d'accès #}
-						{% if is_granted('ROLE_INTERVENTION_TEAM') or is_granted('ROLE_TECHNICIAN') %}
-							<li class="nav-item">
-								<a class="nav-link" href="{{ path('app_intervention_team_index') }}">{{ 'nav.intervention'|trans }}</a>
-							</li>
-						{% endif %}
 
 						{% if is_granted('ROLE_TECHNICIAN') %}
-							<li class="nav-item">
-								<a class="nav-link" href="{{ path('app_technician_index') }}">{{ 'nav.technician'|trans }}</a>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="#" id="logistiqueDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+									Logistique
+								</a>
+								<ul class="dropdown-menu" aria-labelledby="logistiqueDropdown">
+									<li class="nav-item">
+										<a class="nav-link" href="{{ path('app_home') }}">home</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('app_intervention_team_index') }}">Interventions</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('app_product_index') }}">Stock</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('app_cart') }}">Préparations</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('app_event_index') }}">Événements</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('app_site_event_index') }}">Sites</a>
+									</li>
+								</ul>
 							</li>
 						{% endif %}
 
 						{% if is_granted('ROLE_ADMIN') %}
-							<li class="nav-item">
-								<a class="nav-link" href="{{ path('app_absence_index') }}">{{ 'nav.absence'|trans }}</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="/admin">{{ 'nav.dashboard'|trans }}</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{{ path('app_user_index') }}">{{ 'nav.users'|trans }}</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{{ path('app_register') }}">{{ 'nav.register'|trans }}</a>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+									Administration
+								</a>
+								<ul class="dropdown-menu" aria-labelledby="adminDropdown">
+									<li>
+										<a class="dropdown-item" href="{{ path('app_technician_index') }}">Techniciens</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('app_absence_index') }}">Absences</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('app_event_detail_index') }}">Commandes internes</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="/admin">Dashboard</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('app_user_index') }}">Utilisateurs</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('app_register') }}">Créer un compte</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="{{ path('app_galery_picture_index') }}">Photos</a>
+									</li>
+								</ul>
 							</li>
 						{% endif %}
 
+
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_user_show' , {'id' : app.user.id}) }}">{{ 'nav.profile'|trans }}</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_galery_picture_index')}}">{{ 'nav.pictures'|trans }}</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_logout') }}">{{ 'nav.logout'|trans }}</a>
+							<a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
 						</li>
 					{% else %}
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_login') }}">{{ 'nav.login'|trans }}</a>
+							<a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
 						</li>
-					{% endif %}
+						<li class="nav-item">
+							<a class="nav-link{% if app.request.get('_route') == 'app_home' %} active{% endif %}" href="{{ path('app_vente') }}">Accueil</a>
+						</li>
 
-					<li class="nav-item">
-						<div class="form-check form-switch">
-							<input class="form-check-input" type="checkbox" role="switch" id="darkMode" aria-label="Activer le mode sombre">
-							<label class="form-check-label" id="labelDarkMode" for="darkMode">Light mode</label>
+
+					{% endif %}
+					{# ---------------- panier------------------------ #}
+					<li class="nav-item dropdown">
+						<a class="nav-link position-relative" href="#" id="cartDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="fas fa-shopping-cart"></i>
+							<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">0</span>
+						</a>
+						<div class="dropdown-menu dropdown-menu-end p-3" style="min-width: 300px;" aria-labelledby="cartDropdown" id="cart-menu">
+							<h6 class="dropdown-header">Panier</h6>
+							<div id="stock-error-message" class="alert alert-danger alert-dismissible fade show d-none" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+								<span id="stock-error-text"></span>
+								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+
+							<div id="cart-items">
+								<p class="text-muted">Votre panier est vide</p>
+							</div>
+							<hr>
+							<div class="d-flex justify-content-between">
+								<strong>Total :</strong>
+								<strong id="cart-total">0 €</strong>
+							</div>
+							<a href="{{ path('order_checkout') }}" class="btn btn-primary mt-2 w-100">Valider la commande</a>
+
 						</div>
 					</li>
-
 				</ul>
 			</div>
 		</div>
 	</nav>
 </div>
+
 <script>
-	// au chargement de la page, j'enlève la transition à mes éléments html pour ne pas avoir de transition
-// a chaque chargement de page et avoir un effet pénible qui passe du light mode au darkmode
-document.body.classList.add("no-transition");
+	const cart = [];
 
-// si en session j'ai le darkMode je l'applique sur mon body
-if (localStorage.getItem("darkMode") === "enabled") {
-console.log("dark-mode")
-document.body.classList.add("dark-mode");
-document.getElementById("darkMode").checked = true;
-document.getElementById("labelDarkMode").innerHTML = "Dark Mode";
-}
+function updateCartDisplay() {
+const cartItemsContainer = document.getElementById('cart-items');
+const cartCount = document.getElementById('cart-count');
+const cartTotal = document.getElementById('cart-total');
 
-// Supprimer la classe 'no-transition' après un court délai
-// pour que la transition puisse s'appliquer onChange
-setTimeout(() => {
-document.body.classList.remove("no-transition");
-}, 20);
+cartItemsContainer.innerHTML = '';
+let total = 0;
 
-// Une fois que le mode est appliqué, on affiche le contenu
-document.body.classList.add("loaded");
-
-// je capte le moment ou j'active/désactive le darkMode
-document.getElementById("darkMode").addEventListener("change", function () {
-
-document.body.classList.toggle("dark-mode");
-
-// si mon body a la classe dark-mode
-// je le stock dans le cache du navigateur pour la prochaine page que je vais parcourir
-if (document.body.classList.contains("dark-mode")) {
-document.getElementById("labelDarkMode").innerHTML = "Dark Mode";
-localStorage.setItem("darkMode", "enabled");
+if (cart.length === 0) {
+cartItemsContainer.innerHTML = '<p class="text-muted">Votre panier est vide</p>';
 } else {
-document.getElementById("labelDarkMode").innerHTML = "Light Mode";
-localStorage.setItem("darkMode", "disabled");
+cart.forEach(item => {
+const itemTotal = item.quantity * item.price;
+total += itemTotal;
+const row = document.createElement('div');
+row.classList.add('mb-2');
+row.innerHTML = `
+					<strong>${
+item.name
+}</strong><br>
+					<span>${
+item.quantity
+} x ${
+item.price
+} €</span><br>
+					<small>Sous-total : ${
+itemTotal.toFixed(2)
+} €</small>
+				`;
+cartItemsContainer.appendChild(row);
+});
+} cartCount.textContent = cart.reduce((acc, item) => acc + item.quantity, 0);
+cartTotal.textContent = total.toFixed(2) + ' €';
 }
-
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-const navbarCollapse = document.querySelector('.navbar-collapse');
-const toggler = document.querySelector('.navbar-toggler');
-
-// Fermer au clic sur un lien du menu
-document.querySelectorAll('.navbar-collapse .nav-link').forEach(function (link) {
-link.addEventListener('click', function () {
-if (navbarCollapse.classList.contains('show')) {
-new bootstrap.Collapse(navbarCollapse).hide();
-}
-});
-});
-
-// Fermer au clic en dehors de la navbar (mobile uniquement)
-document.addEventListener('click', function (event) {
-const isClickInside = navbarCollapse.contains(event.target) || toggler.contains(event.target);
-if (! isClickInside && navbarCollapse.classList.contains('show')) {
-new bootstrap.Collapse(navbarCollapse).hide();
-}
-});
-});
 </script>

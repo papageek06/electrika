@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page confirmation - Vente
+{% endblock %}
+
+
+{% block body %}
+	{% if app.user %}
+		<div class="container mt-5 theCard">
+			<h2>Bonjour
+				{{ app.user.firstname }},</h2>
+			<p>Merci pour votre commande. Vous trouverez en pièce jointe le bon de commande généré automatiquement.</p>
+			<p>Veuillez remplir les informations suivantes pour finaliser votre commande :</p>
+			<p class="bg-warning">nos services vous contacteront pour confirmer la disponibilité des articles et les modalités de livraison.
+			</p>
+			<div
+				class="container  mt-5 ">
+				<!-- Formulaire de confirmation de commande -->
+				<form action="{{ path('vente_order_confirm') }}" method="POST">
+					<div class="col-3">
+						{% set dateMin = (date()|date_modify('+14 days')).format('Y-m-d') %}
+
+						<label for="dateRetrait">Date de retrait :</label>
+						<input type="date" id="dateRetrait" name="dateRetrait" class="form-control" required min="{{ dateMin }}">
+
+						<label for="dateRetour">Date de retour :</label>
+						<input type="date" id="dateRetour" name="dateRetour" class="form-control" required min="{{ dateMin }}">
+
+						<label for="modeRetrait">Mode de retrait :</label>
+						<select id="modeRetrait" name="modeRetrait" required>
+							<option value="retrait_depot">Retrait au dépôt</option>
+							<option value="livraison">Livraison</option>
+						</select>
+					</div>
+
+					<label for="commentaire">Commentaire :</label>
+					<textarea id="commentaire" name="commentaire" class="form-control" placeholder="Commentaire client"></textarea>
+
+					<button type="submit" class="btn btn-success w-100 mt-3">Valider et générer le PDF</button>
+				</form>
+
+			</div>
+
+			<p>Voici les détails de votre commande :</p>
+
+
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Article</th>
+						<th>Quantité</th>
+						<th>Prix unitaire (HT)</th>
+						<th>Sous-total (HT)</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% set totalHT = 0 %}
+					{% for item in cart %}
+						{% set sousTotal = item.price * item.quantity %}
+						{% set totalHT = totalHT + sousTotal %}
+						<tr>
+							<td>{{ item.name }}</td>
+							<td>{{ item.quantity }}</td>
+							<td>{{ item.price|number_format(2, '.', ' ') }}
+								€</td>
+							<td>{{ sousTotal|number_format(2, '.', ' ') }}
+								€</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+				<tfoot>
+					{% set tva = totalHT * 0.20 %}
+					{% set totalTTC = totalHT + tva %}
+					<tr>
+						<th colspan="3" class="text-end">Total HT</th>
+						<th>{{ totalHT|number_format(2, '.', ' ') }}
+							€</th>
+					</tr>
+					<tr>
+						<th colspan="3" class="text-end">TVA (20%)</th>
+						<th>{{ tva|number_format(2, '.', ' ') }}
+							€</th>
+					</tr>
+					<tr>
+						<th colspan="3" class="text-end">Total TTC</th>
+						<th>{{ totalTTC|number_format(2, '.', ' ') }}
+							€</th>
+					</tr>
+				</tfoot>
+			</table>
+
+
+			<p>À très bientôt,<br>L'équipe Electrika</p>
+		</div>
+	{% else %}
+		<div class="container mt-5 text-center theCard">
+			<div class="alert alert-warning">
+				<h4>Vous devez être connecté pour valider votre commande.</h4>
+				<a href="{{ path('app_login') }}" class="btn btn-primary mt-3">Se connecter</a>
+			</div>
+		</div>
+	{% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5 text-center">
+    <div class="alert alert-warning">
+        <h4>Vous devez être connecté pour valider votre commande.</h4>
+        <a href="{{ path('app_login') }}" class="btn btn-primary mt-3">Se connecter</a>
+    </div>
+</div>
+{% endblock %}

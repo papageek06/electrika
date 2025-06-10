@@ -107,7 +107,7 @@
 							</form>
 
 							<td class="cellEnd">
-								{% if cart_session %}
+								{% if cart_session is defined and cart_session["idProduct"] is defined %}
 									{% for key, id in cart_session.idProduct %}
 										{% if productList.id == id %}
 											{{ cart_session.quantity[key] }}

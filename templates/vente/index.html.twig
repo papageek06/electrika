@@ -1,31 +1,195 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello VenteController!{% endblock %}
+{% block title %}Page d'accueil - Vente
+{% endblock %}
+
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">{{ message }}</div>
+		{% endfor %}
+		{% for message in app.flashes('error') %}
+			<div class="alert alert-danger">{{ message }}</div>
+		{% endfor %}
 
-<div class="example-wrapper">
-    <h2>Hello {{ controller_name }}! ✅</h2>
+	<section class="hero text-center">
+		<div class="container theCard">
+			<h1>Transformez vos événements</h1>
+			<p>Location de matériel professionnel pour des événements mémorables</p>
+			<a href="#products" class="btn btn-warning btn-lg mt-3" onclick="document.getElementById('dynamic-products').classList.add('show');">Découvrir nos produits</a>
+		</div>
+	</section>
 
-    {% for article in articles %}
-    <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="..." alt="Card image cap">
-        <div class="card-body">
-            <h5 class="card-title">{{article.name}}</h5>
-            <p class="card-text">{{article.description}}</p>
-            <p class="card-text">{{article.stock}}</p>
-            <a href="#" class="btn btn-primary">commander</a>
-        </div>
-    </div>
-    {% endfor %}
+	<section id="products" class="container py-5">
+		<h2 class="text-center mb-4 theCard" style="color:black;">Nos produits phares</h2>
+		<div class="row g-4">
+			<div class="col-md-4">
+				<div class="card product-card">
+					<img src="https://www.groupe-electrika.com/public/img/big/TENTEDSC03952jpg_66fd692c06046.jpg" class="card-img-top" alt="Chapiteau">
+					<div class="card-body">
+						<h5 class="card-title">Chapiteau 100m²</h5>
+						<p class="card-text">Structure robuste, idéale pour vos mariages, salons ou festivals.</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card product-card">
+					<img src="https://www.groupe-electrika.com/public/img/big/TENTEDSC03952jpg_66fd692c06046.jpg" class="card-img-top" alt="Tente">
+					<div class="card-body">
+						<h5 class="card-title">Tente nomade</h5>
+						<p class="card-text">Look bohème chic, résistante aux intempéries, installation rapide.</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card product-card">
+					<img src="https://www.groupe-electrika.com/public/img/big/TENTEDSC03952jpg_66fd692c06046.jpg" class="card-img-top" alt="Mobilier">
+					<div class="card-body">
+						<h5 class="card-title">Mobilier lumineux</h5>
+						<p class="card-text">Créez une ambiance unique avec notre mobilier LED design.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</section>
+
+<section id="dynamic-products" class="container py-5 category-section">
+	<h3 class="text-center mb-4 theCard">Tous nos articles</h3>
+	<div class="d-flex flex-wrap justify-content-around">
+		{% for article in articles %}
+			<div class="card m-3 theCard" style="width: 15rem;" data-id="{{ article.id }}">
+
+				<img class="card-img-top" src="/uploads/pictures/{{ article.picture ?: 'default.png' }}" alt="{{ article.name }}">
+				<div class="card-body">
+					<h5 class="card-title">{{ article.name }}</h5>
+					<p class="card-text">{{ article.description }}</p>
+					<p class="card-text">Stock:
+						{{ article.stock }}</p>
+					<p class="card-text">{{ article.price ?: '0' }}
+						€ / semaine</p>
+					<div class="input-group mb-2">
+						<input type="number" class="form-control quantity-input" min="1" value="1" style="max-width: 70px;">
+						<button class="btn btn-success add-to-cart">Ajouter</button>
+					</div>
+					<a href="#" class="btn btn-warning w-100">Voir</a>
+				</div>
+			</div>
+		{% endfor %}
+
+	</div>
+</section>
+
+<section class="cta-section">
+	<div class="container theCard">
+		<h2>Prêt à faire briller votre événement ?</h2>
+		<p>Demandez un devis sur mesure selon vos besoins</p>
+		<a href="#contact" class="btn btn-light mt-3">Nous contacter</a>
+	</div>
+</section>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+const ctaButton = document.querySelector('.btn-warning');
+const dynamicProductsSection = document.getElementById('dynamic-products');
+ctaButton.addEventListener('click', function () {
+dynamicProductsSection.classList.toggle('show');
+});
+});
 
 
+function updateCartUI(data) {
+const cartItemsContainer = document.getElementById('cart-items');
+const cartCount = document.getElementById('cart-count');
+const cartTotal = document.getElementById('cart-total');
 
-</div>
-{% endblock %}
+cartItemsContainer.innerHTML = '';
+let totalQuantity = 0;
+
+for (const [id, item] of Object.entries(data.cart)) {
+totalQuantity += item.quantity;
+const row = document.createElement('div');
+row.classList.add('mb-2');
+row.innerHTML = `
+				<strong>${
+item.name
+}</strong><br>
+				${
+item.quantity
+} x ${
+item.price
+} €<br>
+				<small>Sous-total : ${
+(item.price * item.quantity).toFixed(2)
+} €</small><br>
+				<button class="btn btn-danger btn-sm remove-from-cart" data-id="${id}">Supprimer</button>
+			`;
+cartItemsContainer.appendChild(row);
+}
+document.querySelectorAll('.remove-from-cart').forEach(btn => {
+btn.addEventListener('click', e => {
+const id = btn.dataset.id;
+fetch('/vente/cart/remove', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/x-www-form-urlencoded'
+},
+body: `id=${id}`
+}).then(res => res.json()).then(data => updateCartUI(data));
+});
+});
+
+
+cartCount.textContent = totalQuantity;
+cartTotal.textContent = data.total.toFixed(2) + ' €';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+document.querySelectorAll('.add-to-cart').forEach(btn => {
+btn.addEventListener('click', e => {
+e.preventDefault();
+const card = btn.closest('.card');
+const articleId = card.dataset.id;
+const quantityInput = card.querySelector('.quantity-input');
+const quantity = parseInt(quantityInput.value) || 1;
+
+console.log('Ajout au panier', articleId, 'quantité', quantity);
+
+fetch('/vente/cart/add', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/x-www-form-urlencoded'
+},
+body: `id=${articleId}&quantity=${quantity}`
+}).then(response => {
+if (!response.ok) {
+return response.json().then(err => {
+throw err;
+});
+}
+return response.json();
+}).then(data => updateCartUI(data)).catch(err => {
+console.error('Erreur panier:', err);
+showStockError(err.error || 'Erreur lors de l’ajout au panier');
+});
+});
+});
+
+// Charger le panier au démarrage
+fetch('/vente/cart/content').then(res => res.json()).then(data => updateCartUI(data));
+});
+
+// ------------------------------------- Afficher un message d'erreur de stock
+function showStockError(message) {
+const box = document.getElementById('stock-error-message');
+const text = document.getElementById('stock-error-text');
+text.innerText = message;
+box.classList.remove('d-none');
+box.classList.add('show');
+setTimeout(() => {
+box.classList.remove('show');
+box.classList.add('d-none');
+}, 4000);
+}
+</script>{% endblock %}

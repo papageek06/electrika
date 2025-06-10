@@ -1,0 +1,11 @@
+<h2>Bonjour {{ user.firstname }},</h2>
+
+<p>Merci pour votre commande. Vous trouverez en pièce jointe le bon de commande généré automatiquement.</p>
+<p>Voici les détails de votre commande :</p>
+<ul>
+    {% for item in event_details %}
+        <li>{{ item.product.name }} — Quantité : {{ item.quantity }}</li>
+    {% endfor %}
+</ul>
+
+<p>À très bientôt,<br>L'équipe Electrika</p>

@@ -53,6 +53,9 @@ class Product
     #[ORM\OneToMany(targetEntity: ProductConnector::class, mappedBy: 'product',cascade: ['persist'], orphanRemoval: true)]
     private Collection $productConnectors;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $price = null;
+
     public function __construct()
     {
         $this->productConnectors = new ArrayCollection();
@@ -221,6 +224,18 @@ class Product
                 $productConnector->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?float $price): static
+    {
+        $this->price = $price;
 
         return $this;
     }

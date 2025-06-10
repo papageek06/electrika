@@ -6,26 +6,33 @@ $ternary : #74b9ff;
 $warning : #fdcb6e;
 $success : #00b894;
 $danger : #e17055;
+$card : #7e7f83;
 
 $textColor : #000;
 $textSpan : rgba(0, 0, 0, 0.4);
 
-$bgDark : #1B1F3B;
-$navDark : #2C2F3E;
-$cardDark : #2C2F3E;
-$inputDark : #2C2F3E;
-$btnDark : #5023f5;
-$txtLight : #ecf0f1;
-
 body {
-    background-color: rgb(84, 92, 108, 100) !important;
-    color: white !important;
 
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
+
+main {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+.monTitre {
+  background-color: #212529; // équivalent de bg-dark
+  color: white;
+  padding: 1rem 0;
+  text-align: center;
+}
+
 
 body.loaded {
     visibility: visible;
-    /* Affiche quand le JS est prêt */
 }
 
 .monTitre {
@@ -40,128 +47,14 @@ body.loaded {
     transition: none !important;
 }
 
-body.dark-mode {
-    background-color: $bgDark !important;
+.theCard {
+    background-color: rgba(231, 239, 245, 0.9) !important;
+    color: black !important;
     transition: 0.5s;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+    padding: 20px;
 }
-
-
-
-
-// .navbar,h1, h2, h3, h4, h5, h6, .card, .btn, .table, .modal-content {
-//     background-color: $navDark !important;
-//     color: $txtLight;
-//     transition: 0.5s;
-
-// }
-
-/* Navbar en mode sombre */
-.dark-mode .navbar {
-    background-color: $navDark !important;
-    color: $txtLight;
-    transition: 0.5s;
-
-}
-
-.dark-mode p,
-.dark-mode h1,
-.dark-mode h2,
-.dark-mode h3,
-.dark-mode h4,
-.dark-mode h5,
-.dark-mode h6 {
-    color: $txtLight;
-    transition: 0.5s;
-
-}
-
-.dark-mode .navbar a {
-    color: $txtLight !important;
-    transition: 0.5s;
-
-}
-
-/* Cartes Bootstrap */
-.dark-mode .card {
-    background-color: $cardDark;
-    color: $txtLight;
-    transition: 0.5s;
-
-}
-
-/* Boutons Bootstrap */
-.dark-mode .btn {
-    background-color: $btnDark;
-    color: $txtLight;
-    border-color: $txtLight;
-    transition: 0.5s;
-
-}
-
-.dark-mode .btn:hover {
-    background-color: $txtLight;
-    color: var(--btn-dark);
-    transition: 0.5s;
-
-}
-
-/* Tableaux Bootstrap */
-.dark-mode .table {
-    background-color: $cardDark;
-    color: $txtLight;
-    transition: 0.5s;
-
-}
-
-.dark-mode .table th,
-.dark-mode .table td {
-    background-color: $cardDark;
-    border-color: $txtLight;
-    color: $txtLight;
-    transition: 0.5s;
-
-}
-
-/* Modals en mode sombre */
-.dark-mode .modal-content {
-    background-color: $cardDark;
-    color: $txtLight;
-    transition: 0.5s;
-}
-
-.dark-mode label {
-    color: $txtLight;
-    transition: 0.5s;
-}
-
-.dark-mode input {
-    background-color: $inputDark;
-    color: $txtLight;
-    transition: 0.5s;
-}
-
-.dark-mode select {
-    background-color: $inputDark !important;
-    color: $txtLight;
-    transition: 0.5s;
-}
-
-.dark-mode option {
-    background-color: $inputDark !important;
-    color: $txtLight;
-    transition: 0.5s;
-}
-
-.dark-mode input::placeholder,
-.dark-mode textarea::placeholder {
-    color: $txtLight;
-    opacity: 0.7;
-    /* Réduit l'opacité du texte */
-    transition: 0.5s;
-
-}
-
-// --------------------------- style table ---------------------------
 
 .MyDiv {
     background-color: rgb(132, 145, 172, 100) !important;
@@ -173,17 +66,19 @@ body.dark-mode {
     flex-direction: column;
     align-self: normal;
     justify-content: space-around;
+    box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+    padding: 20px;
 }
 
 .MyTable {
     background-color: rgb(132, 145, 172, 100) !important;
     text-align: center;
-
 }
+
 td input {
     display: inline-block;
     margin: 0 auto;
-  }
+}
 
 .CellStart {
     background-color: rgb(84, 92, 108, 100) !important;
@@ -200,8 +95,6 @@ td input {
     border-radius: 0px 2rem 2rem 0px;
     border-top: 1rem solid rgb(132, 145, 172, 100) !important;
     border-bottom: 1rem solid rgb(132, 145, 172, 100) !important;
-
-
 }
 
 .MyCell {
@@ -218,7 +111,6 @@ input[type="number"] {
     background-color: rgb(132, 145, 172, 100) !important;
     color: white !important;
     width: auto !important;
-
     cursor: pointer;
 }
 
@@ -242,27 +134,30 @@ input[type="number"] {
 }
 
 a {
-  color: black !important;
-  text-decoration: none;
+    color: black !important;
+    text-decoration: none;
 }
 
 nav {
-  color: white !important;
+    color: white !important;
 }
+
 .modal-form {
-  display: none;
-  position: fixed;
-  top: 5%;
-  left: 10%;
-  z-index: 1000;
-  background-color: rgb(83, 142, 231);
-  padding: 20px;
-  border-radius: 10px;
-  border: 1px solid black;
+    display: none;
+    position: fixed;
+    top: 5%;
+    left: 10%;
+    z-index: 1000;
+    background-color: rgb(83, 142, 231);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid black;
 }
+
 td {
     align-content: center;
 }
+
 .lightning-background {
     position: fixed;
     top: 0;
@@ -273,6 +168,4 @@ td {
     display: block;
     background-color: #0a0f2c;
     pointer-events: none;
-  }
-  
-
+}
