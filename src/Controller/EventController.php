@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Entity\EventDetail;
+use App\Entity\Product;
 use App\Form\EventType;
 use App\Repository\EventDetailRepository;
 use App\Repository\EventRepository;
@@ -100,21 +101,20 @@ final class EventController extends AbstractController
             $pdfFiles[] = 'uploads/invoices/' . $file->getFilename();
         }
         // Regrouper les quantités livrées et retournées par produit
-        $blDetails = [];
-        $brDetails = [];
+        $blDetails = $eventDetailRepository->findProductsAndQuantitiesByEventAndMouve($event->getId(), 'bl');
+        $brDetails = $eventDetailRepository->findProductsAndQuantitiesByEventAndMouve($event->getId(), 'br');
 
-        foreach ($event->getEventDetails() as $detail) {
-            if ($detail->getMouve() === 'bl') {
-                $productId = $detail->getProduct()->getId();
-                $blDetails[$productId] = ($blDetails[$productId] ?? 0) + $detail->getQuantity();
-            }
+        // foreach ($event->getEventDetails() as $detail) {
+        //     if ($detail->getMouve() === 'bl') {
+        //         $productId = $detail->getProduct()->getId();
+        //         $blDetails[$productId] = ($blDetails[$productId] ?? 0) + $detail->getQuantity();
+        //     }
 
-            if ($detail->getMouve() === 'br') {
-                $productId = $detail->getProduct()->getId();
-                $brDetails[$productId] = ($brDetails[$productId] ?? 0) + $detail->getQuantity();
-            }
-        }
-
+        //     if ($detail->getMouve() === 'br') {
+        //         $productId = $detail->getProduct()->getId();
+        //         $brDetails[$productId] = ($brDetails[$productId] ?? 0) + $detail->getQuantity();
+        //     }
+        // }
 
 
 
@@ -286,9 +286,11 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}/update-quantities', name: 'app_event_quantity_update', methods: ['POST'])]
-    public function updateQuantities(Request $request, Event $event, EntityManagerInterface $em): Response
+    public function updateQuantities(Request $request, Event $event, Product $product ,EntityManagerInterface $em,): Response
     {
+
         $quantities = $request->request->all('quantities');
+
 
         foreach ($quantities as $id => $quantity) {
             $detail = $em->getRepository(EventDetail::class)->find($id);
@@ -296,9 +298,33 @@ final class EventController extends AbstractController
                 $detail->setQuantity((int)$quantity);
             }
         }
-
         $em->flush();
         $this->addFlash('success', $this->translator->trans('messages.success.quantities_updated'));
+
+        $brQuantities = $request->request->all('returnQuantities'); // récupère les quantités de retour
+        $detail = $em->getRepository(EventDetail::class)->find($event->getId());
+        if ($brQuantities !== NULL && $brQuantities !== []) {
+            foreach ($brQuantities as $productId => $quantity) {
+                
+                
+                    
+                    // creer un nouveau EventDetail si le détail n'existe pas
+                    $newDetail = new EventDetail();
+                    $newDetail->setUser($this->getUser());
+                    $newDetail->setProduct($em->getRepository(Product::class)->find($productId));
+                    $newDetail->setEvent($event);
+                    $newDetail->setQuantity($quantity);
+                    $newDetail->setDate(new \DateTime());
+                    $newDetail->setMouve('br');
+                    $em->persist($newDetail);
+                    
+                    $em->flush();
+                }
+                // if ($detail && $detail->getEvent() === $event) {
+                //     $detail->setQuantity((int)$quantity);
+                // }
+            
+        }
 
         return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
     }

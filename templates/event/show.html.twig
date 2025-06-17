@@ -1,30 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event{% endblock %}
+{% block title %}Event
+{% endblock %}
 
 {% block body %}
-	<style>
+	 <style>
 		table {
 			width: 100%;
+			
 		}
-		.status-header {
-			background-color: #f8f9fa;
-			text-align: center;
-			font-weight: bold;
-		}
-		.quantity-cell {
-			width: 100px;
-		}
-		.date-cell {
-			width: 80px;
-		}
-		.action-cell {
-			width: 120px;
-		}
-		.product-cell {
-			min-width: 150px;
-		}
-	</style>
+
+		
+	</style> 
 
 	<h2 class="text-center m-2">Event</h2>
 	<div class="MyDiv col-12 jutify-items-arround m-2">
@@ -37,30 +24,38 @@
 
 		<div class="row align-items-end justify-content-between">
 			<h3 class="text-center">{{ event.name }}</h3>
-			<div class="container col-10 col-md-3 card MyDiv card-correction">
+			<div class="container col-10 col-md-3  MyDiv card-correction">
 				<h4 class="text-center">CONTACT</h4>
 				<p>{{ event.contact ? event.contact.lastName : 'N/A'}}-{{ event.contact ? event.contact.firstName : 'N/A'}}</p>
-				<p>Email : {{event.contact ? event.contact.email : 'N/A'}}</p>
-				<p>Tel : {{event.contact ? event.contact.phoneNumber : 'N/A'}}</p>
+				<p>Email :
+					{{event.contact ? event.contact.email : 'N/A'}}</p>
+				<p>Tel :
+					{{event.contact ? event.contact.phoneNumber : 'N/A'}}</p>
 				<button class="btn btn-primary m-2">
 					<a href="{{ path('app_contact_edit', {'id': event.contact.id}) }}">Edit</a>
 				</button>
 			</div>
-			<div class="container col-10 col-md-3 card MyDiv card-correction">
+			<div class="container col-10 col-md-3  MyDiv card-correction">
 				<h4 class="text-center">SITE</h4>
 				<p>{{site.name ? site.name : 'N/A'}}</p>
-				<p>Adresse : {{site.address ? site.address : 'N/A'}}</p>
-				<p>Ville : {{site.city ? site.city : 'N/A'}}</p>
+				<p>Adresse :
+					{{site.address ? site.address : 'N/A'}}</p>
+				<p>Ville :
+					{{site.city ? site.city : 'N/A'}}</p>
 				<button class="btn btn-primary m-2">
 					<a href="{{ path('app_site_event_edit', {'id': event.site.id}) }}">Edit</a>
 				</button>
 			</div>
-			<div class="container col-10 col-md-3 card MyDiv card-correction">
+			<div class="container col-10 col-md-3  MyDiv card-correction">
 				<h4 class="text-center">DATE</h4>
-				<p>Montage : {{ event.dateMontage ? event.dateMontage|date('Y-m-d') : '' }}</p>
-				<p>Show du : {{ event.dateStartShow ? event.dateStartShow|date('Y-m-d') : '' }}
-					au {{ event.dateEndSHOW ? event.dateEndSHOW|date('Y-m-d') : '' }}</p>
-				<p>fin de demontage : {{ event.dateEnd ? event.dateEnd|date('Y-m-d') : '' }}</p>
+				<p>Montage :
+					{{ event.dateMontage ? event.dateMontage|date('Y-m-d') : '' }}</p>
+				<p>Show du :
+					{{ event.dateStartShow ? event.dateStartShow|date('Y-m-d') : '' }}
+					au
+					{{ event.dateEndSHOW ? event.dateEndSHOW|date('Y-m-d') : '' }}</p>
+				<p>fin de demontage :
+					{{ event.dateEnd ? event.dateEnd|date('Y-m-d') : '' }}</p>
 				<h5>Fichiers PDF</h5>
 				<select name="file" id="fileSelect" class="form-select">
 					<option value="">Sélectionnez un fichier PDF</option>
@@ -77,155 +72,209 @@
 		</div>
 	</div>
 
-	<div class="card MyDiv m-3">
-		<div class="card-body">
-			<div class="table-responsive">
-				<table class="table table-bordered">
+	<div
+		class="row justify-content-around">
+
+		{# ---------------------------------------cad new -------------------------------- #}
+		<div class=" col-11 col-md-3  MyDiv m-0  ">
+
+			<h3>new</h3>
+			<table class="MyTable">
+				<thead>
+					<tr>
+						<th class="MyCell">produit</th>
+						<th class="MyCell">--Q--</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+
+					{% for eventDetail in eventDetails %}
+
+						{% if eventDetail.mouve == 'new' %}
+
+
+							<tr>
+								<td class="p-1">{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+								<td>{{ eventDetail.quantity }}</td>
+								
+							</tr>
+						{% endif %}
+					{% endfor  %}
+				</tbody>
+
+
+			</table>
+			{% if status == 0 %}
+				<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bp' }) }}">BP -></a>
+				{% else %}
+					<button class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bp' }) }}" disabled>BL -></button>	
+			{% endif %}
+		</div>
+
+		{# ------------------------------------------card pret-----------------------------------  #}
+
+		<div class=" col-11 col-md-3  MyDiv m-0 m-md-2">
+			<h3>Bon de preparation</h3>
+			<form id="form-bp" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
+				<table class="MyTable">
 					<thead>
 						<tr>
-							<th class="product-cell">Produit</th>
-							<th class="status-header">
-								NEW
-								{% if status == 0 %}
-									<div class="mt-2">
-										<a class="btn btn-sm btn-primary" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bp' }) }}">BP →</a>
-									</div>
-								{% endif %}
-							</th>
-							<th class="status-header">
-								BP
-								{% if status == 1 %}
-									<div class="mt-2">
-										<a class="btn btn-sm btn-primary" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bl' }) }}">BL →</a>
-									</div>
-								{% endif %}
-							</th>
-							<th class="status-header">
-								BL
-								{% if status == 2 %}
-									<div class="mt-2">
-										<a class="btn btn-sm btn-primary" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'br' }) }}">BR →</a>
-										<a class="btn btn-sm btn-warning" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bf' }) }}">BF →</a>
-									</div>
-								{% endif %}
-							</th>
-							<th class="status-header">BR (Retour)</th>
+
+							<th class="MyCell">produit</th>
+							<th class="MyCell">--Q--</th>
+							<th class="cellEnd">date</th>
 						</tr>
 					</thead>
 					<tbody>
-						{% set products = [] %}
-						{% for detail in eventDetails %}
-							{% if detail.product.id not in products|keys %}
-								{% set products = products|merge({(detail.product.id): detail.product}) %}
-							{% endif %}
-						{% endfor %}
+						{% for eventDetail in eventDetails %}
+							{% if eventDetail.mouve == 'bp'  %}
 
-						{% for productId, product in products %}
+								<tr>
+									<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+									<td>
+										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0" data-original="{{ eventDetail.quantity }}" data-target="bp">
+									</td>
+									<td>{{ eventDetail.date|date('d/m') }}</td>
+								</tr>
+							{% endif %}
+						{% endfor  %}
+					</tbody>
+
+				</table>
+				<button id="submit-quantity-bp" type="submit" class="btn btn-success mt-2" disabled>Valider les quantités</button>
+			</form>
+			{% if status  == 1 %}
+				<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bl' }) }}">BL -></a>
+
+			{% endif %}
+		</div>
+		{# ------------------------------------------card livraison-----------------------------------  #}
+
+		<div class=" col-11 col-md-3  MyDiv m-0 m-md-2">
+			<h3>Bon de livraison</h3>
+			<form id="form-bl" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
+				<table class="MyTable">
+					<thead>
+						<tr>
+
+							<th class="MyCell">produit</th>
+							<th class="MyCell">--Q--</th>
+							<th class="cellEnd">date</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for eventDetail in eventDetails %}
+							{% if eventDetail.mouve == 'bl'  %}
+
+								<tr>
+									<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+									<td>
+										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0" data-original="{{ eventDetail.quantity }}" data-target="bl">
+									</td>
+									<td>{{ eventDetail.date|date('d/m') }}</td>
+								</tr>
+							{% endif %}
+						{% endfor  %}
+					</tbody>
+
+				</table>
+				<button id="submit-quantity-bl" type="submit" class="btn btn-success mt-2" disabled>Valider les quantités</button>
+			</form>
+			{% if status  == 2 %}{% endif %}
+		</div>
+
+		{# ------------------------------------------card retour-----------------------------------  #}
+
+		<div class=" col-11 col-md-3  MyDiv m-0 m-md-2">
+			<h3>Bon de retour</h3>
+			<form id="form-br" method="POST" name="br" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
+				<table class="MyTable">
+					<thead>
+						<tr>
+
+							<th class="MyCell">produit</th>
+							<th class="MyCell">--Q--</th>
+							<th class="cellEnd">retour</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% set maxQuantity = 0 %}
+						{% set brQ = 0 %}
+						
+						{% for bldetail in blQuantities %}
+							{% set maxQuantity = bldetail.total_quantity %}
 							<tr>
-								<td class="product-cell">{{ product.name }}</td>
-								{# NEW Column #}
+								<td class="product-cell" name='productId' >{{bldetail.name}}</td>
+								
+								{% if brQuantities is not empty %}
+									{% for brdetail in brQuantities %}
+									
+										{% if brdetail.id == bldetail.id %}
+										{% set brQ = brdetail.total_quantity %}
+											<td class="text-center">
+												<input type="number" name="returnQuantities[{{ bldetail.id }}]" value="0" min="0" max="{{maxQuantity}}" class="form-control form-control-sm text-center quantity-input" data-original="{{ brQ }}" data-target="br" style="width: 80px; margin: auto;">
+
+											</td>
+										{% endif %}
+										
+										{# Affichage de la quantité totale retournée pour le produit #}
+										{% if brdetail.id == bldetail.id %}
+											<td class="text-center">{{brdetail.total_quantity}}/{{maxQuantity}}</td>
+										{% endif %}
+										
+									{% endfor %}
+								{% else %}
 								<td class="text-center">
-									{% set newDetail = eventDetails|filter(d => d.product.id == productId and d.mouve == 'new')|first %}
-									{% if newDetail %}
-										{{ newDetail.quantity }}<br>
-										<small class="text-muted">{{ newDetail.date|date('d/m') }}</small>
-									{% endif %}
-								</td>
-								{# BP Column #}
-								<td class="text-center">
-									{% set bpDetail = eventDetails|filter(d => d.product.id == productId and d.mouve == 'bp')|first %}
-									{% if bpDetail %}
-										<input type="number" form="form-bp" name="quantities[{{ bpDetail.id }}]" 
-											value="{{ bpDetail.quantity }}" 
-											class="form-control form-control-sm text-center quantity-input" 
-											min="0" data-original="{{ bpDetail.quantity }}" 
-											data-target="bp"
-											style="width: 80px; margin: auto;">
-										<small class="text-muted">{{ bpDetail.date|date('d/m') }}</small>
-									{% endif %}
-								</td>
-								{# BL Column #}
-								<td class="text-center">
-									{% set blDetail = eventDetails|filter(d => d.product.id == productId and d.mouve == 'bl')|first %}
-									{% if blDetail %}
-										<input type="number" form="form-bl" name="quantities[{{ blDetail.id }}]" 
-											value="{{ blDetail.quantity }}" 
-											class="form-control form-control-sm text-center quantity-input" 
-											min="0" data-original="{{ blDetail.quantity }}" 
-											data-target="bl"
-											style="width: 80px; margin: auto;">
-										<small class="text-muted">{{ blDetail.date|date('d/m') }}</small>
-									{% endif %}
-								</td>
-								{# BR Column #}
-								<td class="text-center">
-									{% if blQuantities[productId] is defined %}
-										{% set brQty = brQuantities[productId] ?? 0 %}
-										{% set maxQty = blQuantities[productId] - brQty %}
-										<div class="text-center">
-											<input type="number" form="form-br" 
-												name="newReturns[{{ productId }}]" 
-												value="0" min="0" max="{{ maxQty }}" 
-												class="form-control form-control-sm return-input quantity-input" 
-												data-original="0" data-target="br"
-												style="width: 80px; margin: auto;">
-											<small class="text-muted">Retourné: {{ brQty }}/{{ blQuantities[productId] }}</small>
-										</div>
-									{% endif %}
-								</td>
+												<input type="number" name="returnQuantities[{{ bldetail.id }}]" value="0" min="0" max="{{maxQuantity}}" class="form-control form-control-sm text-center quantity-input" data-original="{{ brQ }}" data-target="br" style="width: 80px; margin: auto;">
+											</td>
+									<td class="text-center">0/{{maxQuantity}}</td>
+								{% endif %}
 							</tr>
+
 						{% endfor %}
 					</tbody>
-				</table>
-			</div>
+				</tbody>
+			</table>
+			<button id="submit-quantity-br" type="submit" class="btn btn-success mt-2" disabled>Bon de retour</button>
+			
+		</form>
 
-			{# Forms for submitting data #}
-			<form id="form-bp" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}" class="d-inline">
-				<button id="submit-quantity-bp" type="submit" class="btn btn-success mt-2" disabled>Valider BP</button>
-			</form>
-
-			<form id="form-bl" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}" class="d-inline">
-				<button id="submit-quantity-bl" type="submit" class="btn btn-success mt-2" disabled>Valider BL</button>
-			</form>
-
-			<form id="form-br" method="POST" action="{{ path('app_event_new_detail', { 'id': event.id}) }}" class="d-inline">
-				<input type="hidden" name="event_id" value="{{ event.id }}">
-				<button id="submit-quantity-br" type="submit" class="btn btn-success mt-2" disabled>Valider BR</button>
-			</form>
-		</div>
 	</div>
+
+
 
 	<script>
 		// Gestion du sélecteur de fichier
-		document.getElementById('fileSelect').addEventListener('change', function() {
-			const selectedUrl = this.value;
-			if (selectedUrl) {
-				window.open(selectedUrl, '_blank');
-			}
-		});
+document.getElementById('fileSelect').addEventListener('change', function () {
+const selectedUrl = this.value;
+if (selectedUrl) {
+window.open(selectedUrl, '_blank');
+}
+});
 
-		// Gestion des boutons de soumission
-		document.addEventListener('DOMContentLoaded', function() {
-			const targets = ['bp', 'bl', 'br'];
+// Gestion des boutons de soumission
+document.addEventListener('DOMContentLoaded', function () {
+const targets = ['bp', 'bl', 'br'];
 
-			targets.forEach(target => {
-				const inputs = document.querySelectorAll(`.quantity-input[data-target="${target}"]`);
-				const submitButton = document.getElementById(`submit-quantity-${target}`);
+targets.forEach(target => {
+const inputs = document.querySelectorAll (`.quantity-input[data-target="${target}"]`);
+const submitButton = document.getElementById (`submit-quantity-${target}`);
 
-				const checkChanges = () => {
-					let hasChanged = false;
-					inputs.forEach(input => {
-						if (input.value !== input.getAttribute('data-original')) {
-							hasChanged = true;
-						}
-					});
-					submitButton.disabled = !hasChanged;
-				};
+const checkChanges = () => {
+let hasChanged = false;
+inputs.forEach(input => {
+if (input.value !== input.getAttribute('data-original')) {
+hasChanged = true;
+}
+});
+submitButton.disabled = ! hasChanged;
+};
 
-				inputs.forEach(input => {
-					input.addEventListener('input', checkChanges);
-				});
-			});
-		});
+inputs.forEach(input => {
+input.addEventListener('input', checkChanges);
+});
+});
+});
 	</script>
 {% endblock %}

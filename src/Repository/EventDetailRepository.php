@@ -102,6 +102,21 @@ class EventDetailRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+public function findProductsAndQuantitiesByEventAndMouve($event, string $mouve): array
+{
+    return $this->createQueryBuilder('ed')
+         ->select('p.id AS id, p.name AS name, p.picture AS picture, SUM(ed.quantity) AS total_quantity')
+        ->join('ed.product', 'p')
+        ->where('ed.event = :event')
+        ->andWhere('ed.mouve = :mouve')
+        ->groupBy('p')
+        ->setParameter('event', $event)
+        ->setParameter('mouve', $mouve)
+        ->getQuery()
+        ->getResult();
+}
+
+
 
 
     

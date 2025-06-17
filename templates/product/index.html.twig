@@ -7,7 +7,8 @@
 	<style></style>
 
 
-	<div class="m-2 ">
+	<div class="m-1 ">
+		{# Affichage du titre de la page #}">
 		<h2 class="text-center mt-5">Liste des Produits</h2>
 
 		{# Message d'alerte selon le statut du panier #}
@@ -20,9 +21,9 @@
 		</div>
 
 
-		<div class="container mb-4">
+		<div class=" mb-4">
 			<div
-				class="d-flex flex-wrap gap-2 justify-content-center align-items-center">
+				class="d-flex flex-wrap gap-2 justify-content-center align-items-center ">
 				<!-- Select Event -->
 				<select id="eventSelect" name="event_id" class="form-select" style="max-width: 250px;">
 					<option value="">Sélectionnez un événement</option>
@@ -51,23 +52,35 @@
 		</div>
 		{# ----------------------------------------------tableau product------------------------------------------- #}
 
-		<div class="MyDiv m-0 m-sm-2 ">
-			<table role="table" class="table">
+		<div class="MyDiv m-0 m-sm-2 w-100 overflow-auto">
+			{# Affichage du message "Aucun produit trouvé" si aucun produit n'est disponible #}
+			{% if products is empty %}
+				<div class="alert alert-info text-center" id="no-results">
+					Aucun produit trouvé
+				</div>
+			{% else %}
+				<div class="alert alert-info text-center d-none" id="no-results">
+					Aucun produit trouvé
+				</div>
+			{% endif %}
+
+			{# Tableau des produits #}
+			<table role="table" class="">
 				<caption class="visually-hidden">Tableau des produits disponibles</caption>
 
 				<thead>
 					<tr>
-						<th class="CellStart d-none d-md-table-cell">></th>
+						<th class="MyCell d-none d-md-table-cell">image</th>
 						<th class="MyCell">Nom</th>
 						<th class="MyCell d-none d-md-table-cell">Catégorie</th>
 						<th class="MyCell">Stock Initial</th>
-						{% for i in 1..6 %}
-							<th class="MyCell d-none d-lg-table-cell ">Week +{{ i }}</th>
+						{% for i in 0..6 %}
+							<th class="MyCell d-none d-md-table-cell  ">Week +{{ i }}</th>
 						{% endfor %}
 						<th class="MyCell">quantity</th>
 						<th class="MyCell">Actions</th>
-						<th class="cellEnd">panier</th>
-						<th style="display:none;">category id</th>
+						<th class="MyCell">panier</th>
+						
 
 
 					</tr>

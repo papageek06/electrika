@@ -145,7 +145,7 @@
 									{% endif %}
 								</td>
 								{# BL Column #}
-								<td class="text-center">
+								<td class="text-center ">
 									{% set blDetail = eventDetails|filter(d => d.product.id == productId and d.mouve == 'bl')|first %}
 									{% if blDetail %}
 										<input type="number" form="form-bl" name="quantities[{{ blDetail.id }}]" 

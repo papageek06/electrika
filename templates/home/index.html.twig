@@ -5,11 +5,11 @@
 
 {% block body %}
 	{% if app.user %}
-		<h1 class="text-center mt-2">Bienvenue
+		<h2 class="text-center mt-2">Bienvenue
 			{{ app.user.firstName }}
-			!</h1>
+			!</h2>
 	{% else %}
-		<h1 class="text-center mt-2">Bienvenue !</h1>
+		<h2 class="text-center mt-2">Bienvenue !</h2>
 	{% endif %}
 
 	<div class="row justify-content-around mt-4">
@@ -36,37 +36,37 @@
 				<div class="row row-cols-2 row-cols-md-4 g-2 text-white small">
 
 					<div class="d-flex align-items-center gap-2">
-						<span class="legend-color" style="width:20px;height:20px;background-color:#A0522D;display:inline-block;border-radius:3px;">M</span>
-						Montage
+						<span class="legend-color" style="width:60px;height:40px;background-color:#A0522D;display:inline-block;border-radius:3px;">Montage</span>
+						
 					</div>
 
 					<div class="d-flex align-items-center gap-2">
-						<span class="legend-color" style="width:20px;height:20px;background-color:#FFD700;display:inline-block;border-radius:3px;">S</span>
-						Show
+						<span class="legend-color" style="width:60px;height:40px;background-color:#FFD700;display:inline-block;border-radius:3px;">Show</span>
+						
 					</div>
 
 					<div class="d-flex align-items-center gap-2">
-						<span class="legend-color" style="width:20px;height:20px;background-color:#FF8C00;display:inline-block;border-radius:3px;">D</span>
-						Démontage
+						<span class="legend-color" style="width:60px;height:40px;background-color:#FF8C00;display:inline-block;border-radius:3px;">Démontage</span>
+						
 					</div>
 					<div class="d-flex align-items-center gap-2">
-						<span class="legend-color" style="width:20px;height:20px;background-color:#1E90FF;display:inline-block;border-radius:3px;">N</span>
-						Bon nouveau 
-					</div>
-
-					<div class="d-flex align-items-center gap-2">
-						<span class="legend-color" style="width:20px;height:20px;background-color:#FFA500;display:inline-block;border-radius:3px;">BP</span>
-						Bon à préparer 
+						<span class="legend-color" style="width:60px;height:40px;background-color:#1E90FF;display:inline-block;border-radius:3px;"> nouveau </span>
+						
 					</div>
 
 					<div class="d-flex align-items-center gap-2">
-						<span class="legend-color" style="width:20px;height:20px;background-color:#228B22;display:inline-block;border-radius:3px;">BL</span>
-						Bon livré 
+						<span class="legend-color" style="width:60px;height:40px;background-color:#FFA500;display:inline-block;border-radius:3px;">prét </span>
+						
 					</div>
 
 					<div class="d-flex align-items-center gap-2">
-						<span class="legend-color" style="width:20px;height:20px;background-color:#DC143C;display:inline-block;border-radius:3px;">BR</span>
-						Bon en retour 
+						<span class="legend-color" style="width:60px;height:40px;background-color:#228B22;display:inline-block;border-radius:3px;">livré </span>
+						
+					</div>
+
+					<div class="d-flex align-items-center gap-2">
+						<span class="legend-color" style="width:60px;height:40px;background-color:#DC143C;display:inline-block;border-radius:3px;">retour</span>
+						
 					</div>
 				</div>
 			</div>
@@ -86,7 +86,7 @@
 		<h2 class="text-white">Événements à venir :</h2>
 		{% for event in events %}
 			{% if event.dateEnd > date('now') %}
-				<div class="card event-card col-12 col-lg-3 m-2 shadow-sm MyDiv">
+				<div class=" col-12 col-lg-3 m-2  MyDiv">
 					<div class="card-body text-center">
 						<div class="gallery">
 							{% set firstImage = event.galeryPictures|first %}

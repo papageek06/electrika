@@ -43,7 +43,8 @@ final class ProductController extends AbstractController
             $stockInitial = $product->getStockInitial();
             $stockParSemaine = [];
 
-            for ($i = 1; $i <= 6; $i++) {
+            // On initialise la date de début de la semaine en cours
+            for ($i = 0; $i <= 6; $i++) {
                 $currentWeekDate = $today->modify('+' . ($i * 7) . ' days');
                 $startDate = $today->modify('+' . (($i - 1) * 7) . ' days');
                 $endDate = $startDate->modify('+6 days'); // intervalle sur 7 jours
@@ -53,7 +54,7 @@ final class ProductController extends AbstractController
                 $new = [];
 
                 foreach ($eventDetails as $ed) {
-                    if ($ed->getProduct()->getId() !== $product->getId()) {
+                    if ($ed->getProduct()->getId() !== $product->getId() || $ed->getMouve() === 'bc') {
                         continue;
                     }
 
@@ -74,10 +75,9 @@ final class ProductController extends AbstractController
                                 break;
                         }
                     }
+
                 }
-
-
-
+                // Calcul du stock pour la semaine
                 $stock = $stockInitial;
                 $used = false;
 

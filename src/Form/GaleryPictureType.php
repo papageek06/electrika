@@ -20,7 +20,7 @@ class GaleryPictureType extends AbstractType
         $builder
             ->add('picture', FileType::class, [
                 'label' => 'picture',
-                'mapped' => false, // ne lie pas directement le champ à la colonne picture de User
+                'mapped' => false, 
                 'required' => false,
 
                 ])
@@ -28,7 +28,7 @@ class GaleryPictureType extends AbstractType
                 'class' => Event::class,
                 'choice_label' => 'name',
                 'placeholder' => 'Sélectionner un événement',
-                'required' => false, // Laisser facultatif si nécessaire
+                'required' => false, //  facultatif 
                 'multiple' => true, // Un seul événement par image
                 'expanded' => true , // Sélection sous forme de liste déroulante
                 'by_reference' => true, // Nécessaire pour les relations ManyToMany
