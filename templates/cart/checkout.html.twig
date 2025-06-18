@@ -11,26 +11,32 @@
 				{{ app.user.firstname }},</h2>
 			<p>Merci pour votre commande. Vous trouverez en pièce jointe le bon de commande généré automatiquement.</p>
 			<p>Veuillez remplir les informations suivantes pour finaliser votre commande :</p>
-			<p class="bg-warning">nos services vous contacteront pour confirmer la disponibilité des articles et les modalités de livraison.
+			<p class="bg-warning p-3 mb-0">nos services vous contacteront pour confirmer la disponibilité des articles et les modalités de livraison.
 			</p>
 			<div
-				class="container  mt-5 ">
+				class="container my-5">
 				<!-- Formulaire de confirmation de commande -->
 				<form action="{{ path('vente_order_confirm') }}" method="POST">
 					<div class="col-3">
 						{% set dateMin = (date()|date_modify('+14 days')).format('Y-m-d') %}
 
-						<label for="dateRetrait">Date de retrait :</label>
-						<input type="date" id="dateRetrait" name="dateRetrait" class="form-control" required min="{{ dateMin }}">
+						<div class="my-3">
+							<label for="dateRetrait">Date de retrait :</label>
+							<input type="date" id="dateRetrait" name="dateRetrait" class="form-control" required min="{{ dateMin }}">
+						</div>
 
-						<label for="dateRetour">Date de retour :</label>
-						<input type="date" id="dateRetour" name="dateRetour" class="form-control" required min="{{ dateMin }}">
+						<div class="my-3">
+							<label for="dateRetour">Date de retour :</label>
+							<input type="date" id="dateRetour" name="dateRetour" class="form-control" required min="{{ dateMin }}">
+						</div>
 
-						<label for="modeRetrait">Mode de retrait :</label>
-						<select id="modeRetrait" name="modeRetrait" required>
-							<option value="retrait_depot">Retrait au dépôt</option>
-							<option value="livraison">Livraison</option>
-						</select>
+						<div class="my-3">
+							<label for="modeRetrait">Mode de retrait :</label>
+							<select id="modeRetrait" name="modeRetrait" class="form-select" required>
+								<option value="retrait_depot">Retrait au dépôt</option>
+								<option value="livraison">Livraison</option>
+							</select>
+						</div>
 					</div>
 
 					<label for="commentaire">Commentaire :</label>
@@ -41,16 +47,16 @@
 
 			</div>
 
-			<p>Voici les détails de votre commande :</p>
+			<h3>Voici les détails de votre commande :</h3>
 
 
 			<table class="table table-bordered">
-				<thead>
+				<thead class="">
 					<tr>
-						<th>Article</th>
-						<th>Quantité</th>
-						<th>Prix unitaire (HT)</th>
-						<th>Sous-total (HT)</th>
+						<th style="background:rgb(84, 92, 108) !important" class="text-light">Article</th>
+						<th style="background:rgb(84, 92, 108) !important" class="text-light">Quantité</th>
+						<th style="background:rgb(84, 92, 108) !important" class="text-light">Prix unitaire (HT)</th>
+						<th style="background:rgb(84, 92, 108) !important" class="text-light">Sous-total (HT)</th>
 					</tr>
 				</thead>
 				<tbody>
