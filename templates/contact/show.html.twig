@@ -5,38 +5,33 @@
 {% block body %}
     <h2>Contact</h2>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ contact.id }}</td>
-            </tr>
-            <tr>
-                <th>FirstName</th>
-                <td>{{ contact.firstName }}</td>
-            </tr>
-            <tr>
-                <th>LastName</th>
-                <td>{{ contact.lastName }}</td>
-            </tr>
-            <tr>
-                <th>PhoneNumber</th>
-                <td>{{ contact.phoneNumber }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ contact.email }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ contact.status }}</td>
-            </tr>
-        </tbody>
-    </table>
+  <div class="MyDiv">
+      
+        
+            <div>
+                <p>Id : {{ contact.id }}</p>
+            </div>
+            <div>
+                <p>FirstName : {{ contact.firstName }}</p>
+            </div>
+            <div>
+                <p>LastName : {{ contact.lastName }}</p>
+            </div>
+            <div>
+                <p>PhoneNumber : {{ contact.phoneNumber }}</p>
+            </div>
+            <div>
+                <p>Email : {{ contact.email }}</p>
+            </div>
+            <div>
+                <p>Status : {{ contact.status }}</p>
+            </div>
+ 
 
-    <a href="{{ path('app_contact_index') }}">back to list</a>
+    <a class="btn bg-primary col-2" href="{{ path('app_contact_index') }}">back to list</a>
 
-    <a href="{{ path('app_contact_edit', {'id': contact.id}) }}">edit</a>
+    <a class="btn bg-warning col-2" href="{{ path('app_contact_edit', {'id': contact.id}) }}">edit</a>
 
     {{ include('contact/_delete_form.html.twig') }}
+  </div>
 {% endblock %}

@@ -1,4 +1,7 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="MyDiv p-4 shadow-sm rounded-3">
+    <h3 class="mb-4">Nouveau site d'événement</h3>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-success mt-3">Valider</button>
+    {{ form_end(form) }}
+</div>

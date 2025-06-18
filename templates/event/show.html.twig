@@ -4,17 +4,19 @@
 {% endblock %}
 
 {% block body %}
-	 <style>
+	<style>
 		table {
 			width: 100%;
-			
-		}
 
-		
-	</style> 
+		}
+		a {
+			text-decoration: none;
+			color: white;
+		}
+	</style>
 
 	<h2 class="text-center m-2">Event</h2>
-	<div class="MyDiv col-12 jutify-items-arround m-2">
+	<div class="MyDiv col-12 jutify-items-arround m-2" style="justify-self: center;">
 		{% for message in app.flashes('success') %}
 			<div class="alert alert-success">{{ message }}</div>
 		{% endfor %}
@@ -22,39 +24,43 @@
 			<div class="alert alert-danger">{{ message }}</div>
 		{% endfor %}
 
-		<div class="row align-items-end justify-content-between">
+		<div class="row align-items-end justify-content-around m-2">
+
+			{# ---------------------------------  cart event name ------------------------------- #}
 			<h3 class="text-center">{{ event.name }}</h3>
-			<div class="container col-10 col-md-3  MyDiv card-correction">
-				<h4 class="text-center">CONTACT</h4>
+			{# ---------------------------------  cart contact ------------------------------- #}
+			<div class=" col-10 col-md-3  theCard ">
+				<h4 class="text-center">Contact</h4>
 				<p>{{ event.contact ? event.contact.lastName : 'N/A'}}-{{ event.contact ? event.contact.firstName : 'N/A'}}</p>
-				<p>Email :
+				<p><strong>Email :</strong>
 					{{event.contact ? event.contact.email : 'N/A'}}</p>
-				<p>Tel :
+				<p><strong>Phone :</strong>
 					{{event.contact ? event.contact.phoneNumber : 'N/A'}}</p>
 				<button class="btn btn-primary m-2">
-					<a href="{{ path('app_contact_edit', {'id': event.contact.id}) }}">Edit</a>
+					<a href="{{ path('app_contact_show', {'id': event.contact.id}) }}">details</a>
 				</button>
 			</div>
-			<div class="container col-10 col-md-3  MyDiv card-correction">
-				<h4 class="text-center">SITE</h4>
-				<p>{{site.name ? site.name : 'N/A'}}</p>
-				<p>Adresse :
-					{{site.address ? site.address : 'N/A'}}</p>
-				<p>Ville :
-					{{site.city ? site.city : 'N/A'}}</p>
+			{# -----------------------------cart site ------------------------------------ #}
+			<div class=" col-10 col-md-3  theCard">
+				<h4 class="text-center">Site</h4>
+				<p><strong>{{(site.name ? site.name : 'N/A') | upper}}</strong></p>
+				<p><strong>Adresse :</strong></br>{{site.address ? site.address : 'N/A'}}</p>
+				<p>{{site.city ? site.city : 'N/A'}}</p>
+				<p id="travel-time" style="font-weight: bold; margin-top: 1rem;"></p>
 				<button class="btn btn-primary m-2">
-					<a href="{{ path('app_site_event_edit', {'id': event.site.id}) }}">Edit</a>
+					<a href="{{ path('app_site_event_show', {'id': event.site.id}) }}">details</a>
 				</button>
 			</div>
-			<div class="container col-10 col-md-3  MyDiv card-correction">
-				<h4 class="text-center">DATE</h4>
-				<p>Montage :
+			{# -----------------------------cart event ------------------------------------ #}
+			<div class=" col-10 col-md-3  theCard">
+				<h4 class="text-center">Event</h4>
+				<p><strong>Montage :</strong>
 					{{ event.dateMontage ? event.dateMontage|date('Y-m-d') : '' }}</p>
-				<p>Show du :
+				<p><strong>évènement du :</strong>
 					{{ event.dateStartShow ? event.dateStartShow|date('Y-m-d') : '' }}
 					au
 					{{ event.dateEndSHOW ? event.dateEndSHOW|date('Y-m-d') : '' }}</p>
-				<p>fin de demontage :
+				<p><strong>fin de demontage :</strong>
 					{{ event.dateEnd ? event.dateEnd|date('Y-m-d') : '' }}</p>
 				<h5>Fichiers PDF</h5>
 				<select name="file" id="fileSelect" class="form-select">
@@ -66,7 +72,7 @@
 					{% endfor %}
 				</select>
 				<button class="btn btn-primary m-2">
-					<a href="{{ path('app_event_edit', {'id': event.id}) }}">Edit</a>
+					<a href="{{ path('app_event_show', {'id': event.id}) }}">details</a>
 				</button>
 			</div>
 		</div>
@@ -76,15 +82,15 @@
 		class="row justify-content-around">
 
 		{# ---------------------------------------cad new -------------------------------- #}
-		<div class=" col-11 col-md-3  MyDiv m-0  ">
+		<div class=" col-11 col-md-2 MyDiv  m-0 m-md-2 ">
 
-			<h3>new</h3>
+			<h3>new preparation</h3>
 			<table class="MyTable">
 				<thead>
 					<tr>
 						<th class="MyCell">produit</th>
 						<th class="MyCell">--Q--</th>
-						
+
 					</tr>
 				</thead>
 				<tbody>
@@ -97,7 +103,7 @@
 							<tr>
 								<td class="p-1">{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
 								<td>{{ eventDetail.quantity }}</td>
-								
+
 							</tr>
 						{% endif %}
 					{% endfor  %}
@@ -107,14 +113,14 @@
 			</table>
 			{% if status == 0 %}
 				<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bp' }) }}">BP -></a>
-				{% else %}
-					<button class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bp' }) }}" disabled>BL -></button>	
+			{% else %}
+				<button class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bp' }) }}" disabled>en préparation</button>
 			{% endif %}
 		</div>
 
 		{# ------------------------------------------card pret-----------------------------------  #}
 
-		<div class=" col-11 col-md-3  MyDiv m-0 m-md-2">
+		<div class=" col-11 col-md-2  MyDiv m-0 m-md-2">
 			<h3>Bon de preparation</h3>
 			<form id="form-bp" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
 				<table class="MyTable">
@@ -123,7 +129,6 @@
 
 							<th class="MyCell">produit</th>
 							<th class="MyCell">--Q--</th>
-							<th class="cellEnd">date</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -135,23 +140,22 @@
 									<td>
 										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0" data-original="{{ eventDetail.quantity }}" data-target="bp">
 									</td>
-									<td>{{ eventDetail.date|date('d/m') }}</td>
 								</tr>
 							{% endif %}
 						{% endfor  %}
 					</tbody>
 
 				</table>
-				<button id="submit-quantity-bp" type="submit" class="btn btn-success mt-2" disabled>Valider les quantités</button>
+				<button id="submit-quantity-bp" type="submit" class="btn btn-success mt-2" disabled>modifier</button>
 			</form>
 			{% if status  == 1 %}
-				<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bl' }) }}">BL -></a>
+				<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bl' }) }}">Bon de livraison</a>
 
 			{% endif %}
 		</div>
 		{# ------------------------------------------card livraison-----------------------------------  #}
 
-		<div class=" col-11 col-md-3  MyDiv m-0 m-md-2">
+		<div class=" col-11 col-md-2  MyDiv m-0 m-md-2">
 			<h3>Bon de livraison</h3>
 			<form id="form-bl" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
 				<table class="MyTable">
@@ -160,7 +164,6 @@
 
 							<th class="MyCell">produit</th>
 							<th class="MyCell">--Q--</th>
-							<th class="cellEnd">date</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -172,21 +175,20 @@
 									<td>
 										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0" data-original="{{ eventDetail.quantity }}" data-target="bl">
 									</td>
-									<td>{{ eventDetail.date|date('d/m') }}</td>
 								</tr>
 							{% endif %}
 						{% endfor  %}
 					</tbody>
 
 				</table>
-				<button id="submit-quantity-bl" type="submit" class="btn btn-success mt-2" disabled>Valider les quantités</button>
+				<button id="submit-quantity-bl" type="submit" class="btn btn-success mt-2" disabled>modifier</button>
 			</form>
-			{% if status  == 2 %}{% endif %}
+
 		</div>
 
 		{# ------------------------------------------card retour-----------------------------------  #}
 
-		<div class=" col-11 col-md-3  MyDiv m-0 m-md-2">
+		<div class=" col-11 col-md-3 col-lg-2  MyDiv m-0 m-md-2">
 			<h3>Bon de retour</h3>
 			<form id="form-br" method="POST" name="br" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
 				<table class="MyTable">
@@ -201,33 +203,33 @@
 					<tbody>
 						{% set maxQuantity = 0 %}
 						{% set brQ = 0 %}
-						
+
 						{% for bldetail in blQuantities %}
 							{% set maxQuantity = bldetail.total_quantity %}
 							<tr>
-								<td class="product-cell" name='productId' >{{bldetail.name}}</td>
-								
+								<td class="product-cell" name='productId'>{{bldetail.name}}</td>
+
 								{% if brQuantities is not empty %}
 									{% for brdetail in brQuantities %}
-									
+
 										{% if brdetail.id == bldetail.id %}
-										{% set brQ = brdetail.total_quantity %}
+											{% set brQ = brdetail.total_quantity %}
 											<td class="text-center">
-												<input type="number" name="returnQuantities[{{ bldetail.id }}]" value="0" min="0" max="{{maxQuantity}}" class="form-control form-control-sm text-center quantity-input" data-original="{{ brQ }}" data-target="br" style="width: 80px; margin: auto;">
+												<input type="number" name="returnQuantities[{{ bldetail.id }}]" value="0" min="0" max="{{maxQuantity - brdetail.total_quantity}}" class="form-control form-control-sm text-center quantity-input" data-original="{{ brQ }}" data-target="br" style="width: 80px; margin: auto;">
 
 											</td>
 										{% endif %}
-										
+
 										{# Affichage de la quantité totale retournée pour le produit #}
 										{% if brdetail.id == bldetail.id %}
 											<td class="text-center">{{brdetail.total_quantity}}/{{maxQuantity}}</td>
 										{% endif %}
-										
+
 									{% endfor %}
 								{% else %}
-								<td class="text-center">
-												<input type="number" name="returnQuantities[{{ bldetail.id }}]" value="0" min="0" max="{{maxQuantity}}" class="form-control form-control-sm text-center quantity-input" data-original="{{ brQ }}" data-target="br" style="width: 80px; margin: auto;">
-											</td>
+									<td class="text-center">
+										<input type="number" name="returnQuantities[{{ bldetail.id }}]" value="0" min="0" max="{{maxQuantity}}" class="form-control form-control-sm text-center quantity-input" data-original="{{ brQ }}" data-target="br" style="width: 80px; margin: auto;">
+									</td>
 									<td class="text-center">0/{{maxQuantity}}</td>
 								{% endif %}
 							</tr>
@@ -237,15 +239,144 @@
 				</tbody>
 			</table>
 			<button id="submit-quantity-br" type="submit" class="btn btn-success mt-2" disabled>Bon de retour</button>
-			
+
 		</form>
 
 	</div>
+	{# -------------------------maps -------------------------- #}
+	<div
+		class="row p-2 justify-content-around " >
+		<!-- 🔧 Contrôles utilisateur -->
+		<div class=" m-2 col- col-md-5 MyDiv" >
+			<div class="col-md-5">
+				<label for="start-address" class="form-label">Adresse de départ</label>
+				<input type="text" id="start-address" class="form-control" value="255 Route des Cistes, Antibes, France">
+				<div class="form-check mt-2">
+					<input type="checkbox" class="form-check-input" id="use-current-location">
+					<label class="form-check-label" for="use-current-location">Utiliser ma position actuelle</label>
+				</div>
+			</div>
+
+			<div class="col-md-5">
+				<label for="end-address" class="form-label">Adresse d’arrivée</label>
+				<input type="text" id="end-address" class="form-control" value="{{ address }}">
+			</div>
+
+			<div class=" d-flex ">
+				<button class="btn btn-primary m-1 " onclick="calculateRoute()">Mettre à jour</button>
+				<a id="open-navigation" href="#" target="_blank" class="btn btn-success  m-1 ">
+					Ouvrir dans Google Maps
+				</a>
+			</div>
+		</div>
+
+		<!-- 🗺️ Carte -->
+		<div class="MyDiv col-12 col-md-6 m-2" style="align-items: center ;">
+		<div id="map" style="height: 220px;" class="col-11 m-2 "></div>
+		</div>
+	</div>
+	
 
 
+	<!-- 🌍 Google Maps -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYRpXbUVb3Iec6j-McWU4B1GmMrVAGYp8&callback=initMap" async defer></script>
 
 	<script>
-		// Gestion du sélecteur de fichier
+		let map,
+geocoder,
+directionsService,
+directionsRenderer;
+
+function initMap() {
+geocoder = new google.maps.Geocoder();
+directionsService = new google.maps.DirectionsService();
+directionsRenderer = new google.maps.DirectionsRenderer();
+
+map = new google.maps.Map(document.getElementById("map"), {
+zoom: 14,
+center: {
+lat: 43.5528,
+lng: 7.0174
+} // Cannes
+});
+
+directionsRenderer.setMap(map);
+
+// Gestion du switch "utiliser ma position"
+document.getElementById('use-current-location').addEventListener('change', function () {
+const inputStart = document.getElementById('start-address');
+
+if (this.checked) {
+inputStart.disabled = true;
+navigator.geolocation.getCurrentPosition((position) => {
+const coords = {
+lat: position.coords.latitude,
+lng: position.coords.longitude
+};
+
+geocoder.geocode({
+location: coords
+}, (results, status) => {
+if (status === "OK" && results[0]) {
+inputStart.value = results[0].formatted_address;
+calculateRoute();
+} else {
+alert("Impossible d’obtenir votre adresse actuelle.");
+}
+});
+}, () => {
+alert("Géolocalisation refusée.");
+this.checked = false;
+inputStart.disabled = false;
+});
+} else {
+inputStart.disabled = false;
+inputStart.value = "255 Route des Cistes, Antibes, France";
+calculateRoute();
+}
+});
+
+// Calcul initial à l’ouverture
+setTimeout(() => {
+if (document.getElementById('end-address').value) {
+calculateRoute();
+}
+}, 1000);
+}
+
+function calculateRoute() {
+const start = document.getElementById('start-address').value;
+const end = document.getElementById('end-address').value;
+
+if (! start || ! end) {
+alert("Merci de remplir les deux adresses.");
+return;
+}
+
+directionsService.route({
+origin: start,
+destination: end,
+travelMode: 'DRIVING'
+}, function (response, status) {
+if (status === 'OK') {
+directionsRenderer.setDirections(response);
+const duration = response.routes[0].legs[0].duration.text;
+document.getElementById('travel-time').innerText = "Temps estimé : " + duration;
+
+const endLoc = response.routes[0].legs[0].end_location;
+document.getElementById('open-navigation').href = `https://www.google.com/maps/dir/?api=1&destination=${
+endLoc.lat()
+},${
+endLoc.lng()
+}&travelmode=driving`;
+} else {
+alert('Erreur de calcul d’itinéraire : ' + status);
+}
+});
+}
+
+
+// Gestion du sélecteur de fichier
 document.getElementById('fileSelect').addEventListener('change', function () {
 const selectedUrl = this.value;
 if (selectedUrl) {

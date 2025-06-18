@@ -4,6 +4,13 @@
 {% endblock %}
 
 {% block body %}
+<style>
+a{
+	color: white;
+	text-decoration: none;
+
+}
+</style>
 	<h2 class="text-center m-4">Site Event</h2>
 
 
@@ -19,15 +26,16 @@
 					<img class="card-img-top" src="{{ asset('uploads/pictures/default.png') }}" alt="Default image">
 				{% endif %}
 				<h5 class="card-title">{{ site_event.name }}</h5>
-				<p class="card-text">Address :
+				<p class="card-text"><strong>Address :</strong>
 					{{site_event.address}}</p>
-				<p class="card-text">Address :
+				<p class="card-text"><strong>Postal Code :</strong>
 					{{site_event.postalCode}}</p>
-				<p class="card-text">Address :
+				<p class="card-text"><strong>City :</strong>
 					{{site_event.city}}</p>
 				<p id="travel-time" style="font-weight: bold; margin-top: 1rem;"></p>
 
-				<p class="card-text">Address :
+				<p class="card-text"><strong>description: </strong>
+				
 					{{site_event.description}}</p>
 				<div>
 					<a class="btn btn-success m-2" href="{{ path('app_site_event_index') }}">back to list</a>
@@ -35,14 +43,14 @@
 				</div>
 			</div>
 		</div>
-
-		<div class="MyDiv col-10 col-md-3 col-lg-3">
+{# ------------------------------card contact ----------------------------- #}
+		<div class="MyDiv col-10 col-md-3 col-lg-3 " style="justify-content: start;">
 			<h3 class="text-center">contact</h3>
 			{% for contact in site_event.contact %}
 				<div class="card-body">
 					{% set firstPicture = contact.galeryPictures %}
 					{% if firstPicture %}
-						<img class="card-img-top" src="{{ asset('uploads/pictures/' ~ firstPicture.picture) }}" alt="Image de l'event">
+						<img class="card-img-top" src="{{ asset('uploads/pictures/' ~ firstPicture.picture) }}" alt="Image de {{ contact.firstName }}">
 					{% else %}
 						<img class="card-img-top" src="{{ asset('uploads/pictures/homme-67d152475f1fb-67ebf984bbc84.jpg') }}" alt="Default image">
 					{% endif %}
@@ -55,10 +63,12 @@
 				{% endfor %}
 
 			</div>
-			<div class="MyDiv col-10 col-md-3 col-lg-3">
+
+			{# ------------------------------ event card -------------------------------- #}
+			<div class="MyDiv col-10 col-md-3 col-lg-3" style="justify-content: start;">
 				<h3 class="text-center">Events lié</h3>
 				{% for event in events %}
-					<a href="{{ path('app_event_show', {'id': event.id}) }}">{{ event.name }}</a>
+					<a class="btn bg-primary m-1" href="{{ path('app_event_show', {'id': event.id}) }}">=>{{ event.name }}</a>
 				{% endfor %}
 			</div>
 

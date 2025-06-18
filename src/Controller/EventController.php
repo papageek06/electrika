@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Event;
 use App\Entity\EventDetail;
 use App\Entity\Product;
+use App\Entity\SiteEvent;
 use App\Form\EventType;
 use App\Repository\EventDetailRepository;
 use App\Repository\EventRepository;
@@ -64,7 +65,7 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
-    public function show(Event $event, EventDetailRepository $eventDetailRepository): Response
+    public function show(Event $event, EventDetailRepository $eventDetailRepository, SiteEvent $siteEvent): Response
     {
         $eventDetails = $eventDetailRepository->findBy(['event' => $event->getId()]);
         $status = 0;
@@ -127,6 +128,7 @@ final class EventController extends AbstractController
             'pdfFiles' => $pdfFiles,
             'blQuantities' => $blDetails,
             'brQuantities' => $brDetails,
+            'address' => $siteEvent->getAddress() . ', ' . $siteEvent->getPostalCode() . ' ' . $siteEvent->getCity()
         ]);
     }
 

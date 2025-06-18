@@ -56,10 +56,17 @@ body.loaded {
 }
 
 .theCard {
-    background-color:rgb(57, 56, 56) !important;
-    color: white !important;
-    border-radius: 10px;
+    background-color:rgb(84, 92, 108, 100)  !important;
+     padding: 20px;
+    border-radius: 1rem;
+    margin: 2rem;
+    display: flex;
+    justify-items: center;
+    flex-direction: column;
+    align-self: normal;
+    justify-content: space-around;
     padding: 20px;
+    color: white;
 }
 
 .MyDiv {
