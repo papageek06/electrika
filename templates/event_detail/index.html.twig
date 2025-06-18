@@ -13,15 +13,15 @@
 
 	<div class="">
 		<div class="">
-			<form method="POST" action="{{ path('app_event_detail_index') }}" data-turbo="false">
-				<select name="eventSelected">
+			<form class="d-flex p-md-4 m-0 p-0" method="POST" action="{{ path('app_event_detail_index') }}" data-turbo="false">
+				<select class="form-select" name="eventSelected">
 					<option value="">Événement</option>
 					{% for event in listEvents %}
 						<option value="{{ event.1 }}">{{ event.name }}</option>
 					{% endfor %}
 				</select>
 
-				<select name="statusSelected">
+				<select class="form-select mx-3" name="statusSelected">
 					<option value="">Sélectionner un statut</option>
 					<option value="new">New</option>
 					<option value="preparer">Préparer</option>
@@ -29,12 +29,12 @@
 					<option value="retour">Retour</option>
 				</select>
 
-				<select name="orderSelected">
+				<select class="form-select" name="orderSelected">
 					<option value="ASC">Croissant</option>
 					<option value="DESC">Décroissant</option>
 				</select>
 
-				<button class="btn bg-success " type="submit">Filtrer</button>
+				<button class="btn bg-success ms-3" type="submit">Filtrer</button>
 			</form>
 		</div>
 	</div>
@@ -43,8 +43,8 @@
 		<div class="MyDiv  m-md-4 p-md-4 m-0 p-0">
 			<table class="table  ">
 				<form method="POST" action="{{ path('app_event_detail_update_all') }}" data-turbo="false">
-					<div>
-						<button type="submit" class="btn btn-primary ">Valider les modifications</button>
+					<div class="mb-3">
+						<button type="submit" class="btn btn-primary me-3">Valider les modifications</button>
 						<button type="submit" formaction="{{ path('app_event_detail_delete_all') }}" formmethod="POST" class="btn btn-danger" onclick="return confirm('Confirmer la suppression de tous les éléments sélectionnés ?');">
 							Supprimer la sélection
 						</button>
@@ -113,14 +113,14 @@
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
 
-    const selectAllCheckbox = document.getElementById("select-all");
-    const deleteCheckboxes = document.querySelectorAll('input[name="deleteIds[]"]');
+const selectAllCheckbox = document.getElementById("select-all");
+const deleteCheckboxes = document.querySelectorAll('input[name="deleteIds[]"]');
 
-    if (selectAllCheckbox) {
-        selectAllCheckbox.addEventListener("change", function () {
-            deleteCheckboxes.forEach(cb => cb.checked = this.checked);
-        });
-    }
+if (selectAllCheckbox) {
+selectAllCheckbox.addEventListener("change", function () {
+deleteCheckboxes.forEach(cb => cb.checked = this.checked);
+});
+}
 
 const statusAllSelect = document.getElementById("statusAll");
 const statusSelects = document.querySelectorAll(".statusSelect");
