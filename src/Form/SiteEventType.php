@@ -60,7 +60,7 @@ class SiteEventType extends AbstractType
                 'class' => GaleryPicture::class,
                 'choice_label' => 'picture', 
                 'multiple' => true,
-                'expanded' => false, // true = cases à cocher, false = select multiple
+                'expanded' => false, 
                 'label' => 'Galerie Photos',
                 'required' => false,
                 'attr' => [
