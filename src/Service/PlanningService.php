@@ -105,7 +105,6 @@ class PlanningService
                 'extendedProps' => [
                     'type' => 'eventDetail',
                     'eventId' => $item['eventId'],
-                    'eventDetailId' => $item['eventDetailId'],
                     'mouvement' => $item['mouve']
                 ],
                 'url' => $this->urlGenerator->generate('app_event_show', ['id' => $item['eventId']])

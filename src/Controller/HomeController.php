@@ -29,6 +29,7 @@ final class HomeController extends AbstractController
         PlanningService $planningService
     ): Response {
         $orderCounts = $eventDetails->countOrdersByStatus();
+        // dd($orderCounts);
         $event = new Event();
         $formEvent = $this->createForm(EventType::class, $event);
         $contact = new Contact();

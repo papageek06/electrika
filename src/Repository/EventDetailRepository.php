@@ -75,7 +75,7 @@ class EventDetailRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('e')
             ->select('e.mouve AS status, COUNT(e.id) AS total')
-                    ->where('e.date > :today')
+                    ->where('e.date >= :today')
         ->setParameter('today', new \DateTimeImmutable('today'))
             ->groupBy('e.mouve')
             ->getQuery()
@@ -96,9 +96,9 @@ class EventDetailRepository extends ServiceEntityRepository
     public function findByEventDetailDistinct(): array
     {
         return $this->createQueryBuilder('ed')
-            ->select('e.name, ed.mouve, ed.date as date, e.id as eventId, ed.id as eventDetailId')
+            ->select('e.name, ed.mouve, ed.date as date , e.id as eventId')
             ->join('ed.event', 'e')
-            ->groupBy('e.id, ed.mouve, ed.date, ed.id')
+            ->groupBy('e.name',' ed.mouve' , 'ed.date' , 'e.id')
             ->getQuery()
             ->getResult();
     }

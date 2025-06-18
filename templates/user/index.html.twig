@@ -3,38 +3,41 @@
 {% block title %}User index{% endblock %}
 
 {% block body %}
-    <h2>User index</h2>
+    <h2>Vos utilisateurs</h2>
 
-    <table class="table">
+   <section class="table-responsive  ">
+    <table class="table ">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Email</th>
-                <th>Roles</th>
-                <th>Password</th>
-                <th>FirstName</th>
-                <th>LastName</th>
-                <th>DateEntry</th>
-                <th>Status</th>
-                <th>IsVerified</th>
-                <th>actions</th>
+                <th class="MyCell">Id</th>
+                <th class="MyCell">Email</th>
+                <th class="MyCell">Roles</th>
+                <th class="MyCell">Password</th>
+                <th class="MyCell">FirstName</th>
+                <th class="MyCell">LastName</th>
+                <th class="MyCell">DateEntry</th>
+                <th class="MyCell">Status</th>
+                <th class="MyCell">IsVerified</th>
+                <th class="MyCell">actions</th>
             </tr>
         </thead>
         <tbody>
         {% for user in users %}
             <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-                <td>{{ user.password }}</td>
-                <td>{{ user.firstName }}</td>
-                <td>{{ user.lastName }}</td>
-                <td>{{ user.dateEntry ? user.dateEntry|date('Y-m-d') : '' }}</td>
-                <td>{{ user.status }}</td>
-                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+                <td class="m-2">{{ user.id }}</td>
+                <td class="m-2">{{ user.email }}</td>
+                <td class="m-2">{{ user.roles ? user.roles|json_encode : '' }}</td>
+                <td class="m-2">********</td>
+                <td class="m-2">{{ user.firstName }}</td>
+                <td class="m-2">{{ user.lastName }}</td>
+                <td class="m-2">{{ user.dateEntry ? user.dateEntry|date('Y-m-d') : '' }}</td>
+                <td class="m-2">{{ user.status }}</td>
+                <td class="m-2">{{ user.isVerified ? 'Yes' : 'No' }}</td>
+                <td class="m-3">
+                    <div class="d-flex ">
+                    <a class="btn bg-success mb-1" href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
+                    <a class="btn bg-warning mb-1" href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+                    </div>
                 </td>
             </tr>
         {% else %}
@@ -45,5 +48,6 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_user_new') }}">Create new</a>
+    <a class="btn bg-success" href="{{ path('app_user_new') }}">Create new</a>
+   </section>
 {% endblock %}
