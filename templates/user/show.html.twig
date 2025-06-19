@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	<h2>Profil</h2>
+	<h2>Mon profil</h2>
 
 	{% for label, messages in app.flashes %}
 		{% for message in messages %}
@@ -23,7 +23,7 @@
 			{% endif %}
 		</div>
 		<div class="card-body mt-2">
-			<h5 class="card-title">Profile</h5>
+			<h5 class="card-title">Profil</h5>
 			<p class="card-text">Id :{{ user.id }}</p>
 			<p class="card-text">Nom :{{ user.firstName }}</p>
 			<p class="card-text">Prenom :{{user.lastName}}</p>
@@ -66,7 +66,7 @@
 				</div>
 
 
-			<a class="btn bg-success" href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+			<a class="btn bg-success" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
 
 			{% if is_granted('ROLE_ADMIN') %}
 				<a class="btn bg-danger" onclick="return confirm('Are you sure?')">{{ include('user/_delete_form.html.twig') }}</a>
@@ -75,7 +75,7 @@
 	</div>
 
 
-	<a class="btn bg-secondary" href="{{ path('app_user_index') }}">back to list</a>
+	<a class="btn bg-secondary" href="{{ path('app_user_index') }}">Revenir à la liste</a>
 	</section>
 
 {% endblock %}

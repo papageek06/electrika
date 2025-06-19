@@ -21,17 +21,17 @@
                 <td>{{ product_connector.quantity }}</td>
                 <td>{{ product_connector.plugDirection }}</td>
                 <td>
-                    <a href="{{ path('app_product_connector_show', {'id': product_connector.id}) }}">show</a>
-                    <a href="{{ path('app_product_connector_edit', {'id': product_connector.id}) }}">edit</a>
+                    <a href="{{ path('app_product_connector_show', {'id': product_connector.id}) }}">Voir</a>
+                    <a href="{{ path('app_product_connector_edit', {'id': product_connector.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">no records found</td>
+                <td colspan="4">Aucun résultat trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_product_connector_new') }}">Create new</a>
+    <a href="{{ path('app_product_connector_new') }}">Créer
 {% endblock %}

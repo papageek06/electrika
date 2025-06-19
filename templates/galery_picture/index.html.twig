@@ -42,17 +42,17 @@
 						{% endif %}
 					</td>
 					<td class="MyCell">
-						<a href="{{ path('app_galery_picture_show', {'id': galery_picture.id}) }}">show</a><br>
-						<a href="{{ path('app_galery_picture_edit', {'id': galery_picture.id}) }}">edit</a>
+						<a href="{{ path('app_galery_picture_show', {'id': galery_picture.id}) }}">Voir</a><br>
+						<a href="{{ path('app_galery_picture_edit', {'id': galery_picture.id}) }}">Modifier</a>
 					</td>
 				</tr>
 			{% else %}
 				<tr>
-					<td colspan="3">no records found</td>
+					<td colspan="3">Aucun résultat trouvé</td>
 				</tr>
 			{% endfor %}
 		</tbody>
 	</table>
 
-	<a href="{{ path('app_galery_picture_new') }}">Create new</a>
+	<a href="{{ path('app_galery_picture_new') }}">Créer
 {% endblock %}

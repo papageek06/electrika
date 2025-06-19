@@ -43,7 +43,7 @@
 				<p>Email : {{event.contact ? event.contact.email : 'N/A'}}</p>
 				<p>Tel : {{event.contact ? event.contact.phoneNumber : 'N/A'}}</p>
 				<button class="btn btn-primary m-2">
-					<a href="{{ path('app_contact_edit', {'id': event.contact.id}) }}">Edit</a>
+					<a href="{{ path('app_contact_edit', {'id': event.contact.id}) }}">Modifier</a>
 				</button>
 			</div>
 			<div class="container col-10 col-md-3 card MyDiv card-correction">
@@ -52,7 +52,7 @@
 				<p>Adresse : {{site.address ? site.address : 'N/A'}}</p>
 				<p>Ville : {{site.city ? site.city : 'N/A'}}</p>
 				<button class="btn btn-primary m-2">
-					<a href="{{ path('app_site_event_edit', {'id': event.site.id}) }}">Edit</a>
+					<a href="{{ path('app_site_event_edit', {'id': event.site.id}) }}">Modifier</a>
 				</button>
 			</div>
 			<div class="container col-10 col-md-3 card MyDiv card-correction">
@@ -71,7 +71,7 @@
 					{% endfor %}
 				</select>
 				<button class="btn btn-primary m-2">
-					<a href="{{ path('app_event_edit', {'id': event.id}) }}">Edit</a>
+					<a href="{{ path('app_event_edit', {'id': event.id}) }}">Modifier</a>
 				</button>
 			</div>
 		</div>

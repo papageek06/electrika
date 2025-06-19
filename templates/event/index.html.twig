@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event index
+{% block title %}Gestion des événements de site
 {% endblock %}
 
 {% block body %}
@@ -11,9 +11,9 @@
 	}
 	</style>
 
-	<h2 class="text-center m-2  ">Event index</h2>
+	<h2 class="text-center m-2  ">Gestion des événements de site</h2>
 
-	<a class="btn bg-success m-3" href="{{ path('app_event_new') }}">Create new</a>
+	<a class="btn bg-success m-3" href="{{ path('app_event_new') }}">Créer</a>
 	<div class="row col-12 justify-content-around ">
 		{% for event in events %}
 
@@ -37,10 +37,10 @@
 					<p class="card-text">fin :{{ event.dateEnd ? event.dateEnd|date('d/m/Y') : '' }}
 					</p>
 					<button class="btn bg-success">
-						<a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
+						<a href="{{ path('app_event_show', {'id': event.id}) }}">Voir</a>
 					</button>
 					<button class="btn bg-warning">
-						<a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
+						<a href="{{ path('app_event_edit', {'id': event.id}) }}">Modifier</a>
 					</button>
 					{% if is_granted('ROLE_ADMIN') %}
 						<button class="bg-danger">

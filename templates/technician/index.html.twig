@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Technician index{% endblock %}
+{% block title %}Gestion des techniciens{% endblock %}
 
 {% block body %}
   <div class="theCard">
-      <h1>Technician index</h1>
+      <h1>Gestion des techniciens</h1>
 
     <table class="table" style="background-color: rgba(231, 239, 245, 0.9);">
         <thead>
@@ -24,18 +24,18 @@
                 <td>{{ technician.hireDate ? technician.hireDate|date('Y-m-d') : '' }}</td>
                 <td>{{ technician.specialities ? technician.specialities|join(', ') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_technician_show', {'id': technician.id}) }}">show</a>
-                    <a href="{{ path('app_technician_edit', {'id': technician.id}) }}">edit</a>
+                    <a href="{{ path('app_technician_show', {'id': technician.id}) }}">Voir</a>
+                    <a href="{{ path('app_technician_edit', {'id': technician.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="5">Aucun résultat trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_technician_new') }}">Create new</a>
+    <a href="{{ path('app_technician_new') }}" class="btn btn-primary">Créer</a>
     </div>
 {% endblock %}

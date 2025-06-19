@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}InterventionTeam index{% endblock %}
+{% block title %}Gestion des équipe d'interventions{% endblock %}
 
 {% block body %}
-    <h1>InterventionTeam index</h1>
+    <h1 class="text-light">Gestion des équipe d'interventions</h1>
 
     <table class="table">
         <thead>
@@ -23,17 +23,17 @@
                 <td>{{ intervention_team.stardDate ? intervention_team.stardDate|date('Y-m-d') : '' }}</td>
                 <td>{{ intervention_team.endDate ? intervention_team.endDate|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_intervention_team_show', {'id': intervention_team.id}) }}">show</a>
-                    <a href="{{ path('app_intervention_team_edit', {'id': intervention_team.id}) }}">edit</a>
+                    <a href="{{ path('app_intervention_team_show', {'id': intervention_team.id}) }}">Voir</a>
+                    <a href="{{ path('app_intervention_team_edit', {'id': intervention_team.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="5">Aucun résultat trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_intervention_team_new') }}">Create new</a>
+    <a href="{{ path('app_intervention_team_new') }}">Créer
 {% endblock %}

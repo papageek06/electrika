@@ -27,17 +27,17 @@
                 <td class="MyCell">{{ contact.email }}</td>
                 <td class="MyCell">{{ contact.status }}</td>
                 <td class="MyCell">
-                    <a class="btn bg-success w-100" href="{{ path('app_contact_show', {'id': contact.id}) }}">show</a><br>
-                    <a class="btn bg-warning w-100" href="{{ path('app_contact_edit', {'id': contact.id}) }}">edit</a>
+                    <a class="btn bg-success w-100" href="{{ path('app_contact_show', {'id': contact.id}) }}">Voir</a><br>
+                    <a class="btn bg-warning w-100" href="{{ path('app_contact_edit', {'id': contact.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="7">Aucun résultat trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_contact_new') }}">Create new</a>
+    <a href="{{ path('app_contact_new') }}">Créer
 {% endblock %}

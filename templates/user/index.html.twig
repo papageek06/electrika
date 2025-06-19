@@ -1,9 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User index{% endblock %}
+{% block title %}Gestion des users{% endblock %}
 
 {% block body %}
-    <h2>Vos utilisateurs</h2>
+
+    <h2>Gestion des users</h2>
 
    <section class="table-responsive  ">
     <table class="table ">
@@ -19,6 +20,7 @@
                 <th class="MyCell">Status</th>
                 <th class="MyCell">IsVerified</th>
                 <th class="MyCell">actions</th>
+
             </tr>
         </thead>
         <tbody>
@@ -38,16 +40,27 @@
                     <a class="btn bg-success mb-1" href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
                     <a class="btn bg-warning mb-1" href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
                     </div>
+=======
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                <td>{{ user.password }}</td>
+                <td>{{ user.firstName }}</td>
+                <td>{{ user.lastName }}</td>
+                <td>{{ user.dateEntry ? user.dateEntry|date('Y-m-d') : '' }}</td>
+                <td>{{ user.status }}</td>
+                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_user_show', {'id': user.id}) }}">Voir</a>
+                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="10">no records found</td>
+                <td colspan="10">Aucun résultat trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a class="btn bg-success" href="{{ path('app_user_new') }}">Create new</a>
-   </section>
+    <a href="{{ path('app_user_new') }}">Créer
 {% endblock %}

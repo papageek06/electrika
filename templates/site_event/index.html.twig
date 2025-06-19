@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}SiteEvent index{% endblock %}
+{% block title %}Gestion des événements de site{% endblock %}
 
 {% block body %}
 
@@ -18,10 +18,10 @@
         }
     </style>
 
-    <h2 class="m-4 text-center">SiteEvent index</h2>
+    <h2 class="m-4 text-center">Gestion des événements de site</h2>
 
     <button class="btn btn-primary text-light m-2">
-        <a href="{{ path('app_site_event_new') }}" class="text-light">Create new</a>
+        <a href="{{ path('app_site_event_new') }}" class="text-light">Créer</a>
     </button>
 
 
@@ -54,13 +54,13 @@
                 <td class="MyCell">{{ site_event.postalCode }}</td>
                 <td class="MyCell">{{ site_event.description }}</td>
                 <td class="MyCell">
-                    <a class="btn bg-success w-100" href="{{ path('app_site_event_show', {'id': site_event.id}) }}">show</a><br>
-                    <a class="btn bg-warning w-100" href="{{ path('app_site_event_edit', {'id': site_event.id}) }}">edit</a>
+                    <a class="btn bg-success w-100" href="{{ path('app_site_event_show', {'id': site_event.id}) }}">Voir</a><br>
+                    <a class="btn bg-warning w-100" href="{{ path('app_site_event_edit', {'id': site_event.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td class="MyCell" colspan="7">no records found</td>
+                <td class="MyCell" colspan="7">Aucun résultat trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
