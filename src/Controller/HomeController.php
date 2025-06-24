@@ -28,8 +28,7 @@ final class HomeController extends AbstractController
         ProductRepository $products,
         PlanningService $planningService
     ): Response {
-        $orderCounts = $eventDetails->countOrdersByStatus();
-        // dd($orderCounts);
+        $orderCounts = $eventDetails->countOrdersByStatus(); 
         $event = new Event();
         $formEvent = $this->createForm(EventType::class, $event);
         $contact = new Contact();

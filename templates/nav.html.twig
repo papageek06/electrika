@@ -35,13 +35,16 @@
 						</li>
 
 						{% if is_granted('ROLE_TECHNICIAN') %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{ path('app_home') }}">Accueil tech</a>
+							</li>
 							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle" href="#" id="logistiqueDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 									Logistique
 								</a>
 								<ul class="dropdown-menu" aria-labelledby="logistiqueDropdown">
 									<li class="nav-item">
-										<a class="dropdown-item" href="{{ path('app_home') }}">Accueil</a>
+										<a class="dropdown-item" href="{{ path('app_home') }}">Accueil tech</a>
 									</li>
 									<li>
 										<a class="dropdown-item" href="{{ path('app_intervention_team_index') }}">Interventions</a>

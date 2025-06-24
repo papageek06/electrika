@@ -92,14 +92,14 @@
 							{# Image produit #}
 							<form method="post" action="{{ path('app_cart_add') }}" data-turbo="false">
 								<td class="CellStart d-none d-md-table-cell">
-									<img width="70px" loading="lazy" src="{{ asset('uploads/pictures/' ~ (productList.picture ?? 'default.png')) }}" alt="{{ productList.name }}">
+									<img width="70px" loading="lazy" src="{{ asset('uploads/pictures/' ~ (productList.picture ?? 'default.png')) }}" alt="image de {{ productList.name }}">
 								</td>
 
 								<td class="MyCell" id="{{ productList.name }}">{{ productList.name }}</td>
 								<td class="MyCell d-none d-md-table-cell">{{ productList.category ? productList.category.name : "N/A" }}</td>
 								<td class="MyCell">{{ productList.stockInitial }}</td>
 
-								{# Affichage du stock par semaine #}
+								{# Display stock per week #}
 								{% for semaine in stockSemaines[productList.id] %}
 									<td class="MyCell d-none d-md-table-cell {{ semaine.stock|number_format and semaine.stock|number_format < 0 ? 'text-danger text-white' : '' }}">
 										{{ semaine.stock }}

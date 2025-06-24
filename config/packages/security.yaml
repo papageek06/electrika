@@ -41,7 +41,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/profile, roles: ROLE_ADMIN }
+        - { path: ^/profile/show, roles: ROLE_USER }
         - { path: ^/intervention, roles: [ROLE_INTERVENTION_TEAM, ROLE_TECHNICIAN, ROLE_ADMIN] }
         - { path: ^/technician, roles: [ROLE_TECHNICIAN, ROLE_ADMIN] }
         - { path: ^/absence, roles: ROLE_ADMIN }
