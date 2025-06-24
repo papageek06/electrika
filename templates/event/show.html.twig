@@ -48,8 +48,8 @@
 				<p>{{site.city ? site.city : 'N/A'}}</p>
 				<p id="travel-time" style="font-weight: bold; margin-top: 1rem;"></p>
 				<button class="btn btn-primary m-2">
-					<a href="{{ path('app_site_event_show', {'id': event.site.id}) }}">details</a>
-				</button>
+					<a href="{{ event.site ? path('app_site_event_edit', {'id': event.site.id}) : '#' }}">Modifier</a>
+
 			</div>
 			{# -----------------------------cart event ------------------------------------ #}
 			<div class=" col-10 col-md-3  theCard">
