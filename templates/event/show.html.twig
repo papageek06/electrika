@@ -41,7 +41,7 @@
 				</button>
 			</div>
 			{# -----------------------------cart site ------------------------------------ #}
-			{# <div class=" col-10 col-md-3  theCard">
+			<div class=" col-10 col-md-3  theCard">
 				<h4 class="text-center">Site</h4>
 				<p><strong>{{(site.name ? site.name : 'N/A') | upper}}</strong></p>
 				<p><strong>Adresse :</strong></br>{{site.address ? site.address : 'N/A'}}</p>
@@ -50,7 +50,7 @@
 				<button class="btn btn-primary m-2">
 					<a href="{{ event.site ? path('app_site_event_edit', {'id': event.site.id}) : '#' }}">Modifier</a>
 
-			</div> #}
+			</div>
 			{# -----------------------------cart event ------------------------------------ #}
 			<div class=" col-10 col-md-3  theCard">
 				<h4 class="text-center">Event</h4>
@@ -244,7 +244,7 @@
 
 	</div>
 	{# -------------------------maps -------------------------- #}
-	{# <div
+	<div
 		class="row p-2 justify-content-around " >
 		<!-- 🔧 Contrôles utilisateur -->
 		<div class=" m-2 col- col-md-5 MyDiv" >
@@ -279,101 +279,101 @@
 
 
 	<!-- 🌍 Google Maps -->
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYRpXbUVb3Iec6j-McWU4B1GmMrVAGYp8&callback=initMap" async defer></script> #}
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYRpXbUVb3Iec6j-McWU4B1GmMrVAGYp8&callback=initMap" async defer></script>
 
 	<script>
-// 		let map,
-// geocoder,
-// directionsService,
-// directionsRenderer;
+		let map,
+geocoder,
+directionsService,
+directionsRenderer;
 
-// function initMap() {
-// geocoder = new google.maps.Geocoder();
-// directionsService = new google.maps.DirectionsService();
-// directionsRenderer = new google.maps.DirectionsRenderer();
+function initMap() {
+geocoder = new google.maps.Geocoder();
+directionsService = new google.maps.DirectionsService();
+directionsRenderer = new google.maps.DirectionsRenderer();
 
-// map = new google.maps.Map(document.getElementById("map"), {
-// zoom: 14,
-// center: {
-// lat: 43.5528,
-// lng: 7.0174
-// } // Cannes
-// });
+map = new google.maps.Map(document.getElementById("map"), {
+zoom: 14,
+center: {
+lat: 43.5528,
+lng: 7.0174
+} // Cannes
+});
 
-// directionsRenderer.setMap(map);
+directionsRenderer.setMap(map);
 
-// // Gestion du switch "utiliser ma position"
-// document.getElementById('use-current-location').addEventListener('change', function () {
-// const inputStart = document.getElementById('start-address');
+// Gestion du switch "utiliser ma position"
+document.getElementById('use-current-location').addEventListener('change', function () {
+const inputStart = document.getElementById('start-address');
 
-// if (this.checked) {
-// inputStart.disabled = true;
-// navigator.geolocation.getCurrentPosition((position) => {
-// const coords = {
-// lat: position.coords.latitude,
-// lng: position.coords.longitude
-// };
+if (this.checked) {
+inputStart.disabled = true;
+navigator.geolocation.getCurrentPosition((position) => {
+const coords = {
+lat: position.coords.latitude,
+lng: position.coords.longitude
+};
 
-// geocoder.geocode({
-// location: coords
-// }, (results, status) => {
-// if (status === "OK" && results[0]) {
-// inputStart.value = results[0].formatted_address;
-// calculateRoute();
-// } else {
-// alert("Impossible d’obtenir votre adresse actuelle.");
-// }
-// });
-// }, () => {
-// alert("Géolocalisation refusée.");
-// this.checked = false;
-// inputStart.disabled = false;
-// });
-// } else {
-// inputStart.disabled = false;
-// inputStart.value = "255 Route des Cistes, Antibes, France";
-// calculateRoute();
-// }
-// });
+geocoder.geocode({
+location: coords
+}, (results, status) => {
+if (status === "OK" && results[0]) {
+inputStart.value = results[0].formatted_address;
+calculateRoute();
+} else {
+alert("Impossible d’obtenir votre adresse actuelle.");
+}
+});
+}, () => {
+alert("Géolocalisation refusée.");
+this.checked = false;
+inputStart.disabled = false;
+});
+} else {
+inputStart.disabled = false;
+inputStart.value = "255 Route des Cistes, Antibes, France";
+calculateRoute();
+}
+});
 
-// // Calcul initial à l’ouverture
-// setTimeout(() => {
-// if (document.getElementById('end-address').value) {
-// calculateRoute();
-// }
-// }, 1000);
-// }
+// Calcul initial à l’ouverture
+setTimeout(() => {
+if (document.getElementById('end-address').value) {
+calculateRoute();
+}
+}, 1000);
+}
 
-// function calculateRoute() {
-// const start = document.getElementById('start-address').value;
-// const end = document.getElementById('end-address').value;
+function calculateRoute() {
+const start = document.getElementById('start-address').value;
+const end = document.getElementById('end-address').value;
 
-// if (! start || ! end) {
-// alert("Merci de remplir les deux adresses.");
-// return;
-// }
+if (! start || ! end) {
+alert("Merci de remplir les deux adresses.");
+return;
+}
 
-// directionsService.route({
-// origin: start,
-// destination: end,
-// travelMode: 'DRIVING'
-// }, function (response, status) {
-// if (status === 'OK') {
-// directionsRenderer.setDirections(response);
-// const duration = response.routes[0].legs[0].duration.text;
-// document.getElementById('travel-time').innerText = "Temps estimé : " + duration;
+directionsService.route({
+origin: start,
+destination: end,
+travelMode: 'DRIVING'
+}, function (response, status) {
+if (status === 'OK') {
+directionsRenderer.setDirections(response);
+const duration = response.routes[0].legs[0].duration.text;
+document.getElementById('travel-time').innerText = "Temps estimé : " + duration;
 
-// const endLoc = response.routes[0].legs[0].end_location;
-// document.getElementById('open-navigation').href = `https://www.google.com/maps/dir/?api=1&destination=${
-// endLoc.lat()
-// },${
-// endLoc.lng()
-// }&travelmode=driving`;
-// } else {
-// alert('Erreur de calcul d’itinéraire : ' + status);
-// }
-// });
-// }
+const endLoc = response.routes[0].legs[0].end_location;
+document.getElementById('open-navigation').href = `https://www.google.com/maps/dir/?api=1&destination=${
+endLoc.lat()
+},${
+endLoc.lng()
+}&travelmode=driving`;
+} else {
+alert('Erreur de calcul d’itinéraire : ' + status);
+}
+});
+}
 
 
 // Gestion du sélecteur de fichier
