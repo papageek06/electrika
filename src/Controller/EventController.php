@@ -65,7 +65,7 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
-    public function show(Event $event, EventDetailRepository $eventDetailRepository, SiteEvent $siteEvent): Response
+    public function show(Event $event, EventDetailRepository $eventDetailRepository): Response
     {
         $eventDetails = $eventDetailRepository->findBy(['event' => $event->getId()]);
         $status = 0;
@@ -128,7 +128,9 @@ final class EventController extends AbstractController
             'pdfFiles' => $pdfFiles,
             'blQuantities' => $blDetails,
             'brQuantities' => $brDetails,
-            'address' => $siteEvent->getAddress() . ', ' . $siteEvent->getPostalCode() . ' ' . $siteEvent->getCity()
+            'address' => $event->getSite()?->getAddress() . ', ' .
+             $event->getSite()?->getPostalCode() . ' ' .
+             $event->getSite()?->getCity()
         ]);
     }
 
