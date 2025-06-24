@@ -41,7 +41,7 @@
 				</button>
 			</div>
 			{# -----------------------------cart site ------------------------------------ #}
-			<div class=" col-10 col-md-3  theCard">
+			{# <div class=" col-10 col-md-3  theCard">
 				<h4 class="text-center">Site</h4>
 				<p><strong>{{(site.name ? site.name : 'N/A') | upper}}</strong></p>
 				<p><strong>Adresse :</strong></br>{{site.address ? site.address : 'N/A'}}</p>
@@ -50,7 +50,7 @@
 				<button class="btn btn-primary m-2">
 					<a href="{{ event.site ? path('app_site_event_edit', {'id': event.site.id}) : '#' }}">Modifier</a>
 
-			</div>
+			</div> #}
 			{# -----------------------------cart event ------------------------------------ #}
 			<div class=" col-10 col-md-3  theCard">
 				<h4 class="text-center">Event</h4>
