@@ -1,7 +1,27 @@
+# Upgrade to 3.4.1
+
+## BC BREAK: You can no longer use the `.*` notation to get all fields of an entity in a DTO
+
+This feature was introduced in 3.4.0, and introduces several issues, so we
+decide to remove it before it is used too widely.
+
 # Upgrade to 3.4
+
+## Discriminator Map class duplicates
 
 Using the same class several times in a discriminator map is deprecated.
 In 4.0, this will be an error.
+
+## `Doctrine\ORM\Mapping\ClassMetadata::$reflFields` deprecated
+
+To better support property hooks and lazy proxies in the future, `$reflFields` had to
+be deprecated because we cannot use the PHP internal reflection API directly anymore.
+
+The property was changed from an array to an object of type `LegacyReflectionFields`
+that implements `ArrayAccess`.
+
+Use the new `Doctrine\ORM\Mapping\PropertyAccessors\PropertyAccessor` API and access
+through `Doctrine\ORM\Mapping\ClassMetadata::$propertyAccessors` instead.
 
 # Upgrade to 3.3
 
@@ -13,7 +33,7 @@ The class `Doctrine\ORM\Mapping\Driver\DatabaseDriver` is deprecated without rep
 
 Output walkers should implement the new `\Doctrine\ORM\Query\OutputWalker` interface and create
 `Doctrine\ORM\Query\Exec\SqlFinalizer` instances instead of `Doctrine\ORM\Query\Exec\AbstractSqlExecutor`s.
-The output walker must not base its workings on the query `firstResult`/`maxResult` values, so that the 
+The output walker must not base its workings on the query `firstResult`/`maxResult` values, so that the
 `SqlFinalizer` can be kept in the query cache and used regardless of the actual `firstResult`/`maxResult` values.
 Any operation dependent on `firstResult`/`maxResult` should take place within the `SqlFinalizer::createExecutor()`
 method. Details can be found at https://github.com/doctrine/orm/pull/11188.
@@ -124,7 +144,7 @@ WARNING: This was relaxed in ORM 3.2 when partial was re-allowed for array-hydra
   `Doctrine\ORM\Query::HINT_FORCE_PARTIAL_LOAD` are removed.
 - `Doctrine\ORM\EntityManager*::getPartialReference()` is removed.
 
-## BC BREAK: Enforce ArrayCollection Type on `\Doctrine\ORM\QueryBuilder::setParameters(ArrayCollection $parameters)` 
+## BC BREAK: Enforce ArrayCollection Type on `\Doctrine\ORM\QueryBuilder::setParameters(ArrayCollection $parameters)`
 
 The argument $parameters can no longer be a key=>value array. Only ArrayCollection types are allowed.
 
