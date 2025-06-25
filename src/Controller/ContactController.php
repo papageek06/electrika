@@ -17,9 +17,17 @@ final class ContactController extends AbstractController
     #[Route(name: 'app_contact_index', methods: ['GET'])]
     public function index(ContactRepository $contactRepository): Response
     {
-        return $this->render('contact/index.html.twig', [
-            'contacts' => $contactRepository->findAll(),
-        ]);
+        if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_TECHNICIAN')) {
+            $contact = $contactRepository->findAll();
+
+            return $this->render('contact/index.html.twig', [
+                'contacts' => $contact,
+            ]);
+        } else {
+            return $this->render('contact/index.html.twig', [
+                'contacts' => $contactRepository->findAgence('agence'),
+            ]);
+        }
     }
 
     #[Route('/new', name: 'app_contact_new', methods: ['GET', 'POST'])]
@@ -71,7 +79,7 @@ final class ContactController extends AbstractController
     #[Route('/{id}', name: 'app_contact_delete', methods: ['POST'])]
     public function delete(Request $request, Contact $contact, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$contact->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $contact->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($contact);
             $entityManager->flush();
         }

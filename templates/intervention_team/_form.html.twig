@@ -1,4 +1,130 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+<div id="event-dates-preview" class="alert alert-info d-none mt-3 ">
+	<strong>Dates de l’événement :</strong>
+	<small class="form-text text-muted">Ces dates sont préremplies automatiquement selon l'événement et le type, mais vous pouvez les modifier si besoin.</small>
+
+	<ul class="mb-0">
+		<li>
+			<strong>Montage :</strong>
+			<span id="preview-montage">-</span>
+		</li>
+		<li>
+			<strong>Début show :</strong>
+			<span id="preview-start-show">-</span>
+		</li>
+		<li>
+			<strong>Fin show :</strong>
+			<span id="preview-end-show">-</span>
+		</li>
+		<li>
+			<strong>Démontage :</strong>
+			<span id="preview-demontage">-</span>
+		</li>
+	</ul>
+</div>
+
+<div class="MyDiv col-12 col-md-6 style=" style="align-self: auto !important ;">
+	{{ form_start(form) }}
+	{{ form_widget(form) }}
+	<button class="btn bg-warning">{{ button_label|default('Save') }}</button>
+	<a class="btn bg-success" href="{{ path('app_intervention_team_index') }}">Revenir à la liste</a>
+	{{ form_end(form) }}
+</div>
+
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+const eventSelect = document.querySelector('#intervention_team_form_event');
+const typeSelect = document.querySelector('input[name="intervention_team_form[type]"]:checked');
+const startInput = document.querySelector('#intervention_team_form_stardDate');
+const endInput = document.querySelector('#intervention_team_form_endDate');
+
+const divPreview = document.querySelector('#event-dates-preview');
+const previewMontage = document.querySelector('#preview-montage');
+const previewStartShow = document.querySelector('#preview-start-show');
+const previewEndShow = document.querySelector('#preview-end-show');
+const previewDemontage = document.querySelector('#preview-demontage');
+
+let selectedOption = null;
+
+function updatePreview() {
+if (! selectedOption) 
+return;
+
+
+const start = selectedOption.getAttribute('data-start');
+const startShow = selectedOption.getAttribute('data-start-show');
+const endShow = selectedOption.getAttribute('data-end-show');
+const end = selectedOption.getAttribute('data-end');
+
+previewMontage.textContent = start ?? '-';
+previewStartShow.textContent = startShow ?? '-';
+previewEndShow.textContent = endShow ?? '-';
+previewDemontage.textContent = end ?? '-';
+
+divPreview.classList.remove('d-none');
+}
+
+function fillDateFields(type) {
+if (! selectedOption) 
+return;
+
+
+const start = selectedOption.getAttribute('data-start');
+const startShow = selectedOption.getAttribute('data-start-show');
+const endShow = selectedOption.getAttribute('data-end-show');
+const end = selectedOption.getAttribute('data-end');
+
+switch (type) {
+case 'montage':
+if (start) 
+startInput.value = start;
+
+if (startShow) 
+endInput.value = startShow;
+
+break;
+case 'permanence':
+if (startShow) 
+startInput.value = startShow;
+
+if (endShow) 
+endInput.value = endShow;
+
+break;
+case 'demontage':
+if (endShow) 
+startInput.value = endShow;
+
+if (end) 
+endInput.value = end;
+
+break;
+default: startInput.value = '';
+endInput.value = '';
+}
+}
+
+if (eventSelect) {
+eventSelect.addEventListener('change', function () {
+selectedOption = eventSelect.options[eventSelect.selectedIndex];
+updatePreview();
+
+const selectedType = document.querySelector('input[name="intervention_team_form[type]"]:checked');
+if (selectedType) 
+fillDateFields(selectedType.value);
+
+});
+}
+
+document.querySelectorAll('input[name="intervention_team_form[type]"]').forEach(radio => {
+radio.addEventListener('change', function () {
+if (selectedOption) 
+fillDateFields(this.value);
+
+});
+});
+});
+</script>

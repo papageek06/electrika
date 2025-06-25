@@ -1,39 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion des équipe d'interventions{% endblock %}
+{% block title %}Gestion des équipe d'interventions
+{% endblock %}
 
 {% block body %}
-    <h1 class="text-light">Gestion des équipe d'interventions</h1>
+	<h1 class="text-light">Gestion des équipe d'interventions</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Type</th>
-                <th>StardDate</th>
-                <th>EndDate</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for intervention_team in intervention_teams %}
-            <tr>
-                <td>{{ intervention_team.id }}</td>
-                <td>{{ intervention_team.type }}</td>
-                <td>{{ intervention_team.stardDate ? intervention_team.stardDate|date('Y-m-d') : '' }}</td>
-                <td>{{ intervention_team.endDate ? intervention_team.endDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_intervention_team_show', {'id': intervention_team.id}) }}">Voir</a>
-                    <a href="{{ path('app_intervention_team_edit', {'id': intervention_team.id}) }}">Modifier</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">Aucun résultat trouvé</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Type</th>
+				<th>StardDate</th>
+				<th>EndDate</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for intervention_team in intervention_teams %}
+				<tr>
+					<td>{{ intervention_team.id }}</td>
+					<td>{{ intervention_team.type }}</td>
+					<td>{{ intervention_team.stardDate ? intervention_team.stardDate|date('Y-m-d') : '' }}</td>
+					<td>{{ intervention_team.endDate ? intervention_team.endDate|date('Y-m-d H:i:s') : '' }}</td>
+					<td>
+						<a href="{{ path('app_intervention_team_show', {'id': intervention_team.id}) }}">Voir</a>
+						<a href="{{ path('app_intervention_team_edit', {'id': intervention_team.id}) }}">Modifier</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="5">Aucun résultat trouvé</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 
-    <a href="{{ path('app_intervention_team_new') }}">Créer
-{% endblock %}
+	<a class="btn bg-success" href="{{ path('app_intervention_team_new') }}">Créer</a>
+	{% endblock %}

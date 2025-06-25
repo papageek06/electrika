@@ -11,6 +11,10 @@ Disallow: /translations/
 Disallow: /public/build/
 Disallow: /public/bundles/
 Allow: /
+Allow: /public/build/*.js
+Allow: /public/build/*.css
+Allow: /assets/
+
 
 # Empêcher l’indexation des URLs générées par les environnements de dev/test
 Disallow: /*_profiler

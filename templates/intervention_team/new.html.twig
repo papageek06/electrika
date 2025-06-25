@@ -3,9 +3,11 @@
 {% block title %}New InterventionTeam{% endblock %}
 
 {% block body %}
-    <h1>Créer une équipe d'intervention</h1>
+    <h1 class="text-light text-center">Créer une équipe d'intervention</h1>
+<div class="d-flex  justify-content-center align-items-center flex-column " style="align-self: auto !important ;"> 
 
     {{ include('intervention_team/_form.html.twig') }}
 
-    <a href="{{ path('app_intervention_team_index') }}">Revenir à la liste</a>
+    
+    </div>
 {% endblock %}

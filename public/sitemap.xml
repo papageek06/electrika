@@ -1,27 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
-
-
+This XML file does not appear to have any style information associated with it. The document tree is shown below.
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!--  created with Free Online Sitemap Generator www.xml-sitemaps.com  -->
 <url>
-  <loc>https://www.gestion.professionaldev.fr/</loc>
-  <lastmod>2025-06-10T09:36:11+00:00</lastmod>
-  <priority>1.00</priority>
+<loc>https://www.gestion.professionaldev.fr/</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>1.00</priority>
 </url>
 <url>
-  <loc>https://www.gestion.professionaldev.fr/login</loc>
-  <lastmod>2025-06-10T09:36:11+00:00</lastmod>
-  <priority>0.80</priority>
+<loc>https://www.gestion.professionaldev.fr/login</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.80</priority>
 </url>
 <url>
-  <loc>https://www.gestion.professionaldev.fr/home</loc>
-  <lastmod>2025-06-10T09:36:11+00:00</lastmod>
-  <priority>0.80</priority>
+<loc>https://www.gestion.professionaldev.fr/home</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.80</priority>
 </url>
-
-
+<url>
+<loc>https://www.gestion.professionaldev.fr/event/7</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/contact/2</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/site/event/2/edit</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/contact</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/contact/2/edit</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/site/event</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/contact/3</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.33</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/contact/3/edit</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.33</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/contact/4</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.33</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/contact/4/edit</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.33</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/contact/5</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.33</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/contact/5/edit</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.33</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/contact/6</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.33</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/contact/6/edit</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.33</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/contact/new</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.33</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/site/event/new</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.33</priority>
+</url>
+<url>
+<loc>https://www.gestion.professionaldev.fr/site/event/2</loc>
+<lastmod>2025-06-25T11:26:42+00:00</lastmod>
+<priority>0.33</priority>
+</url>
 </urlset>

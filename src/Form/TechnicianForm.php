@@ -16,16 +16,22 @@ class TechnicianForm extends AbstractType
     {
         $builder
             ->add('status')
-            ->add('hireDate')
+            ->add('hireDate',
+                                        \Symfony\Component\Form\Extension\Core\Type\DateTimeType::class, [
+                    'widget' => 'single_text',
+                    'html5' => true,
+                    'attr' => ['class' => 'date'],
+                ])
             ->add('specialities')
             ->add('user', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'id',
+                'choice_label' => 'firstName',
             ])
             ->add('interventionTeams', EntityType::class, [
                 'class' => InterventionTeam::class,
-                'choice_label' => 'id',
+                'choice_label' => 'event',
                 'multiple' => true,
+                'expanded' => true, 
             ])
         ;
     }

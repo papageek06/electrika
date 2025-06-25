@@ -19,17 +19,16 @@ class ContactRepository extends ServiceEntityRepository
     //    /**
     //     * @return Contact[] Returns an array of Contact objects
     //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+       public function findAgence($value): array
+       {
+           return $this->createQueryBuilder('c')
+               ->andWhere('c.status = :val')
+               ->setParameter('val', $value)
+               ->orderBy('c.id', 'ASC')
+               ->getQuery()
+               ->getResult()
+           ;
+       }
 
     //    public function findOneBySomeField($value): ?Contact
     //    {
