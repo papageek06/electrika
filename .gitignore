@@ -9,6 +9,7 @@
 /vendor/
 /deploy.sh
 /migrations/
+/public/uploads/
 
 ###< symfony/framework-bundle ###
 
