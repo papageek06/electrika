@@ -1,11 +1,13 @@
 {% extends 'base.html.twig' %}
-
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
 {% block title %}New Absence{% endblock %}
 
 {% block body %}
     <h1>Créer une nouvelle absence</h1>
 
+  <section class="MyDiv col-12 col-md-6">
+   
     {{ include('absence/_form.html.twig') }}
-
-    <a href="{{ path('app_absence_index') }}">Revenir à la liste</a>
+    <a class="btn bg-primary" href="{{ path('app_absence_index') }}">Revenir à la liste</a>
+  </section>
 {% endblock %}

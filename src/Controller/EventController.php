@@ -295,7 +295,7 @@ final class EventController extends AbstractController
 
         $quantities = $request->request->all('quantities');
 
-// dd($quantities);
+
         foreach ($quantities as $id => $quantity) {
             $detail = $em->getRepository(EventDetail::class)->find($id);
             if ($detail && $detail->getEvent() === $event) {

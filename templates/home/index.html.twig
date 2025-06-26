@@ -17,23 +17,23 @@
 			<h5 class="card-title mb-3">Total des commandes</h5>
 
 			{% if orderCounts|length > 0%}
-			<ul class="list-unstyled">
-				{% for order in orderCounts %}
-					<li>
-						<span class="badge bg-{{ order.status == 'new' ? 'primary' : order.status == 'bp' ? 'warning' : order.status == 'bl' ? 'success' : 'danger' }}">
-							{{ order.status }}
-							:
-							{{ order.total }}
-						</span>
-					</li>
-				{% endfor %}
-			</ul>
-				{% endif %}
+				<ul class="list-unstyled">
+					{% for order in orderCounts %}
+						<li>
+							<span class="badge bg-{{ order.status == 'new' ? 'primary' : order.status == 'bp' ? 'warning' : order.status == 'bl' ? 'success' : 'danger' }}">
+								{{ order.status }}
+								:
+								{{ order.total }}
+							</span>
+						</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
 
 			<div class="d-flex flex-wrap gap-2">
-				<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEvent">+ Événement</button>
-				<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSite">+ Site</button>
-				<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalContact">+ Contact</button>
+				<a class="btn btn-primary" href="{{ path('app_event_new') }}" >+ Événement</a>
+				<a class="btn btn-primary" href="{{ path('app_site_event_new') }}" >+ Site</a>
+				<a class="btn btn-primary" href="{{ path('app_contact_new') }}" >+ Contact</a>
 			</div>
 			<div class="my-4">
 				<h5 class="text-white mb-3">Légende des couleurs du planning</h5>
@@ -41,37 +41,41 @@
 
 					<div class="d-flex align-items-center gap-2">
 						<span class="p-3 legend-color" style="width:120px;height:40px;background-color:#A0522D;display:inline-block;border-radius:3px;">Montage</span>
-						
+
 					</div>
 
 					<div class="d-flex align-items-center gap-2">
 						<span class="p-3 legend-color" style="width:120px;height:40px;background-color:#FFD700;display:inline-block;border-radius:3px;">Show</span>
-						
+
 					</div>
 
 					<div class="d-flex align-items-center gap-2">
 						<span class="p-3 legend-color" style="width:120px;height:40px;background-color:#FF8C00;display:inline-block;border-radius:3px;">Démontage</span>
-						
+
 					</div>
-					<div class="w-100"> </div>
+					<div class="w-100"></div>
 					<div class="d-flex align-items-center gap-2">
-						<span class="p-3 legend-color" style="width:120px;height:40px;background-color:#1E90FF;display:inline-block;border-radius:3px;"> Nouveau </span>
-						
+						<span class="p-3 legend-color" style="width:120px;height:40px;background-color:#1E90FF;display:inline-block;border-radius:3px;">
+							Nouveau
+						</span>
+
 					</div>
 
 					<div class="d-flex align-items-center gap-2">
-						<span class="p-3 legend-color" style="width:120px;height:40px;background-color:#FFA500;display:inline-block;border-radius:3px;">Prét </span>
-						
+						<span class="p-3 legend-color" style="width:120px;height:40px;background-color:#FFA500;display:inline-block;border-radius:3px;">Prét
+						</span>
+
 					</div>
 
 					<div class="d-flex align-items-center gap-2">
-						<span class="p-3 legend-color" style="width:120px;height:40px;background-color:#228B22;display:inline-block;border-radius:3px;">Livré </span>
-						
+						<span class="p-3 legend-color" style="width:120px;height:40px;background-color:#228B22;display:inline-block;border-radius:3px;">Livré
+						</span>
+
 					</div>
 
 					<div class="d-flex align-items-center gap-2">
 						<span class="p-3 legend-color" style="width:120px;height:40px;background-color:#DC143C;display:inline-block;border-radius:3px;">Retour</span>
-						
+
 					</div>
 				</div>
 			</div>
@@ -115,115 +119,29 @@
 		{% endfor %}
 	</div>
 
-	<!-- MODALS for form input -->
-	<div class="modal fade" id="modalEvent" tabindex="-1" aria-labelledby="modalEventLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content bg-light">
-				<div class="modal-header">
-					<h5 class="modal-title" id="modalEventLabel">Nouvel événement</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-				</div>
-				<div class="modal-body">
-					{{ form_start(form) }}
 
-					<p>{{ form_label(form.name) }}</p>
-					<p>{{ form_widget(form.name) }}</p>
-					<p>{{ form_label(form.dateMontage) }}</p>
-					<p>{{ form_widget(form.dateMontage) }}</p>
-					<p>{{ form_label(form.dateStartShow) }}</p>
-					<p>{{ form_widget(form.dateStartShow) }}</p>
-					<p>{{ form_label(form.dateEndSHOW) }}</p>
-					<p>{{ form_widget(form.dateEndSHOW) }}</p>
-					<p>{{ form_label(form.dateEnd) }}</p>
-					<p>{{ form_widget(form.dateEnd) }}</p>
-					<p>{{ form_label(form.site) }}</p>
-					<p>{{ form_widget(form.site) }}</p>
-					<p>{{ form_label(form.contact) }}</p>
-					<p>{{ form_widget(form.contact) }}</p>
-					<button type="submit" class="btn btn-primary">Ajouter</button>
-
-					{{ form_end(form) }}
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="modal fade" id="modalSite" tabindex="-1" aria-labelledby="modalSiteLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content bg-light">
-				<div class="modal-header">
-					<h5 class="modal-title" id="modalSiteLabel">Nouveau site</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-				</div>
-				<div class="modal-body">
-					{{ form_start(formSite) }}
-					<p>{{ form_label(formSite.name) }}</p>
-					<p>{{ form_widget(formSite.name) }}</p>
-					<p>{{ form_label(formSite.address) }}</p>
-					<p>{{ form_widget(formSite.address) }}</p>
-					<p>{{ form_label(formSite.city) }}</p>
-					<p>{{ form_widget(formSite.city) }}</p>
-					<p>{{ form_label(formSite.postalCode) }}</p>
-					<p>{{ form_widget(formSite.postalCode) }}</p>
-					<p>{{ form_label(formSite.description) }}</p>
-					<p>{{ form_widget(formSite.description) }}</p>
-					<button type="submit" class="btn btn-success">Ajouter</button>
-
-					{{ form_end(form) }}
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="modal fade" id="modalContact" tabindex="-1" aria-labelledby="modalContactLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content bg-light">
-				<div class="modal-header">
-					<h5 class="modal-title" id="modalContactLabel">Nouveau contact</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-				</div>
-				<div class="modal-body">
-					{{ form_start(formContact) }}
-
-					<p>{{ form_label(formContact.firstName) }}</p>
-					<p>{{ form_widget(formContact.firstName) }}</p>
-					<p>{{ form_label(formContact.lastName) }}</p>
-					<p>{{ form_widget(formContact.lastName) }}</p>
-					<p>{{ form_label(formContact.phoneNumber) }}</p>
-					<p>{{ form_widget(formContact.phoneNumber) }}</p>
-					<p>{{ form_label(formContact.email) }}</p>
-					<p>{{ form_widget(formContact.email) }}</p>
-					<p>{{ form_label(formContact.status) }}</p>
-					<p>{{ form_widget(formContact.status) }}</p>
-					<button type="submit" class="btn btn-primary">Ajouter</button>
-
-					{{ form_end(form) }}
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 	<script src='fullcalendar/core/locales-all.global.js'></script>
 	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-			var calendarEl = document.getElementById('calendar');
-			var calendar = new FullCalendar.Calendar(calendarEl, {
-				initialView: 'dayGridMonth',
-				locale: 'fr',
-				headerToolbar: {
-					left: 'prev,next today',
-					center: 'title',
-					right: 'dayGridMonth,timeGridWeek,timeGridDay, list'
-				},
-				events: {{ data|raw }},
-				eventClick: function(info) {
-					if (info.event.url) {
-						window.location.href = info.event.url;
-					}
-				}
-			});
-			calendar.render();
-		});
+		document.addEventListener('DOMContentLoaded', function () {
+var calendarEl = document.getElementById('calendar');
+var calendar = new FullCalendar.Calendar(calendarEl, {
+initialView: 'dayGridMonth',
+locale: 'fr',
+headerToolbar: {
+left: 'prev,next today',
+center: 'title',
+right: 'dayGridMonth,timeGridWeek,timeGridDay, list'
+},
+events: {{ data|raw }},
+eventClick: function (info) {
+if (info.event.url) {
+window.location.href = info.event.url;
+}
+}
+});
+calendar.render();
+});
 	</script>
 {% endblock %}

@@ -15,12 +15,31 @@ class AbsenceForm extends AbstractType
     {
         $builder
             ->add('type')
-            ->add('startDate')
-            ->add('endDate')
-            ->add('comment')
+            ->add('startDate',
+                \Symfony\Component\Form\Extension\Core\Type\DateType::class, [
+                    'widget' => 'single_text',
+                    'html5' => true,
+                    'attr' => ['class' => 'js-datepicker'],
+                ]
+            )
+            ->add('endDate',
+                \Symfony\Component\Form\Extension\Core\Type\DateType::class, [
+                    'widget' => 'single_text',
+                    'html5' => true,
+                    'attr' => ['class' => 'js-datepicker'],
+                ]
+            )
+            ->add('comment', \Symfony\Component\Form\Extension\Core\Type\TextareaType::class, [
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Commentaire (facultatif)',
+                    'rows' => 3,
+                ],
+            ]
+            )
             ->add('technicians', EntityType::class, [
                 'class' => Technician::class,
-                'choice_label' => 'id',
+                'choice_label' => 'user.firstName',
             ])
         ;
     }

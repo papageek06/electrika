@@ -4,9 +4,9 @@
 
 {% block body %}
   <div class="theCard">
-      <h1>Gestion des techniciens</h1>
+      <h1 class="text-center">Gestion des techniciens</h1>
 
-    <table class="table" style="background-color: rgba(231, 239, 245, 0.9);">
+    <table class="table table-dark" style="background-color: rgba(231, 239, 245, 0.9);">
         <thead>
             <tr>
                 <th>Id</th>
@@ -24,8 +24,8 @@
                 <td>{{ technician.hireDate ? technician.hireDate|date('Y-m-d') : '' }}</td>
                 <td>{{ technician.specialities ? technician.specialities|join(', ') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_technician_show', {'id': technician.id}) }}">Voir</a>
-                    <a href="{{ path('app_technician_edit', {'id': technician.id}) }}">Modifier</a>
+                    <a class="btn bg-success" href="{{ path('app_technician_show', {'id': technician.id}) }}">Voir</a>
+                    <a class="btn bg-warning" href="{{ path('app_technician_edit', {'id': technician.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
