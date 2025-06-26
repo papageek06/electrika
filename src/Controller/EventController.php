@@ -290,12 +290,12 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}/update-quantities', name: 'app_event_quantity_update', methods: ['POST'])]
-    public function updateQuantities(Request $request, Event $event, Product $product ,EntityManagerInterface $em,): Response
+    public function updateQuantities(Request $request, Event $event ,EntityManagerInterface $em,): Response
     {
 
         $quantities = $request->request->all('quantities');
 
-
+// dd($quantities);
         foreach ($quantities as $id => $quantity) {
             $detail = $em->getRepository(EventDetail::class)->find($id);
             if ($detail && $detail->getEvent() === $event) {

@@ -1,6 +1,7 @@
 
-<div class="MyCard justifi-items-center text-center" style=" " >
+<div class="MyDiv justifi-items-center col-12 col-md-6 "  >
 <h2 class"">Edit Product</h2>
+
 {{ form_start(form) }}
 
 <h3>{{ form_label(form.name) }}</h3>
@@ -19,7 +20,7 @@
 <p>{{ form_widget(form.picture) }}</p>
 <h3>Connecteurs</h3>
 {% for connectorForm in form.productConnectors %}
-    <div class="card mb-2 p-2">
+    <div class="MyDiv mb-2 p-2">
         {{ form_row(connectorForm.connector) }}
         {{ form_row(connectorForm.quantity) }}
         {{ form_row(connectorForm.plugDirection) }}
