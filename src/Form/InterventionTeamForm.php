@@ -31,7 +31,7 @@ class InterventionTeamForm extends AbstractType
                 ]
             )
             ->add(
-                'stardDate',
+                'startDate',
                 \Symfony\Component\Form\Extension\Core\Type\DateTimeType::class,
                 [
                     'widget' => 'single_text',

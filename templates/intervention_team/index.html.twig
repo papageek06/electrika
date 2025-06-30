@@ -6,12 +6,12 @@
 {% block body %}
 	<h1 class="text-light">Gestion des équipe d'interventions</h1>
 
-	<table class="table">
+	<table class="table table-dark">
 		<thead>
 			<tr>
 				<th>Id</th>
 				<th>Type</th>
-				<th>StardDate</th>
+				<th>StartDate</th>
 				<th>EndDate</th>
 				<th>actions</th>
 			</tr>
@@ -21,7 +21,7 @@
 				<tr>
 					<td>{{ intervention_team.id }}</td>
 					<td>{{ intervention_team.type }}</td>
-					<td>{{ intervention_team.stardDate ? intervention_team.stardDate|date('Y-m-d') : '' }}</td>
+					<td>{{ intervention_team.startDate ? intervention_team.startDate|date('Y-m-d') : '' }}</td>
 					<td>{{ intervention_team.endDate ? intervention_team.endDate|date('Y-m-d H:i:s') : '' }}</td>
 					<td>
 						<a href="{{ path('app_intervention_team_show', {'id': intervention_team.id}) }}">Voir</a>

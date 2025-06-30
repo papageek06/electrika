@@ -3,9 +3,9 @@
 {% block title %}InterventionTeam{% endblock %}
 
 {% block body %}
-    <h1>InterventionTeam</h1>
+    <h1 class="text-light text-center">InterventionTeam</h1>
 
-    <table class="table">
+    <table class="table table-dark">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -16,8 +16,8 @@
                 <td>{{ intervention_team.type }}</td>
             </tr>
             <tr>
-                <th>StardDate</th>
-                <td>{{ intervention_team.stardDate ? intervention_team.stardDate|date('Y-m-d') : '' }}</td>
+                <th>StartDate</th>
+                <td>{{ intervention_team.startDate ? intervention_team.startDate|date('Y-m-d') : '' }}</td>
             </tr>
             <tr>
                 <th>EndDate</th>

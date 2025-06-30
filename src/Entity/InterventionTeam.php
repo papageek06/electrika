@@ -20,7 +20,7 @@ class InterventionTeam
     private ?string $type = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $stardDate = null;
+    private ?\DateTime $startDate = null;
 
     #[ORM\Column]
     private ?\DateTime $endDate = null;
@@ -56,14 +56,14 @@ class InterventionTeam
         return $this;
     }
 
-    public function getStardDate(): ?\DateTime
+    public function getStartDate(): ?\DateTime
     {
-        return $this->stardDate;
+        return $this->startDate;
     }
 
-    public function setStardDate(\DateTime $stardDate): static
+    public function setStartDate(\DateTime $startDate): static
     {
-        $this->stardDate = $stardDate;
+        $this->startDate = $startDate;
 
         return $this;
     }

@@ -32,12 +32,12 @@ class PlanningService
 
     public function generateCalendarData(): array
     {
-        return array_merge(
-            $this->getEventData(),
-            $this->getEventDetailData(),
-            $this->getAbsenceData(),
-            $this->getInterventionTeamData()
-        );
+        return [
+            'events' => $this->getEventData(),
+            'eventDetails' => $this->getEventDetailData(),
+            'absences' => $this->getAbsenceData(),
+            'interventionTeams' => $this->getInterventionTeamData(),
+        ];
     }
 
     private function getEventData(): array
@@ -118,7 +118,7 @@ class PlanningService
         $absenceData = [];
         foreach ($this->absenceRepository->findAll() as $absence) {
             $absenceData[] = [
-                'title' => $absence->getTechnician()->getUser()->getPrenom() . ' - ' . $absence->getType(),
+                'title' => $absence->getTechnicians()->getUser()->getfirstName() . ' - ' . $absence->getType(),
                 'start' => $absence->getStartDate()->format('Y-m-d'),
                 'end' => $absence->getEndDate()->modify('+1 day')->format('Y-m-d'),
                 'backgroundColor' => '#DC3545',

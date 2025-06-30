@@ -16,7 +16,7 @@
 		<div class="card bg-dark text-white col-md-4 col-lg-3 m-3 p-3 shadow-sm">
 			<h5 class="card-title mb-3">Total des commandes</h5>
 
-			{% if orderCounts|length > 0%}
+			{# {% if orderCounts|length > 0%}
 				<ul class="list-unstyled">
 					{% for order in orderCounts %}
 						<li>
@@ -28,12 +28,30 @@
 						</li>
 					{% endfor %}
 				</ul>
-			{% endif %}
+			{% endif %} #}
 
 			<div class="d-flex flex-wrap gap-2">
-				<a class="btn btn-primary" href="{{ path('app_event_new') }}" >+ Événement</a>
-				<a class="btn btn-primary" href="{{ path('app_site_event_new') }}" >+ Site</a>
-				<a class="btn btn-primary" href="{{ path('app_contact_new') }}" >+ Contact</a>
+				<a class="btn btn-primary" href="{{ path('app_event_new') }}">+ Événement</a>
+				<a class="btn btn-primary" href="{{ path('app_site_event_new') }}">+ Site</a>
+				<a class="btn btn-primary" href="{{ path('app_contact_new') }}">+ Contact</a>
+			</div>
+			<div class="d-flex flex-wrap gap-2 mt-3">
+				<div class="form-check form-check-inline">
+					<input class="form-check-input data-toggle" type="checkbox" value="events" id="toggleEvents" checked>
+					<label class="form-check-label" for="toggleEvents">Événements</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input data-toggle" type="checkbox" value="eventDetails" id="toggleDetails" checked>
+					<label class="form-check-label" for="toggleDetails">Détails</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input data-toggle" type="checkbox" value="absences" id="toggleAbsences" checked>
+					<label class="form-check-label" for="toggleAbsences">Absences</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input data-toggle" type="checkbox" value="interventionTeams" id="toggleTeams" checked>
+					<label class="form-check-label" for="toggleTeams">Équipes</label>
+				</div>
 			</div>
 			<div class="my-4">
 				<h5 class="text-white mb-3">Légende des couleurs du planning</h5>
@@ -120,28 +138,65 @@
 	</div>
 
 
-
 	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 	<script src='fullcalendar/core/locales-all.global.js'></script>
 	<script>
-		document.addEventListener('DOMContentLoaded', function () {
-var calendarEl = document.getElementById('calendar');
-var calendar = new FullCalendar.Calendar(calendarEl, {
-initialView: 'dayGridMonth',
-locale: 'fr',
-headerToolbar: {
-left: 'prev,next today',
-center: 'title',
-right: 'dayGridMonth,timeGridWeek,timeGridDay, list'
-},
-events: {{ data|raw }},
-eventClick: function (info) {
-if (info.event.url) {
-window.location.href = info.event.url;
-}
-}
+const calendarData = {{ data|raw }};
+let calendar; // Déclaration globale
+
+document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+
+    calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'fr',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
+        },
+        events: [], // Vide au départ, rempli ensuite dynamiquement
+        eventClick: function (info) {
+            if (info.event.url) {
+                window.location.href = info.event.url;
+            }
+        }
+    });
+
+    calendar.render();
+
+    updateCalendarDisplay(); // Charger les événements au démarrage
 });
-calendar.render();
+
+function updateCalendarDisplay() {
+    const checkboxes = document.querySelectorAll('.data-toggle');
+    const selectedTypes = Array.from(checkboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+    const filteredEvents = [];
+
+    if (selectedTypes.includes('events') && calendarData.events) {
+        filteredEvents.push(...calendarData.events);
+    }
+    if (selectedTypes.includes('eventDetails') && calendarData.eventDetails) {
+        filteredEvents.push(...calendarData.eventDetails);
+    }
+    if (selectedTypes.includes('absences') && calendarData.absences) {
+        filteredEvents.push(...calendarData.absences);
+    }
+    if (selectedTypes.includes('interventionTeams') && calendarData.interventionTeams) {
+        filteredEvents.push(...calendarData.interventionTeams);
+    }
+
+    calendar.removeAllEvents();
+    calendar.addEventSource(filteredEvents);
+}
+
+// Réagir aux clics sur les cases à cocher
+document.querySelectorAll('.data-toggle').forEach(cb => {
+    cb.addEventListener('change', updateCalendarDisplay);
 });
-	</script>
+</script>
+
 {% endblock %}

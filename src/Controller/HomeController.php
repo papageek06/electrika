@@ -35,6 +35,7 @@ final class HomeController extends AbstractController
         $formContact = $this->createForm(ContactType::class, $contact);
         $site = new SiteEvent();
         $formSite = $this->createForm(SiteEventType::class, $site);
+        $data = $planningService->generateCalendarData();
 
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
@@ -42,10 +43,12 @@ final class HomeController extends AbstractController
             'eventDetails' => $eventDetails->findAll(),
             'products' => $products->findAll(),
             'orderCounts' => $orderCounts,
-            'data' => json_encode($planningService->generateCalendarData()),
+            'data' => json_encode($data),
             'form' => $formEvent,
             'formContact' => $formContact,
             'formSite' => $formSite
+            
         ]);
     }
+    
 }
