@@ -2,12 +2,18 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Absence;
 use App\Entity\Category;
+use App\Entity\Commande;
+use App\Entity\Connector;
+use App\Entity\Contact;
 use App\Entity\Event;
 use App\Entity\EventDetail;
 use App\Entity\GaleryPicture;
+use App\Entity\InterventionTeam;
 use App\Entity\Product;
 use App\Entity\SiteEvent;
+use App\Entity\Technician;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -52,14 +58,23 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('siteEvent', 'fas fa-list', SiteEvent::class);
-        yield MenuItem::linkToCrud('product', 'fas fa-list', Product::class);
-        yield MenuItem::linkToCrud('Event', 'fas fa-list', Event::class);
-        yield MenuItem::linkToCrud('User', 'fas fa-list', User::class);
-        yield MenuItem::linkToCrud('category', 'fas fa-list', Category::class);
-        yield MenuItem::linkToCrud('event_detail', 'fas fa-list', EventDetail::class);
-        yield MenuItem::linkToCrud('galery-picture', 'fas fa-list', GaleryPicture::class);
+        yield MenuItem::linktoRoute('🏠 Retour au site', 'fas fa-home', 'app_home');
+
+    yield MenuItem::section('📂 Gestion des entités');
+
+    yield MenuItem::linkToCrud('Commandes', 'fas fa-file-invoice', Commande::class);
+    yield MenuItem::linkToCrud('Produits', 'fas fa-box', Product::class);
+    yield MenuItem::linkToCrud('Catégories', 'fas fa-tags', Category::class);
+    yield MenuItem::linkToCrud('Connecteurs', 'fas fa-plug',Connector::class);
+    yield MenuItem::linkToCrud('Événements', 'fas fa-calendar-alt',Event::class);
+    yield MenuItem::linkToCrud('Détails Événement', 'fas fa-info-circle',EventDetail::class);
+    yield MenuItem::linkToCrud('Sites Événement', 'fas fa-map-marker-alt',SiteEvent::class);
+    yield MenuItem::linkToCrud('Absences', 'fas fa-user-slash',Absence::class);
+    yield MenuItem::linkToCrud('Galerie', 'fas fa-images',GaleryPicture::class);
+    yield MenuItem::linkToCrud('Contacts', 'fas fa-address-book',Contact::class);
+    yield MenuItem::linkToCrud('Techniciens', 'fas fa-user-cog',Technician::class);
+    yield MenuItem::linkToCrud('Interventions', 'fas fa-tools',InterventionTeam::class);
+    yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-users',User::class);
         
         
 

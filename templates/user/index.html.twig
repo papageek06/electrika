@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+
+
 {% block title %}Gestion des users{% endblock %}
 
 {% block body %}
@@ -7,7 +9,7 @@
     <h2>Gestion des users</h2>
 
    <section class="table-responsive  ">
-    <table class="table ">
+    <table class="table table-dark">
         <thead>
             <tr>
                 <th class="MyCell">Id</th>
@@ -41,19 +43,7 @@
                     <a class="btn bg-warning mb-1" href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
                     </div>
                 </td>
-                <td>{{ user.id }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-                <td>{{ user.password }}</td>
-                <td>{{ user.firstName }}</td>
-                <td>{{ user.lastName }}</td>
-                <td>{{ user.dateEntry ? user.dateEntry|date('Y-m-d') : '' }}</td>
-                <td>{{ user.status }}</td>
-                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_user_show', {'id': user.id}) }}">Voir</a>
-                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
-                </td>
+                
             </tr>
         {% else %}
             <tr>

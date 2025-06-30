@@ -6,12 +6,16 @@
     <h2>Modifier mon profil</h2>
 
 
+<div class="MyDiv col-12 col-md-8 col-lg-6">
 
     
+ {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
 
-    {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+</div>
+    
 
-    <a href="{{ path('app_home') }}">Accueil</a>
+   
+    <a class="btn bg-success" href="{{ path('app_home') }}">Accueil</a>
 
     
 {% endblock %}
