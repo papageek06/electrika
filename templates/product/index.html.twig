@@ -4,11 +4,28 @@
 {% endblock %}
 
 {% block body %}
-	<style></style>
+	<style>
+		.flash-animate {
+			animation: flash-green 0.6s ease-in-out;
+		}
+
+		@keyframes flash-green {
+			0% {
+				background-color: #28a745;
+				color: white;
+			}
+			100% {
+				background-color: inherit;
+				color: inherit;
+			}
+		}
+	</style>
 
 
-	<div class="m-1 ">
-		{# Affichage du titre de la page #}">
+	<div
+		class="m-1 ">
+		{# Affichage du titre de la page #}
+		">
 		<h2 class="text-center mt-5">Liste des Produits</h2>
 
 		{# Message d'alerte selon le statut du panier #}
@@ -52,7 +69,8 @@
 		</div>
 		{# ----------------------------------------------tableau product------------------------------------------- #}
 
-		<div class="MyDiv m-0 m-sm-2 w-100 overflow-auto">
+		<div
+			class="MyDiv m-0 m-sm-2 w-100 overflow-auto">
 			{# Affichage du message "Aucun produit trouvé" si aucun produit n'est disponible #}
 			{% if products is empty %}
 				<div class="alert alert-info text-center" id="no-results">
@@ -79,8 +97,7 @@
 						{% endfor %}
 						<th class="MyCell">quantity</th>
 						<th class="MyCell">Actions</th>
-						<th class="MyCell">panier</th>
-						
+
 
 
 					</tr>
@@ -90,44 +107,37 @@
 						<tr
 							class="product-item" data-category="{{ productList.category.id }}" data-name="{{ productList.name|lower }}">
 							{# Image produit #}
-							<form method="post" action="{{ path('app_cart_add') }}" data-turbo="false">
-								<td class="CellStart d-none d-md-table-cell">
-									<img width="70px" loading="lazy" src="{{ asset('uploads/pictures/' ~ (productList.picture ?? 'default.png')) }}" alt="image de {{ productList.name }}">
-								</td>
 
-								<td class="MyCell" id="{{ productList.name }}">{{ productList.name }}</td>
-								<td class="MyCell d-none d-md-table-cell">{{ productList.category ? productList.category.name : "N/A" }}</td>
-								<td class="MyCell">{{ productList.stockInitial }}</td>
-
-								{# Display stock per week #}
-								{% for semaine in stockSemaines[productList.id] %}
-									<td class="MyCell d-none d-md-table-cell {{ semaine.stock|number_format and semaine.stock|number_format < 0 ? 'text-danger text-white' : '' }}">
-										{{ semaine.stock }}
-									</td>
-								{% endfor %}
-
-								<td class="category-{{ productList.category.id }}" style="display:none;"></td>
-
-
-								<td class="MyCell"><input class="col-4" type="number" name="quantity" value="1"></td>
-								<td class="MyCell col-1 ">
-									<a href="{{ path('app_product_show', {'id': productList.id}) }}" class="btn btn-primary col-9 m-1" aria-label="Voirle detail de {{ productList.name }}">Détails</a>
-									<input type="hidden" name="product_id" value="{{ productList.id }}">
-									<input type="hidden" name="user" value="{{ app.user.id }}">
-									<input type="hidden" name="event_id" id="eventIdInput" value="{{ cart_session['eventId'][0] ?? '' }}">
-									<button class="btn btn-warning mt-1  col-9 m-1" aria-label="Ajouter {{ productList.name }} au panier" type="submit">add</button>
-								</td>
-							</form>
-
-							<td class="cellEnd">
-								{% if cart_session is defined and cart_session["idProduct"] is defined %}
-									{% for key, id in cart_session.idProduct %}
-										{% if productList.id == id %}
-											{{ cart_session.quantity[key] }}
-										{% endif %}
-									{% endfor %}
-								{% endif %}
+							<td class="CellStart d-none d-md-table-cell">
+								<img width="70px" loading="lazy" src="{{ asset('uploads/pictures/' ~ (productList.picture ?? 'default.png')) }}" alt="image de {{ productList.name }}">
 							</td>
+
+							<td class="MyCell" id="{{ productList.name }}">{{ productList.name }}</td>
+							<td class="MyCell d-none d-md-table-cell">{{ productList.category ? productList.category.name : "N/A" }}</td>
+							<td class="MyCell">{{ productList.stockInitial }}</td>
+
+							{% for semaine in stockSemaines[productList.id] %}
+								<td class="MyCell d-none d-md-table-cell {{ semaine.stock|number_format and semaine.stock|number_format < 0 ? 'text-danger text-white' : '' }}">
+									{{ semaine.stock }}
+								</td>
+							{% endfor %}
+
+							<td class="category-{{ productList.category.id }}" style="display:none;"></td>
+
+							<td class="MyCell">
+								<input class="form-control form-control-sm mb-1 quantity-input" type="number" value="1" min="1" data-product-id="{{ productList.id }}" data-default-event-id="{{ cart_session['eventId'][0] ?? '' }}" data-status="{{ cart_session['status'] ?? 'new' }}" data-action="{{ path('app_technician_cart_add') }}">
+							</td>
+							<td class="MyCell col-1">
+								<a href="{{ path('app_product_show', {'id':  productList.id}) }}" class="btn btn-primary col-9 m-1">Détails</a>
+								<button class="btn btn-warning mt-1 col-9 m-1 btn-add-to-cart-tech" data-product-id="{{ productList.id }}">
+									Ajouter
+								</button>
+							</td>
+
+
+
+
+
 						</tr>
 
 					{% else %}
@@ -141,81 +151,134 @@
 			</table>
 		</div>
 	</div>
-	<script>
-		// ----------JavaScript to handle the event selection and update the hidden input field----------
+<script>
 document.addEventListener("DOMContentLoaded", function () {
-let eventSelect = document.getElementById("eventSelect");
-let eventIdInputList = document.querySelectorAll("input[name='event_id']");
+    // --------- MAJ event_id sur tous les inputs ----------
+    const eventSelect = document.getElementById("eventSelect");
+    const eventIdInputs = document.querySelectorAll("input[name='event_id']");
 
-function updateEventIdInputs() {
-let selectedEventId = eventSelect.value;
-eventIdInputList.forEach(input => {
-input.value = selectedEventId;
-});
+    function updateEventIdInputs() {
+        const selectedEventId = eventSelect.value;
+        eventIdInputs.forEach(input => input.value = selectedEventId);
+    }
+
+    if (eventSelect) {
+        eventSelect.addEventListener("change", updateEventIdInputs);
+        updateEventIdInputs();
+    }
+	// Si un event est déjà dans la session, on le sélectionne dans le select
+const cartTech = {{ app.session.get('cart_technician')|json_encode|raw }};
+if (cartTech && cartTech.eventId) {
+    const eventOption = document.querySelector(`#eventSelect option[value="${cartTech.eventId}"]`);
+    if (eventOption) {
+        eventOption.selected = true;
+        // Forcer mise à jour manuelle si d'autres champs dépendent de #eventSelect
+        eventSelect.dispatchEvent(new Event('change'));
+    }
 }
 
-updateEventIdInputs();
-eventSelect.addEventListener("change", updateEventIdInputs);
+
+    // --------- Filtrage produits par recherche + catégorie ----------
+    const searchInput = document.getElementById('searchInput');
+    const categorySelect = document.getElementById('categorySelect');
+    const productRows = document.querySelectorAll('.product-item');
+
+    function filterProducts() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedCategory = categorySelect.value;
+        let foundMatch = false;
+
+        productRows.forEach(row => {
+            const name = row.dataset.name;
+            const categoryId = row.dataset.category;
+            const matchesSearch = name.includes(searchTerm);
+            const matchesCategory = !selectedCategory || categoryId === selectedCategory;
+            const show = matchesSearch && matchesCategory;
+            row.style.display = show ? '' : 'none';
+            if (show) foundMatch = true;
+        });
+
+        const noResults = document.getElementById('no-results');
+        if (noResults) noResults.style.display = foundMatch ? 'none' : 'block';
+    }
+
+    if (searchInput) searchInput.addEventListener('input', filterProducts);
+    if (categorySelect) categorySelect.addEventListener('change', filterProducts);
+    filterProducts();
+
+    // --------- Ajout au panier technicien (AJAX) ----------
+    document.querySelectorAll('.btn-add-to-cart-tech').forEach(button => {
+        button.addEventListener('click', function () {
+            const productId = this.dataset.productId;
+            const quantityInput = document.querySelector(`input[data-product-id="${productId}"]`);
+            const quantity = quantityInput.value;
+            const productName = this.dataset.productName;
+
+            const defaultEventId = quantityInput.dataset.defaultEventId;
+            const selectedEventId = document.getElementById("eventSelect")?.value;
+            const eventId = defaultEventId !== '' ? defaultEventId : selectedEventId;
+
+            const status = quantityInput.dataset.status || 'new';
+            const actionUrl = quantityInput.dataset.action;
+
+            if (!eventId) {
+                alert("Veuillez sélectionner un évènement.");
+                return;
+            }
+
+            fetch(actionUrl, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    product_id: productId,
+                    quantity: quantity,
+                    event_id: eventId,
+                    status: status
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // ✅ Badge panier technicien
+                const badge = document.getElementById('tech-cart-count');
+                if (badge) {
+                    badge.textContent = data.cartCount;
+                    badge.classList.add('bg-success');
+                    setTimeout(() => badge.classList.remove('bg-success'), 500);
+                }
+
+                // ✅ Dropdown panier
+                const detailDiv = document.getElementById('tech-cart-details');
+                if (detailDiv && data.cartHtml) {
+                    detailDiv.innerHTML = data.cartHtml;
+                }
+
+                // ✅ MAJ cellule quantité du tableau produit
+                const quantityCell = document.getElementById('product-quantity-' + productId);
+                if (quantityCell && data.cartHtml) {
+                    const regex = new RegExp(
+                        `<strong>\\s*${productName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*</strong>[\\s\\S]*?value="(\\d+)"`,
+                        'i'
+                    );
+                    const match = data.cartHtml.match(regex);
+                    if (match) {
+                        quantityCell.innerHTML = `<span>${match[1]}</span>`;
+                    }
+                }
+
+                console.log(data.message || 'Produit ajouté.');
+            })
+            .catch(error => {
+                console.error('Erreur AJAX :', error);
+                alert("Erreur lors de l’ajout au panier.");
+            });
+        });
+    });
 });
+</script>
 
-// ----------JavaScript to handle the category selection and filter the products ----------
 
-document.addEventListener("DOMContentLoaded", function () {
-let categorySelect = document.getElementById("categorySelect");
-let productRows = document.querySelectorAll("tbody tr");
 
-function filterProducts() {
-let selectedCategoryId = categorySelect.value;
-productRows.forEach(row => {
-let categoryCell = row.querySelector("td.category-" + selectedCategoryId);
-if (selectedCategoryId === "" || categoryCell) {
-row.style.display = "";
-} else {
-row.style.display = "none";
-}
-});
-}
-
-categorySelect.addEventListener("change", filterProducts);
-filterProducts();
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-const searchInput = document.getElementById('searchInput');
-const categorySelect = document.getElementById('categorySelect');
-const productRows = document.querySelectorAll('.product-item');
-const eventSelect = document.getElementById('eventSelect');
-
-function filterProducts() {
-const searchTerm = searchInput.value.toLowerCase();
-const selectedCategory = categorySelect.value;
-
-productRows.forEach(function (row) {
-const name = row.dataset.name; // data-name
-const categoryId = row.dataset.category; // data-category
-
-const matchesSearch = name.includes(searchTerm);
-const matchesCategory = ! selectedCategory || categoryId === selectedCategory;
-
-row.style.display = matchesSearch && matchesCategory ? '' : 'none';
-});
-}
-
-// Lancer le filtre à chaque modification
-searchInput.addEventListener('input', filterProducts);
-categorySelect.addEventListener('change', filterProducts);
-
-// Mettre à jour le champ caché event_id dans les formulaires
-eventSelect.addEventListener('change', function () {
-const selectedEventId = this.value;
-document.querySelectorAll('input#selectedEventInput').forEach(input => {
-input.value = selectedEventId;
-});
-});
-});
-
-// ----------JavaScript to handle the no results message ----------
-const noResults = document.getElementById('no-results');
-noResults.style.display = foundMatch ? 'none' : 'block';
-	</script>
 {% endblock %}

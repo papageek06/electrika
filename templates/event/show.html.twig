@@ -24,7 +24,8 @@
 			<div class="alert alert-danger">{{ message }}</div>
 		{% endfor %}
 
-		<div class="row align-items-end justify-content-around m-2">
+		<div
+			class="row align-items-end justify-content-around m-2">
 
 			{# ---------------------------------  cart event name ------------------------------- #}
 			<h3 class="text-center">{{ event.name }}</h3>
@@ -32,9 +33,11 @@
 			<div class=" col-10 col-md-3  theCard ">
 				<h4 class="text-center">Contact</h4>
 				<p>{{ event.contact ? event.contact.lastName : 'N/A'}}-{{ event.contact ? event.contact.firstName : 'N/A'}}</p>
-				<p><strong>Email :</strong>
+				<p>
+					<strong>Email :</strong>
 					{{event.contact ? event.contact.email : 'N/A'}}</p>
-				<p><strong>Phone :</strong>
+				<p>
+					<strong>Phone :</strong>
 					{{event.contact ? event.contact.phoneNumber : 'N/A'}}</p>
 				<button class="btn btn-primary m-2">
 					<a href="{{ path('app_contact_show', {'id': event.contact.id}) }}">details</a>
@@ -43,246 +46,280 @@
 			{# -----------------------------cart site ------------------------------------ #}
 			<div class=" col-10 col-md-3  theCard">
 				<h4 class="text-center">Site</h4>
-				<p><strong>{{(site.name ? site.name : 'N/A') | upper}}</strong></p>
-				<p><strong>Adresse :</strong></br>{{site.address ? site.address : 'N/A'}}</p>
-				<p>{{site.city ? site.city : 'N/A'}}</p>
-				<p id="travel-time" style="font-weight: bold; margin-top: 1rem;"></p>
-				<button class="btn btn-primary m-2">
-					<a href="{{ event.site ? path('app_site_event_edit', {'id': event.site.id}) : '#' }}">Modifier</a>
+				<p>
+					<strong>{{(site.name ? site.name : 'N/A') | upper}}</strong>
+				</p>
+				<p>
+					<strong>Adresse :</strong>
+				</p>
+			</br>
+			{{site.address ? site.address : 'N/A'}}</p>
+		<p>{{site.city ? site.city : 'N/A'}}</p>
+		<p id="travel-time" style="font-weight: bold; margin-top: 1rem;"></p>
+		<button class="btn btn-primary m-2">
+			<a href="{{ event.site ? path('app_site_event_edit', {'id': event.site.id}) : '#' }}">Modifier</a>
 
-			</div>
-			{# -----------------------------cart event ------------------------------------ #}
-			<div class=" col-10 col-md-3  theCard">
-				<h4 class="text-center">Event</h4>
-				<p><strong>Montage :</strong>
-					{{ event.dateMontage ? event.dateMontage|date('Y-m-d') : '' }}</p>
-				<p><strong>évènement du :</strong>
-					{{ event.dateStartShow ? event.dateStartShow|date('Y-m-d') : '' }}
-					au
-					{{ event.dateEndSHOW ? event.dateEndSHOW|date('Y-m-d') : '' }}</p>
-				<p><strong>fin de demontage :</strong>
-					{{ event.dateEnd ? event.dateEnd|date('Y-m-d') : '' }}</p>
-				<h5>Fichiers PDF</h5>
-				<select name="file" id="fileSelect" class="form-select">
-					<option value="">Sélectionnez un fichier PDF</option>
-					{% for file in pdfFiles %}
-						<option value="{{ asset(file) }}">{{ file|split('/')|last }}</option>
-					{% else %}
-						<option disabled>Aucun fichier PDF trouvé.</option>
-					{% endfor %}
-				</select>
-				<button class="btn btn-primary m-2">
-					<a href="{{ path('app_event_show', {'id': event.id}) }}">details</a>
-				</button>
-			</div>
+		</div>
+		{# -----------------------------cart event ------------------------------------ #}
+		<div class=" col-10 col-md-3  theCard">
+			<h4 class="text-center">Event</h4>
+			<p>
+				<strong>Montage :</strong>
+				{{ event.dateMontage ? event.dateMontage|date('Y-m-d') : '' }}</p>
+			<p>
+				<strong>évènement du :</strong>
+				{{ event.dateStartShow ? event.dateStartShow|date('Y-m-d') : '' }}
+				au
+				{{ event.dateEndSHOW ? event.dateEndSHOW|date('Y-m-d') : '' }}</p>
+			<p>
+				<strong>fin de demontage :</strong>
+				{{ event.dateEnd ? event.dateEnd|date('Y-m-d') : '' }}</p>
+			<h5>Fichiers PDF</h5>
+			<select name="file" id="fileSelect" class="form-select">
+				<option value="">Sélectionnez un fichier PDF</option>
+				{% for file in pdfFiles %}
+					<option value="{{ asset(file) }}">{{ file|split('/')|last }}</option>
+				{% else %}
+					<option disabled>Aucun fichier PDF trouvé.</option>
+				{% endfor %}
+			</select>
+			<button class="btn btn-primary m-2">
+				<a href="{{ path('app_event_show', {'id': event.id}) }}">details</a>
+			</button>
 		</div>
 	</div>
+</div>
 
-	<div
-		class="row justify-content-around">
+<div
+	class="row justify-content-around">
 
-		{# ---------------------------------------cad new -------------------------------- #}
-		<div class=" col-11 col-md-2 MyDiv  m-0 m-md-2 ">
+	{# ---------------------------------------cad new -------------------------------- #}
+	<div class=" col-11 col-md-2 MyDiv  m-0 m-md-2 ">
 
-			<h3>new preparation</h3>
+		<h3>new preparation</h3>
+		{% if status == 0 %}
+			<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bp' }) }}">BP -></a>
+		{% else %}
+			<button class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bp' }) }}" disabled>en préparation</button>
+		{% endif %}
+		{# EXEMPLE pour la carte "new preparation" (admin only) #}
+		{% if is_granted('ROLE_ADMIN') %}
+			<form method="POST" action="{{ path('app_technician_cart_bulk_add') }}" class="text-center">
+				<input type="hidden" name="event_id" value="{{ event.id }}">
+				<input type="hidden" name="status" value="new">
+				<button type="submit" class="btn btn-warning mt-2">Ajouter un article</button>
+			</form>
+		{% endif %}
+
+		<table class="MyTable">
+			<thead>
+				<tr>
+					<th class="MyCell">produit</th>
+					<th class="MyCell">--Q--</th>
+
+				</tr>
+			</thead>
+			<tbody>
+
+				{% for eventDetail in eventDetails %}
+
+					{% if eventDetail.mouve == 'new' %}
+
+
+						<tr>
+							<td class="p-1">{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+							<td>{{ eventDetail.quantity }}</td>
+
+						</tr>
+					{% endif %}
+				{% endfor  %}
+			</tbody>
+
+
+		</table>
+
+	</div>
+
+	{# ------------------------------------------card pret-----------------------------------  #}
+
+	<div class=" col-11 col-md-2  MyDiv m-0 m-md-2">
+		<h3>Bon de preparation</h3>
+<div class="d-flex">
+		    <form method="POST" action="{{ path('app_technician_cart_bulk_add') }}" class="text-center">
+        <input type="hidden" name="event_id" value="{{ event.id }}">
+        <input type="hidden" name="status" value="bp">
+        <button type="submit" class="btn btn-warning mt-2">+ article</button>
+    </form>
+				<button id="submit-quantity-bp" type="submit" class="btn btn-success mt-2" disabled>modifier</button>
+</div>
+		<form id="form-bp" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
 			<table class="MyTable">
 				<thead>
 					<tr>
+
 						<th class="MyCell">produit</th>
 						<th class="MyCell">--Q--</th>
-
 					</tr>
 				</thead>
 				<tbody>
-
 					{% for eventDetail in eventDetails %}
-
-						{% if eventDetail.mouve == 'new' %}
-
+						{% if eventDetail.mouve == 'bp'  %}
 
 							<tr>
-								<td class="p-1">{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
-								<td>{{ eventDetail.quantity }}</td>
-
+								<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+								<td>
+									<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0" data-original="{{ eventDetail.quantity }}" data-target="bp">
+								</td>
 							</tr>
 						{% endif %}
 					{% endfor  %}
 				</tbody>
 
-
 			</table>
-			{% if status == 0 %}
-				<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bp' }) }}">BP -></a>
-			{% else %}
-				<button class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bp' }) }}" disabled>en préparation</button>
-			{% endif %}
-		</div>
+		</form>
+		{% if status  == 1 %}
+			<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bl' }) }}">Bon de livraison</a>
 
-		{# ------------------------------------------card pret-----------------------------------  #}
+		{% endif %}
+	</div>
+	{# ------------------------------------------card livraison-----------------------------------  #}
 
-		<div class=" col-11 col-md-2  MyDiv m-0 m-md-2">
-			<h3>Bon de preparation</h3>
-			<form id="form-bp" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
-				<table class="MyTable">
-					<thead>
-						<tr>
+	<div class=" col-11 col-md-2  MyDiv m-0 m-md-2">
+		<h3>Bon de livraison</h3>
+<div class="d-flex">
+		    <form method="POST" action="{{ path('app_technician_cart_bulk_add') }}" class="text-center">
+        <input type="hidden" name="event_id" value="{{ event.id }}">
+        <input type="hidden" name="status" value="bl">
+        <button type="submit" class="btn btn-warning mt-2">+article</button>
+    </form>
+	<button id="submit-quantity-bl" type="submit" class="btn btn-success mt-2" disabled>modifier</button>
+	</div>
+		    
+		<form id="form-bl" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
+			<table class="MyTable">
+				<thead>
+					<tr>
 
-							<th class="MyCell">produit</th>
-							<th class="MyCell">--Q--</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for eventDetail in eventDetails %}
-							{% if eventDetail.mouve == 'bp'  %}
+						<th class="MyCell">produit</th>
+						<th class="MyCell">--Q--</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for eventDetail in eventDetails %}
+						{% if eventDetail.mouve == 'bl'  %}
 
-								<tr>
-									<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
-									<td>
-										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0" data-original="{{ eventDetail.quantity }}" data-target="bp">
-									</td>
-								</tr>
-							{% endif %}
-						{% endfor  %}
-					</tbody>
-
-				</table>
-				<button id="submit-quantity-bp" type="submit" class="btn btn-success mt-2" disabled>modifier</button>
-			</form>
-			{% if status  == 1 %}
-				<a class="btn btn-primary m-2" href="{{ path('app_event_upgrade', { 'id': event.id, 'status': 'bl' }) }}">Bon de livraison</a>
-
-			{% endif %}
-		</div>
-		{# ------------------------------------------card livraison-----------------------------------  #}
-
-		<div class=" col-11 col-md-2  MyDiv m-0 m-md-2">
-			<h3>Bon de livraison</h3>
-			<form id="form-bl" method="POST" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
-				<table class="MyTable">
-					<thead>
-						<tr>
-
-							<th class="MyCell">produit</th>
-							<th class="MyCell">--Q--</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for eventDetail in eventDetails %}
-							{% if eventDetail.mouve == 'bl'  %}
-
-								<tr>
-									<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
-									<td>
-										<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0" data-original="{{ eventDetail.quantity }}" data-target="bl">
-									</td>
-								</tr>
-							{% endif %}
-						{% endfor  %}
-					</tbody>
-
-				</table>
-				<button id="submit-quantity-bl" type="submit" class="btn btn-success mt-2" disabled>modifier</button>
-			</form>
-
-		</div>
-
-		{# ------------------------------------------card retour-----------------------------------  #}
-
-		<div class=" col-11 col-md-3 col-lg-2  MyDiv m-0 m-md-2">
-			<h3>Bon de retour</h3>
-			<form id="form-br" method="POST" name="br" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
-				<table class="MyTable">
-					<thead>
-						<tr>
-
-							<th class="MyCell">produit</th>
-							<th class="MyCell">--Q--</th>
-							<th class="cellEnd">retour</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% set maxQuantity = 0 %}
-						{% set brQ = 0 %}
-
-						{% for bldetail in blQuantities %}
-							{% set maxQuantity = bldetail.total_quantity %}
 							<tr>
-								<td class="product-cell" name='productId'>{{bldetail.name}}</td>
-
-								{% if brQuantities is not empty %}
-									{% for brdetail in brQuantities %}
-
-										{% if brdetail.id == bldetail.id %}
-											{% set brQ = brdetail.total_quantity %}
-											<td class="text-center">
-												<input type="number" name="returnQuantities[{{ bldetail.id }}]" value="0" min="0" max="{{maxQuantity - brdetail.total_quantity}}" class="form-control form-control-sm text-center quantity-input" data-original="{{ brQ }}" data-target="br" style="width: 80px; margin: auto;">
-
-											</td>
-										{% endif %}
-
-										{# Affichage de la quantité totale retournée pour le produit #}
-										{% if brdetail.id == bldetail.id %}
-											<td class="text-center">{{brdetail.total_quantity}}/{{maxQuantity}}</td>
-										{% endif %}
-
-									{% endfor %}
-								{% else %}
-									<td class="text-center">
-										<input type="number" name="returnQuantities[{{ bldetail.id }}]" value="0" min="0" max="{{maxQuantity}}" class="form-control form-control-sm text-center quantity-input" data-original="{{ brQ }}" data-target="br" style="width: 80px; margin: auto;">
-									</td>
-									<td class="text-center">0/{{maxQuantity}}</td>
-								{% endif %}
+								<td>{{ eventDetail.product ? eventDetail.product.name : '' }}</td>
+								<td>
+									<input type="number" name="quantities[{{ eventDetail.id }}]" value="{{ eventDetail.quantity }}" class="form-control form-control-sm text-center quantity-input" min="0" data-original="{{ eventDetail.quantity }}" data-target="bl">
+								</td>
 							</tr>
-
-						{% endfor %}
-					</tbody>
+						{% endif %}
+					{% endfor  %}
 				</tbody>
-			</table>
-			<button id="submit-quantity-br" type="submit" class="btn btn-success mt-2" disabled>Bon de retour</button>
 
+			</table>
+			
 		</form>
 
 	</div>
-	{# -------------------------maps -------------------------- #}
-	<div
-		class="row p-2 justify-content-around " >
-		<!-- 🔧 Contrôles utilisateur -->
-		<div class=" m-2 col- col-md-5 MyDiv" >
-			<div class="col-md-5">
-				<label for="start-address" class="form-label">Adresse de départ</label>
-				<input type="text" id="start-address" class="form-control" value="255 Route des Cistes, Antibes, France">
-				<div class="form-check mt-2">
-					<input type="checkbox" class="form-check-input" id="use-current-location">
-					<label class="form-check-label" for="use-current-location">Utiliser ma position actuelle</label>
-				</div>
-			</div>
 
-			<div class="col-md-5">
-				<label for="end-address" class="form-label">Adresse d’arrivée</label>
-				<input type="text" id="end-address" class="form-control" value="{{ address }}">
-			</div>
+	{# ------------------------------------------card retour-----------------------------------  #}
 
-			<div class=" d-flex ">
-				<button class="btn btn-primary m-1 " onclick="calculateRoute()">Mettre à jour</button>
-				<a id="open-navigation" href="#" target="_blank" class="btn btn-success  m-1 ">
-					Ouvrir dans Google Maps
-				</a>
+	<div class=" col-11 col-md-3 col-lg-2  MyDiv m-0 m-md-2">
+		<h3>Bon de retour</h3>
+		<form id="form-br" method="POST" name="br" action="{{ path('app_event_quantity_update', { 'id': event.id }) }}">
+			<table class="MyTable">
+				<thead>
+					<tr>
+
+						<th class="MyCell">produit</th>
+						<th class="MyCell">--Q--</th>
+						<th class="cellEnd">retour</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% set maxQuantity = 0 %}
+					{% set brQ = 0 %}
+
+					{% for bldetail in blQuantities %}
+						{% set maxQuantity = bldetail.total_quantity %}
+						<tr>
+							<td class="product-cell" name='productId'>{{bldetail.name}}</td>
+
+							{% if brQuantities is not empty %}
+								{% for brdetail in brQuantities %}
+
+									{% if brdetail.id == bldetail.id %}
+										{% set brQ = brdetail.total_quantity %}
+										<td class="text-center">
+											<input type="number" name="returnQuantities[{{ bldetail.id }}]" value="0" min="0" max="{{maxQuantity - brdetail.total_quantity}}" class="form-control form-control-sm text-center quantity-input" data-original="{{ brQ }}" data-target="br" style="width: 80px; margin: auto;">
+
+										</td>
+									{% endif %}
+
+									{# Affichage de la quantité totale retournée pour le produit #}
+									{% if brdetail.id == bldetail.id %}
+										<td class="text-center">{{brdetail.total_quantity}}/{{maxQuantity}}</td>
+									{% endif %}
+
+								{% endfor %}
+							{% else %}
+								<td class="text-center">
+									<input type="number" name="returnQuantities[{{ bldetail.id }}]" value="0" min="0" max="{{maxQuantity}}" class="form-control form-control-sm text-center quantity-input" data-original="{{ brQ }}" data-target="br" style="width: 80px; margin: auto;">
+								</td>
+								<td class="text-center">0/{{maxQuantity}}</td>
+							{% endif %}
+						</tr>
+
+					{% endfor %}
+				</tbody>
+			</tbody>
+		</table>
+		<button id="submit-quantity-br" type="submit" class="btn btn-success mt-2" disabled>Bon de retour</button>
+
+	</form>
+
+</div>
+{# -------------------------maps -------------------------- #}
+<div
+	class="row p-2 justify-content-around ">
+	<!-- 🔧 Contrôles utilisateur -->
+	<div class=" m-2 col- col-md-5 MyDiv">
+		<div class="col-md-5">
+			<label for="start-address" class="form-label">Adresse de départ</label>
+			<input type="text" id="start-address" class="form-control" value="255 Route des Cistes, Antibes, France">
+			<div class="form-check mt-2">
+				<input type="checkbox" class="form-check-input" id="use-current-location">
+				<label class="form-check-label" for="use-current-location">Utiliser ma position actuelle</label>
 			</div>
 		</div>
 
-		<!-- 🗺️ Carte -->
-		<div class="MyDiv col-12 col-md-6 m-2" style="align-items: center ;">
-		<div id="map" style="height: 220px;" class="col-11 m-2 "></div>
+		<div class="col-md-5">
+			<label for="end-address" class="form-label">Adresse d’arrivée</label>
+			<input type="text" id="end-address" class="form-control" value="{{ address }}">
+		</div>
+
+		<div class=" d-flex ">
+			<button class="btn btn-primary m-1 " onclick="calculateRoute()">Mettre à jour</button>
+			<a id="open-navigation" href="#" target="_blank" class="btn btn-success  m-1 ">
+				Ouvrir dans Google Maps
+			</a>
 		</div>
 	</div>
-	
+
+	<!-- 🗺️ Carte -->
+	<div class="MyDiv col-12 col-md-6 m-2" style="align-items: center ;">
+		<div id="map" style="height: 220px;" class="col-11 m-2 "></div>
+	</div>
+</div>
 
 
-	<!-- 🌍 Google Maps -->
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYRpXbUVb3Iec6j-McWU4B1GmMrVAGYp8&callback=initMap" async defer></script>
+<!-- 🌍 Google Maps -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYRpXbUVb3Iec6j-McWU4B1GmMrVAGYp8&callback=initMap" async defer></script>
 
-	<script>
-		let map,
+<script>
+	let map,
 geocoder,
 directionsService,
 directionsRenderer;
@@ -407,5 +444,4 @@ input.addEventListener('input', checkChanges);
 });
 });
 });
-	</script>
-{% endblock %}
+</script>{% endblock %}

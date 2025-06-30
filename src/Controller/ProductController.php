@@ -115,6 +115,7 @@ final class ProductController extends AbstractController
             'cart_session' => $session->get('cart', []),
             'categorys' => $category->findAll(),
             'stockSemaines' => $stocksParProduit,
+            'productRepository' => $productRepository,
         ]);
     }
 

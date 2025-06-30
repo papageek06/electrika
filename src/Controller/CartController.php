@@ -10,11 +10,13 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints\Length;
+use Twig\Environment;
 
 final class CartController extends AbstractController
 {
@@ -22,23 +24,29 @@ final class CartController extends AbstractController
     public function index(Request $request): Response
     {
 
-        $session = $request->getSession();
-        $cartSession = $session->get('cart');
-        
-        if (!is_null($cartSession) && count($cartSession["idProduct"]) > 0) {
+     $user = $this->getUser(); // null si pas connecté
+    $session = $request->getSession();
 
-           $countCart = count($cartSession["idProduct"]);
-           $cartSession["countCart"] = $countCart;
+    // Détection du rôle
+    if ($user && in_array('ROLE_TECHNICIEN', $user->getRoles())) {
+        $cartKey = 'cart_technician';
+    } else {
+        $cartKey = 'cart_client';
+    }
 
-        }else{
-            $cartSession = ["message" => "Your cart is empty"];
-        }
+    $cartSession = $session->get($cartKey, []);
 
+    if (isset($cartSession['idProduct']) && is_array($cartSession['idProduct']) && count($cartSession['idProduct']) > 0) {
+        $cartSession['countCart'] = count($cartSession['idProduct']);
+    } else {
+        $cartSession = ["message" => "Le panier est vide"];
+    }
 
-        return $this->render('cart/index.html.twig', [
-            'cart_session' => $cartSession,
-            
-        ]);
+    return $this->render('cart/index.html.twig', [
+        'cart_session' => $cartSession,
+        'cart_type' => $cartKey,
+    ]);
+
 
     }
 
@@ -187,10 +195,217 @@ EntityManagerInterface $entityManager
     }
     return $this->redirectToRoute('app_event_index');
 }
+#[Route('/cart/technician/add', name: 'app_technician_cart_add', methods: ['POST'])]
+public function addToTechnicianCart(
+    Request $request,
+    ProductRepository $productRepository,
+    EventRepository $eventRepository
+): Response {
+    $session = $request->getSession();
+
+    $productId = $request->request->get('product_id');
+    $quantity = (int) $request->request->get('quantity');
+    $eventId = $request->request->get('event_id');
+    $status = $request->request->get('status'); // peut être 'new', 'bp', etc.
+
+    // Sécurité
+    if (!$productId || !$eventId || $quantity < 1) {
+        $this->addFlash('error', 'Informations incomplètes pour le panier');
+        return $this->redirectToRoute('app_product_index');
+    }
+
+    $product = $productRepository->find($productId);
+    $event = $eventRepository->find($eventId);
+
+    if (!$product || !$event) {
+        $this->addFlash('error', 'Produit ou évènement introuvable');
+        return $this->redirectToRoute('app_product_index');
+    }
+
+    // Panier technicien en session
+    $cart = $session->get('cart_technician', []);
+    $cart['status'] = $status;
+    $cart['eventId'] = $event->getId();
+    $cart['eventName'] = $event->getName();
+
+    // Initialiser le tableau s’il n'existe pas
+    if (!isset($cart['products'])) {
+        $cart['products'] = [];
+    }
+
+    // Ajouter ou mettre à jour
+    $found = false;
+    foreach ($cart['products'] as &$item) {
+        if ($item['product']->getId() === $product->getId()) {
+            $item['quantity'] += $quantity;
+            $found = true;
+            break;
+        }
+    }
+    if (!$found) {
+        $cart['products'][] = [
+            'product' => $product,
+            'quantity' => $quantity,
+            'event' => $event,
+        ];
+    }
+
+    $session->set('cart_technician', $cart);
 
     
+if ($request->isXmlHttpRequest()) {
+    $cartHtml = $this->renderView('cart/_technician_dropdown.html.twig', [
+        'cart' => $cart,
+    ]);
 
-    
-                
+    return $this->json([
+        'success' => true,
+        'message' => "{$product->getName()} ajouté au panier",
+        'cartCount' => count($cart['products']),
+        'cartHtml' => $cartHtml,
+    ]);
+}
+// Si ce n'est pas une requête AJAX, on redirige
+$this->addFlash('success', "{$product->getName()} ajouté au panier technique.");
+return $this->redirectToRoute('app_product_index');
+
+}
+
+#[Route('/cart/technician/validate', name: 'app_technician_cart_validate')]
+public function validateTechnicianCart(
+    SessionInterface $session,
+    ProductRepository $productRepository,
+    EventRepository $eventRepository,
+    EntityManagerInterface $em
+): Response {
+    $cart = $session->get('cart_technician');
+
+    if (!$cart || empty($cart['products'])) {
+        $this->addFlash('error', 'Aucun produit dans le panier technicien.');
+        return $this->redirectToRoute('app_product_index');
+    }
+
+    $event = $eventRepository->find($cart['eventId']);
+    if (!$event) {
+        $this->addFlash('error', 'Évènement non trouvé.');
+        return $this->redirectToRoute('app_product_index');
+    }
+
+    foreach ($cart['products'] as $item) {
+        $product = $productRepository->find($item['product']->getId());
+        if (!$product) {
+            continue; // Ignore les produits supprimés ou introuvables
+        }
+
+        $eventDetail = new EventDetail();
+        $eventDetail->setProduct($product);
+        $eventDetail->setEvent($event);
+        $eventDetail->setQuantity($item['quantity']);
+        $eventDetail->setMouve($cart['status']);
+        $eventDetail->setDate(new \DateTime());
+
+        $em->persist($eventDetail);
+    }
+
+    $em->flush();
+    $session->remove('cart_technician');
+
+    $this->addFlash('success', 'Préparation validée pour l\'évènement.');
+    return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+}
+
+#[Route('/cart/technician/remove/{key}', name: 'app_technician_cart_remove')]
+public function removeTechnicianItem(SessionInterface $session, int $key): Response
+{
+    $cart = $session->get('cart_technician', []);
+    if (isset($cart['products'][$key])) {
+        unset($cart['products'][$key]);
+        $cart['products'] = array_values($cart['products']); // Réindexation
+        $session->set('cart_technician', $cart);
+    }
+
+    return $this->redirectToRoute('app_product_index'); // ou autre route
+}
+
+
+
+    #[Route('/cart/technician/clear', name: 'app_technician_cart_clear')]
+public function clearTechnicianCart(SessionInterface $session): Response
+{
+    $session->remove('cart_technician');
+    return $this->redirectToRoute('app_product_index');
+}
+
+#[Route('/cart/technician/update', name: 'app_technician_cart_update_quantity', methods: ['POST'])]
+public function updateTechnicianQuantity(Request $request, SessionInterface $session): JsonResponse
+{
+    $key = (int) $request->request->get('key');
+    $quantity = (int) $request->request->get('quantity');
+
+    $cart = $session->get('cart_technician', []);
+    if (isset($cart['products'][$key]) && $quantity > 0) {
+        $cart['products'][$key]['quantity'] = $quantity;
+        $session->set('cart_technician', $cart);
+        return new JsonResponse(['success' => true, 'message' => 'Quantité mise à jour']);
+    }
+
+    return new JsonResponse(['success' => false, 'message' => 'Erreur lors de la mise à jour']);
+}
+
+#[Route('/cart/technician/bulk-add', name: 'app_technician_cart_bulk_add', methods: ['POST'])]
+public function bulkAddToTechnicianCart(
+    Request $request,
+    EventRepository $eventRepository
+): Response {
+    $eventId = $request->request->get('event_id');
+    $status = $request->request->get('status');
+
+    $session = $request->getSession();
+
+    $event = $eventRepository->find($eventId);
+    if (!$event) {
+        $this->addFlash('error', "Événement introuvable.");
+        return $this->redirectToRoute('app_event_index');
+    }
+
+    // On ne garde que les informations de contexte
+    $cart = [
+        'status' => $status,
+        'eventId' => $eventId,
+        'eventName' => $event->getName(),
+        'products' => [] // vide, on le remplit plus tard manuellement
+    ];
+
+    $session->set('cart_technician', $cart);
+
+    $this->addFlash('success', 'Événement sélectionné pour le panier technicien.');
+    return $this->redirectToRoute('app_product_index'); // vers la page d’ajout produit
+}
+
+  
+        #[Route('/cart/technician/dropdown', name: 'app_technician_cart_dropdown', methods: ['GET'])]
+public function technicianDropdown(
+    SessionInterface $session,
+    ProductRepository $productRepository
+): Response {
+    $cart = $session->get('cart_technician', []);
+
+    // Si tu stockes juste les IDs (meilleure pratique)
+    if (isset($cart['products'])) {
+        foreach ($cart['products'] as $index => $item) {
+            if (isset($item['product_id']) && !isset($item['product'])) {
+                $product = $productRepository->find($item['product_id']);
+                if ($product) {
+                    $cart['products'][$index]['product'] = $product;
+                }
+            }
+        }
+    }
+
+    return $this->render('cart/_technician_dropdown.html.twig', [
+        'cart' => $cart,
+    ]);
+}
+        
 
 }

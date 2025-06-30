@@ -10,6 +10,9 @@
 		color: white !important;
 	}
 </style>
+{% set cart = app.session.get('cart', null) %}
+{% set cart_technician = app.session.get('cart_technician', null) %}
+
 
 <div class=" p-0">
 	<nav class="navbar navbar-dark bg-dark  navbar-expand-lg  px-3 " role="navigation" aria-label="Menu principal">
@@ -28,8 +31,8 @@
 							<a class="nav-link text-light" href="{{ path('app_user_show', {'id': app.user.id}) }}">Profil</a>
 						</li>
 						{# <li class="nav-item">
-							<a class="nav-link text-light" href="#">Commandes</a>
-						</li> #}
+																															<a class="nav-link text-light" href="#">Commandes</a>
+																														</li> #}
 						<li class="nav-item">
 							<a class="nav-link text-light" href="{{ path('app_contact_index') }}">Contacts</a>
 						</li>
@@ -111,6 +114,7 @@
 
 					{% endif %}
 					{# ---------------- panier------------------------ #}
+
 					<li class="nav-item dropdown">
 						<a class="nav-link position-relative" href="#" id="cartDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							<i class="fas fa-shopping-cart"></i>
@@ -135,6 +139,27 @@
 
 						</div>
 					</li>
+{% if is_granted('ROLE_TECHNICIEN') or is_granted('ROLE_ADMIN') %}
+	<li class="nav-item dropdown">
+		<a class="nav-link position-relative" href="#" id="techCartDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+			<i class="fas fa-toolbox"></i>
+			<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" id="tech-cart-count">
+				{{ cart_technician.products is defined ? cart_technician.products|length : 0 }}
+			</span>
+		</a>
+		<div class="dropdown-menu dropdown-menu-end p-3" style="min-width: 320px;" aria-labelledby="techCartDropdown">
+			{% if app.user %}
+				<h6 class="dropdown-header">Sélection de {{ app.user.firstName }}</h6>
+			{% else %}
+				<h6 class="dropdown-header text-muted">Non connecté</h6>
+			{% endif %}
+			<div id="tech-cart-details">
+				{# Le contenu du panier technicien sera injecté dynamiquement en AJAX #}
+			</div>
+		</div>
+	</li>
+{% endif %}
+
 				</ul>
 			</div>
 		</div>
@@ -143,39 +168,58 @@
 
 <script>
 	const cart = [];
+	{% if cart is defined and cart.idProduct is defined %}
+		{% for i in 0..(cart.idProduct|length - 1) %}
+			cart.push({
+				name: "{{ cart.nameProduct[i] }}",
+				price: {{ cart.priceProduct[i] ?? 0 }},
+				quantity: {{ cart.quantity[i] }}
+			});
+		{% endfor %}
+	{% endif %}
+	document.addEventListener("DOMContentLoaded", updateCartDisplay);
 
-function updateCartDisplay() {
-const cartItemsContainer = document.getElementById('cart-items');
-const cartCount = document.getElementById('cart-count');
-const cartTotal = document.getElementById('cart-total');
-
-cartItemsContainer.innerHTML = '';
-let total = 0;
-
-if (cart.length === 0) {
-cartItemsContainer.innerHTML = '<p class="text-muted">Votre panier est vide</p>';
-} else {
-cart.forEach(item => {
-const itemTotal = item.quantity * item.price;
-total += itemTotal;
-const row = document.createElement('div');
-row.classList.add('mb-2');
-row.innerHTML = `
-					<strong>${
-item.name
-}</strong><br>
-					<span>${
-item.quantity
-} x ${
-item.price
-} €</span><br>
-					<small>Sous-total : ${
-itemTotal.toFixed(2)
-} €</small>
+	function updateCartDisplay() {
+		const cartItemsContainer = document.getElementById('cart-items');
+		const cartCount = document.getElementById('cart-count');
+		const cartTotal = document.getElementById('cart-total');
+		
+		cartItemsContainer.innerHTML = '';
+		let total = 0;
+		if (cart.length === 0) {
+			cartItemsContainer.innerHTML = '<p class="text-muted">Votre panier est vide</p>';
+		} else {
+			cart.forEach(item => {
+				const itemTotal = item.quantity * item.price;
+				total += itemTotal;
+				const row = document.createElement('div');
+				row.classList.add('mb-2');
+				row.innerHTML = `
+					<strong>${item.name}</strong><br>
+					<span>${item.quantity} x ${item.price} €</span><br>
+					<small>Sous-total : ${itemTotal.toFixed(2)} €</small>
 				`;
-cartItemsContainer.appendChild(row);
+				cartItemsContainer.appendChild(row);
+			});
+		}
+		cartCount.textContent = cart.reduce((acc, item) => acc + item.quantity, 0);
+		cartTotal.textContent = total.toFixed(2) + ' €';
+	}
+	document.addEventListener("DOMContentLoaded", function () {
+	const detailDiv = document.getElementById('tech-cart-details');
+
+	if (detailDiv) {
+		fetch('{{ path("app_technician_cart_dropdown") }}', {
+			headers: { 'X-Requested-With': 'XMLHttpRequest' }
+		})
+		.then(response => response.text())
+		.then(html => {
+			detailDiv.innerHTML = html;
+		})
+		.catch(error => {
+			console.error('Erreur chargement panier technicien :', error);
+		});
+	}
 });
-} cartCount.textContent = cart.reduce((acc, item) => acc + item.quantity, 0);
-cartTotal.textContent = total.toFixed(2) + ' €';
-}
+
 </script>
