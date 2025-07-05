@@ -18,16 +18,7 @@
 <p>{{ form_widget(form.category) }}</p>
 <p>{{ form_label(form.picture) }}</p>
 <p>{{ form_widget(form.picture) }}</p>
-<h3>Connecteurs</h3>
-{% for connectorForm in form.productConnectors %}
-    <div class="MyDiv mb-2 p-2">
-        {{ form_row(connectorForm.connector) }}
-        {{ form_row(connectorForm.quantity) }}
-        {{ form_row(connectorForm.plugDirection) }}
-    </div>
-{% else %}
-    <p class="text-muted">Aucun connecteur configuré.</p>
-{% endfor %}
+
 
 
 

@@ -18,6 +18,8 @@ class ProductConnectorForm extends AbstractType
         $builder
             ->add('quantity', IntegerType::class, [
                 'label' => 'Quantité',
+                
+               
             ])
             ->add('plugDirection', ChoiceType::class, [
                 'choices' => [
